@@ -49,6 +49,9 @@ flutter:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
+  assets:
+    - assets/icons/facebook_icon.png
+    - assets/icons/google_icon.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -61,6 +64,12 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
+
+  fonts:
+    - family: pt_sans
+      fonts:
+        - asset: assets/fonts/PT_Sans_Caption_Bold.ttf
+          weight: 700
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
