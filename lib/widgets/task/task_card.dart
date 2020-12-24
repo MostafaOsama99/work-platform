@@ -1,10 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/model/task.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
-class TaskWidget extends StatelessWidget {
+class TaskCard extends StatelessWidget {
   final Task task;
 
-  const TaskWidget( this.task);
+  const TaskCard(this.task);
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +34,15 @@ class TaskWidget extends StatelessWidget {
               )
             ],
           ),
-
-
-
+          StepProgressIndicator(
+            totalSteps: 100,
+            currentStep: task.progress.toInt(),
+            size: 13,
+            roundedEdges: const Radius.circular(30),
+            padding: 0,
+            selectedColor: Colors.green,
+            unselectedColor: Colors.deepPurple.shade600,
+          ),
         ],
       ),
     );

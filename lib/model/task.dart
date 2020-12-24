@@ -2,11 +2,18 @@ import 'package:flutter/foundation.dart';
 
 //! this model may have a provider
 
-class Task{
+class Task {
   //TODO:check if id is string or double
   final String name, id, description;
-  final DateTime created, deadline ;
-  double progress;
+  final DateTime created, deadline;
 
-  Task({this.created, this.deadline, @required this.name, this.id,@required this.description});
+  final double progress;
+
+  Task(
+      {@required this.progress,
+      this.created,
+      @required this.deadline,
+      @required this.name,
+      this.id,
+      @required this.description});
 }

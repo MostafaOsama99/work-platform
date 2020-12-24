@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:project/widgets/task/task_card.dart';
 
 import '../model/task.dart';
 
@@ -61,9 +62,15 @@ class HomePage extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 20),
               )),
             ),
-            Flexible(flex: 3, child: Tasks([
-              Task(description: 'description', name: 'Task name', deadline: DateTime.now())
-            ])),
+            Flexible(
+                flex: 3,
+                child: Tasks([
+                  Task(
+                    progress: 70,
+                      description: 'description',
+                      name: 'Task name',
+                      deadline: DateTime.now())
+                ])),
             Flexible(child: Container()),
           ],
         ),
@@ -82,8 +89,6 @@ class Tasks extends StatelessWidget {
     return ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: tasks.length,
-        itemBuilder: (context,i)=> TaskWidget(tasks[i]));
+        itemBuilder: (context, i) => TaskCard(tasks[i]));
   }
 }
-
-
