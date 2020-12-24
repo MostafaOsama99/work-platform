@@ -16,6 +16,7 @@ final TEXT_FIELD_DECORATION = InputDecoration(
     height: 0,
   ),
   fillColor: Colors.white,
+  hintStyle: TextStyle(color: Colors.grey),
   contentPadding: const EdgeInsets.only(left: 20, bottom: 0, top: 0),
   focusedBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Colors.white, width: 2),
