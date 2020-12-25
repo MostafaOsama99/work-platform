@@ -3,372 +3,16 @@ import 'package:intl/intl.dart';
 
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
-// maximum height for TextFormField error text height
-//   usually between 0-1
-const ERROR_TEXT_STYLE = 0.4;
-const COLOR_BACKGROUND = Color.fromRGBO(37, 36, 42, 1);
-const PADDING_VERTICAL = 12.0;
-// default TextFormField decoration
-// ignore: non_constant_identifier_names
-final TEXT_FIELD_DECORATION = InputDecoration(
-  filled: true,
-  errorStyle: TextStyle(
-    height: 0,
-  ),
-  fillColor: Colors.white,
-  hintStyle: TextStyle(color: Colors.grey),
-  contentPadding: const EdgeInsets.only(left: 20, bottom: 0, top: 0),
-  focusedBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.white, width: 2),
-    borderRadius: BorderRadius.circular(25.7),
-  ),
-  enabledBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.white),
-    borderRadius: BorderRadius.circular(25.7),
-  ),
-  focusedErrorBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.red, width: 1.5),
-    borderRadius: BorderRadius.circular(25.7),
-  ),
-  errorBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.red, width: 2),
-    borderRadius: BorderRadius.circular(25.7),
-  ),
-  // disabledBorder: OutlineInputBorder(
-  //   borderSide: BorderSide(color: Colors.white),
-  //   borderRadius: BorderRadius.circular(25.7),
-  // ),
-);
-
-class AuthScreen extends StatefulWidget {
-  @override
-  _AuthScreenState createState() => _AuthScreenState();
-}
-
-class _AuthScreenState extends State<AuthScreen> {
-  bool _isLogin = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final _buttonSocialWidth = MediaQuery.of(context).size.width / 2.7;
-
-    final GlobalKey<_LoginState> _loginForm = GlobalKey<_LoginState>();
-    final GlobalKey<_SignUpState> _signUp = GlobalKey<_SignUpState>();
-
-    return Scaffold(
-      backgroundColor: COLOR_BACKGROUND,
-      resizeToAvoidBottomInset: true,
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniStartDocked,
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        //crossAxisAlignment: CrossAxisAlignment.start,
-        children: !_isLogin
-            ? <Widget>[
-                IconButton(
-                    splashRadius: 28,
-                    iconSize: 40,
-                    icon: Image.asset('assets/icons/google_icon.png',
-                        color: Colors.red),
-                    onPressed: () {}),
-                SizedBox(height: 10),
-                IconButton(
-                    splashRadius: 28,
-                    iconSize: 40,
-                    icon: Image.asset(
-                      'assets/icons/facebook_icon.png',
-                      color: Colors.blue.shade700,
-                    ),
-                    onPressed: () {}),
-                SizedBox(height: 20),
-              ]
-            : [],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Center(
-            child: SingleChildScrollView(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).padding.top,
-                child: Column(
-                  children: [
-                    Expanded(
-                      flex: _isLogin ? 5 : 11,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        //  mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Spacer(flex: 1),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 30),
-                            child: Text(
-                              _isLogin ? 'Welcome\nBack' : 'Create\nAccount',
-                              style: TextStyle(
-                                  fontFamily: 'pt_sans',
-                                  fontSize: 28,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Spacer(flex: 1),
-                          Expanded(
-                            flex: _isLogin ? 4 : 10,
-                            child: _isLogin
-                                ? Login(key: _loginForm)
-                                : SignUp(key: _signUp),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          if (_isLogin)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: _buttonSocialWidth,
-                                  child: MaterialButton(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 12),
-                                    color: Colors.red.shade700,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Image.asset(
-                                          'assets/icons/google_icon.png',
-                                          height: 30,
-                                        ),
-                                        Text(
-                                          'Google',
-                                          style: TextStyle(
-                                              fontFamily: 'pt_sans',
-                                              color: Colors.white,
-                                              fontSize: 18),
-                                        )
-                                      ],
-                                    ),
-                                    onPressed: () {},
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: _buttonSocialWidth,
-                                  child: MaterialButton(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 14),
-                                    color: Colors.blue.shade800,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Image.asset(
-                                          'assets/icons/facebook_icon.png',
-                                          height: 30,
-                                        ),
-                                        Text(
-                                          'Facebook',
-                                          style: TextStyle(
-                                              fontFamily: 'pt_sans',
-                                              color: Colors.white,
-                                              fontSize: 18),
-                                        )
-                                      ],
-                                    ),
-                                    onPressed: () {},
-                                  ),
-                                )
-                              ],
-                            ),
-                          MaterialButton(
-                              minWidth: 230,
-                              height: 45,
-                              color: Color.fromRGBO(40, 49, 230, 1),
-                              child: Text(
-                                _isLogin ? 'Log in' : 'Sign up',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: 'pt_sans',
-                                    color: Colors.white),
-                              ),
-                              onPressed: () {
-                                //calling method from child class
-                                _isLogin
-                                    ? _loginForm.currentState._submit()
-                                    : _signUp.currentState._submit();
-                              }),
-                          Text('or',
-                              style: TextStyle(
-                                  fontFamily: 'pt_sans', color: Colors.white)),
-                          MaterialButton(
-                              minWidth: 230,
-                              height: 45,
-                              color: Colors.white,
-                              child: Text(
-                                _isLogin ? 'Sign up' : 'Log in',
-                                style: TextStyle(
-                                    fontSize: 20, fontFamily: 'pt_sans'),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isLogin = !_isLogin;
-                                });
-                              }),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-bool isEmail(String em) {
-  String p =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  RegExp regExp = new RegExp(p);
-  return regExp.hasMatch(em);
-}
-
-class Login extends StatefulWidget {
-  Login({Key key}) : super(key: key);
-
-  @override
-  _LoginState createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> {
-  static final _formKey = GlobalKey<FormState>();
-  final _passwordFocusScope = FocusNode();
-
-  bool hidePassword = true;
-
-  @override
-  void dispose() {
-    _passwordFocusScope.dispose();
-    super.dispose();
-  }
-
-  _submit() {
-    FocusScope.of(context).unfocus();
-    _formKey.currentState.validate();
-    // if (!_formKey.currentState.validate()) {
-    //   // Invalid!
-    //   return;
-    // }
-    // _formKey.currentState.save();
-    // setState(() {
-    //   _isLoading = true;
-    // });
-    // if (_authMode == AuthMode.Login) {
-    //   // Log user in
-    // } else {
-    //   // Sign user up
-    // }
-    // setState(() {
-    //   _isLoading = false;
-    // });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            style: TextStyle(fontSize: 18),
-            keyboardType: TextInputType.emailAddress,
-            onFieldSubmitted: (_) {
-              FocusScope.of(context).requestFocus(_passwordFocusScope);
-            },
-            autofocus: false,
-            validator: (value) {
-              if (value.isEmpty)
-                return "Please enter your email address";
-              else if (!isEmail(value))
-                return "Please enter a valid email address";
-              //_registerData['email'] = value;
-              return null;
-            },
-            decoration: TEXT_FIELD_DECORATION.copyWith(
-              prefixIcon: Icon(
-                Icons.mail,
-                color: COLOR_BACKGROUND,
-              ),
-              hintText: 'Email',
-              errorStyle: TextStyle(height: 1),
-            ),
-          ),
-          // SizedBox(height: 20),
-          TextFormField(
-            // autofocus: false,
-            style: TextStyle(fontSize: 18),
-            obscureText: hidePassword,
-            textInputAction: TextInputAction.done,
-            focusNode: _passwordFocusScope,
-            validator: (value) {
-              if (value.length < 8) return 'Password too short';
-              //    _registerData['password'] = value;
-              return null;
-            },
-            decoration: TEXT_FIELD_DECORATION.copyWith(
-              prefixIcon: Icon(
-                Icons.vpn_key,
-                color: COLOR_BACKGROUND,
-              ),
-              suffixIcon: IconButton(
-                icon: Icon(
-                  Icons.remove_red_eye,
-                  color: COLOR_BACKGROUND,
-                ),
-                onPressed: () {
-                  setState(() {
-                    hidePassword = !hidePassword;
-                  });
-                },
-              ),
-              hintText: 'password',
-              errorStyle: TextStyle(height: 1),
-            ),
-          ),
-          FlatButton(
-              onPressed: () {},
-              child: Text(
-                'Forget Password !',
-                style: TextStyle(color: Colors.white, fontFamily: 'pt_sans'),
-              )),
-        ],
-      ),
-    );
-  }
-}
+import '../../constants.dart';
 
 class SignUp extends StatefulWidget {
   SignUp({Key key}) : super(key: key);
 
   @override
-  _SignUpState createState() => _SignUpState();
+  SignUpState createState() => SignUpState();
 }
 
-class _SignUpState extends State<SignUp> {
+class SignUpState extends State<SignUp> {
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   static const _textFormHeight = 35.0;
@@ -465,7 +109,7 @@ class _SignUpState extends State<SignUp> {
     _mailController.dispose();
   }
 
-  _submit() {
+  submit() {
     _formKey.currentState.validate();
   }
 
@@ -670,7 +314,7 @@ class _SignUpState extends State<SignUp> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: PADDING_VERTICAL),
               child: SizedBox(
-                  height: _textFormHeight,
+                height: _textFormHeight,
                 child: TextFormField(
                   scrollPadding: EdgeInsets.zero,
                   textInputAction: TextInputAction.next,
@@ -709,7 +353,7 @@ class _SignUpState extends State<SignUp> {
                       decoration: TEXT_FIELD_DECORATION.copyWith(
                           hintText: 'Birth date',
                           prefixIcon:
-                              Icon(Icons.date_range, color: COLOR_BACKGROUND)),
+                          Icon(Icons.date_range, color: COLOR_BACKGROUND)),
                       format: DateFormat("dd-MM-yyyy"),
                       onChanged: (_) {
                         FocusScope.of(context).requestFocus(_genderFocusNode);

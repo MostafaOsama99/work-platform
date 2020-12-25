@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/screen/auth_screen.dart';
+import 'file:///D:/GP/project/lib/screen/auth/auth_screen.dart';
 
 
 void main() {
@@ -24,15 +24,20 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       darkTheme: ThemeData(
-        brightness: Brightness.dark,
+        brightness: Brightness.light,
         primarySwatch: Colors.grey,
         primaryColor: Colors.black,
         backgroundColor: const Color(0xFF212121),
         accentColor: Colors.white,
         accentIconTheme: IconThemeData(color: Colors.black),
         dividerColor: Colors.black12,
-      ),
-      themeMode: ThemeMode.dark,
+        buttonTheme: ButtonTheme.of(context).copyWith(
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        ),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+       ),
+       themeMode: ThemeMode.dark,
       home: AuthScreen(),
 
     );

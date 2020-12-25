@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/screen/auth_screen.dart';
+import 'file:///D:/GP/project/lib/screen/auth/auth_screen.dart';
 import 'package:project/screen/main_screen/chats_screen.dart';
 import 'package:project/screen/main_screen/home_screen.dart';
 import 'package:project/screen/main_screen/statistics_screen.dart';
