@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'file:///D:/GP/project/lib/screen/auth/auth_screen.dart';
+import 'package:project/screen/home_page_screen.dart';
 
 
 void main() {
@@ -25,10 +26,10 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData(
         brightness: Brightness.light,
-        primarySwatch: Colors.grey,
-        primaryColor: Colors.black,
-        backgroundColor: const Color(0xFF212121),
-        accentColor: Colors.white,
+        primarySwatch: Colors.blue, //Colors.grey,
+        primaryColor: const Color(0x1F4287), //Colors.black
+        backgroundColor: const Color(0x071E3D),
+        accentColor: const Color.fromRGBO(39, 142, 165, 1),//Colors.white,
         accentIconTheme: IconThemeData(color: Colors.black),
         dividerColor: Colors.black12,
         buttonTheme: ButtonTheme.of(context).copyWith(
@@ -36,9 +37,11 @@ class MyApp extends StatelessWidget {
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        fontFamily: 'pt_sans',
+        scaffoldBackgroundColor: const Color.fromRGBO(27, 32, 41, 1) //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
        ),
        themeMode: ThemeMode.dark,
-      home: AuthScreen(),
+      home: HomePage(),
 
     );
   }

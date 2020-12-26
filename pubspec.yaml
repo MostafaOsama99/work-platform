@@ -71,6 +71,8 @@ flutter:
       fonts:
         - asset: assets/fonts/PT_Sans_Caption_Bold.ttf
           weight: 700
+        - asset: assets/fonts/PTSansCaption-Regular.ttf
+
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

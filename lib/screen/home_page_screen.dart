@@ -17,7 +17,7 @@ class HomePage extends StatelessWidget {
         HEIGHT_APPBAR;
 
     return Scaffold(
-      backgroundColor: COLOR_BACKGROUND,
+      // backgroundColor: COLOR_BACKGROUND,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(HEIGHT_APPBAR),
         child: AppBar(
@@ -64,13 +64,36 @@ class HomePage extends StatelessWidget {
             ),
             Flexible(
                 flex: 3,
-                child: Tasks([
-                  Task(
-                    progress: 70,
-                      description: 'description',
-                      name: 'Task name',
-                      deadline: DateTime.now())
-                ])),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 22, top: 16, bottom: 8),
+                      child: Text(
+                        'Tasks',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 350,
+                      child: Tasks([
+                        Task(
+                            progress: 70,
+                            description: 'description',
+                            name: 'Task name',
+                            deadline: DateTime.now()),
+                        Task(
+                            progress: 30,
+                            description: 'description',
+                            name: 'Task name',
+                            deadline: DateTime.now())
+                      ]),
+                    ),
+                  ],
+                )),
             Flexible(child: Container()),
           ],
         ),
@@ -87,7 +110,7 @@ class Tasks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        scrollDirection: Axis.horizontal,
+       // scrollDirection: Axis.horizontal,
         itemCount: tasks.length,
         itemBuilder: (context, i) => TaskCard(tasks[i]));
   }
