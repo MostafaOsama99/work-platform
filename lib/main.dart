@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         backgroundColor: Color.fromRGBO(37, 36, 42, 1),
@@ -28,13 +29,19 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.light,
         primarySwatch: Colors.blue, //Colors.grey,
         primaryColor: const Color(0x1F4287), //Colors.black
-        backgroundColor: const Color(0x071E3D),
+        backgroundColor: const Color.fromRGBO(19, 76, 161,1),
         accentColor: const Color.fromRGBO(39, 142, 165, 1),//Colors.white,
-        accentIconTheme: IconThemeData(color: Colors.black),
-        dividerColor: Colors.black12,
+        accentIconTheme: IconThemeData(color: Color.fromRGBO(33, 230, 193, 1)),
+        dividerColor: Colors.grey.withOpacity(0.3),
         buttonTheme: ButtonTheme.of(context).copyWith(
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        ),
+        splashColor: const Color.fromRGBO(39, 142, 165, 0.5),
+        appBarTheme: AppBarTheme(
+          brightness: Brightness.dark,
+          color: Color.fromRGBO(13, 56, 120, 1),
+          elevation: 2
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'pt_sans',
