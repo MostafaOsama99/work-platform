@@ -10,7 +10,7 @@ class HomePage extends StatefulWidget {
   static const HEIGHT_ANNOUNCE = 75.0;
 
   final List<List> teams ;
-  const HomePage({this.teams}) ;
+  const HomePage({this.teams = const []}) ;
 
   @override
   _HomePageState createState() => _HomePageState();
