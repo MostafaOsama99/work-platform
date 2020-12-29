@@ -20,7 +20,7 @@ class TaskCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,12 +37,13 @@ class TaskCard extends StatelessWidget {
               )
             ],
           ),
+          CheckPoint(
+            title: "task 1",
+            value: true,
+          ),
+         // task.checkPoints.map((key, value) =>)
 
-          if(task.checkPoints != null)
-          ...task.checkPoints.entries.map((e) => CheckPoint(title: e.key,value: e.value)).toList(),
-          //List.generate(task.checkPoints.length, (index) => CheckPoint(title: task.checkPoints.,value: value))
-          //task.checkPoints.map((key, value) => CheckPoint(title: title,value: value))
-          //CheckPoint(title: 'this is a check point', value: false),
+
           StepProgressIndicator(
             totalSteps: 100,
             currentStep: task.progress.toInt(),
