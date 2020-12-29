@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'file:///D:/GP/project/lib/screen/auth/auth_screen.dart';
-import 'file:///D:/GP/project/lib/screen/main_screen/home_screen.dart';
+import 'package:project/screen/auth/auth_screen.dart';
+import 'package:project/screen/main_screen/home_screen.dart';
 import 'package:project/screen/main_screen.dart';
 import 'tab_item.dart';
 
