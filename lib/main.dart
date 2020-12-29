@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/screen/edit_team_screen.dart';
 import 'file:///D:/GP/project/lib/screen/auth/auth_screen.dart';
 import 'package:project/screen/home_page_screen.dart';
 
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(
           brightness: Brightness.dark,
           color: Color.fromRGBO(13, 56, 120, 1),
-          elevation: 2
+          elevation: 2,
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'pt_sans',

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:project/screen/edit_team_screen.dart';
 import '../widgets/task/task_card.dart';
 
 import '../model/task.dart';
+import '../constants.dart';
 
 const COLOR_BACKGROUND = Color.fromRGBO(37, 36, 42, 1);
 
 class HomePage extends StatefulWidget {
-  static const HEIGHT_APPBAR = 50.0;
   static const HEIGHT_ANNOUNCE = 75.0;
 
   final List<List> teams ;
@@ -27,12 +28,12 @@ class _HomePageState extends State<HomePage> {
     //TODO: subtract bottomNavigationBar height
     final bodyHeight = height -
         MediaQuery.of(context).padding.top -
-        HomePage.HEIGHT_APPBAR;
+        HEIGHT_APPBAR;
 
     return Scaffold(
       // backgroundColor: COLOR_BACKGROUND,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(HomePage.HEIGHT_APPBAR),
+        preferredSize: Size.fromHeight(HEIGHT_APPBAR),
         child: AppBar(
           centerTitle: true,
           leading: IconButton(
@@ -58,12 +59,26 @@ class _HomePageState extends State<HomePage> {
                   _changeTeam(context, height);
                 })
           ],
-          title: Center(
+          title:
+          OutlineButton(
+            padding: EdgeInsets.all(8),
+            highlightedBorderColor: Colors.teal.shade300,
+           // highlightColor: Colors.white,
+            color: Colors.black,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide(width: 1.5)),
+            onPressed: () {
+              Navigator.push(context,MaterialPageRoute(builder: (context) => EditTeamScreen()));
+            },
             child: Text(
               'Team Name',
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
-          ),
+          )
+
+
+          ,
         ),
       ),
       body: SizedBox(
@@ -197,7 +212,7 @@ class _HomePageState extends State<HomePage> {
             curve: Curves.easeOut,
           ).drive(Tween<Offset>(
             begin: Offset(0, -1),
-            end: Offset(0,(HomePage.HEIGHT_APPBAR *1.4) / height ),
+            end: Offset(0,(HEIGHT_APPBAR *1.4) / height ),
           )),
           child: child,
         );

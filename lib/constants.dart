@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 const ERROR_TEXT_STYLE = 0.4;
 const COLOR_BACKGROUND = Color.fromRGBO(37, 36, 42, 1);
 const PADDING_VERTICAL = 12.0;
+const HEIGHT_APPBAR = 50.0;
+
 // default TextFormField decoration
 // ignore: non_constant_identifier_names
 final TEXT_FIELD_DECORATION = InputDecoration(
@@ -17,6 +19,10 @@ final TEXT_FIELD_DECORATION = InputDecoration(
   //hintStyle: TextStyle(color: Colors.grey),
   contentPadding: const EdgeInsets.only(left: 20, bottom: 0, top: 0),
   focusedBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.white, width: 2),
+    borderRadius: BorderRadius.circular(25.7),
+  ),
+  disabledBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Colors.white, width: 2),
     borderRadius: BorderRadius.circular(25.7),
   ),
