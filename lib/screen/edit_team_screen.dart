@@ -166,12 +166,12 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             CircleAvatar(
-              radius: 30,
+              radius: 22,
               child: Text(name[0] + name[lastLitter],
                   style: TextStyle(fontSize: 16)),
               backgroundColor: Colors.yellow,
             ),
-            //  SizedBox(width: 15,),
+              SizedBox(width: 12),
             Flexible(
                 flex: 5,
                 child: Text(name,
