@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/screen/edit_team_screen.dart';
-import 'file:///D:/GP/project/lib/screen/auth/auth_screen.dart';
+
 import 'package:project/screen/home_page_screen.dart';
 
 
