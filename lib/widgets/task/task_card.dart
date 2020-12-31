@@ -127,9 +127,7 @@ class _CheckPointState extends State<CheckPoint> {
                   checkColor: Theme.of(context).accentIconTheme.color,
                   inactiveColor: Colors.black45,
                   materialTapTargetSize: MaterialTapTargetSize.padded,
-                  onChanged: (bool value) {
-                    //_value = !_value;
-                  }),
+                  onChanged:(value)=> setState(() => _value = value)),
             ],
           ),
         ),
