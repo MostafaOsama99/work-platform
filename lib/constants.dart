@@ -12,28 +12,27 @@ const HEIGHT_APPBAR = 50.0;
 // ignore: non_constant_identifier_names
 final TEXT_FIELD_DECORATION = InputDecoration(
   filled: true,
-  errorStyle: TextStyle(
-    height: 0,
-  ),
+  errorStyle: TextStyle(height: 0),
   fillColor: Colors.white,
+
   ///use it in case => theme brightness: Brightness.dark,
   //hintStyle: TextStyle(color: Colors.grey),
   contentPadding: const EdgeInsets.only(left: 20, bottom: 0, top: 0),
   focusedBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Colors.white, width: 2),
-    borderRadius: BorderRadius.circular(25.7),
+    borderRadius: BorderRadius.circular(25),
   ),
   enabledBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Colors.white),
-    borderRadius: BorderRadius.circular(25.7),
+    borderRadius: BorderRadius.circular(25),
   ),
   focusedErrorBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Colors.red, width: 1.5),
-    borderRadius: BorderRadius.circular(25.7),
+    borderRadius: BorderRadius.circular(25),
   ),
   errorBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Colors.red, width: 2),
-    borderRadius: BorderRadius.circular(25.7),
+    borderRadius: BorderRadius.circular(25),
   ),
   // disabledBorder: OutlineInputBorder(
   //   borderSide: BorderSide(color: Colors.white),
@@ -47,5 +46,3 @@ bool isEmail(String em) {
   RegExp regExp = new RegExp(p);
   return regExp.hasMatch(em);
 }
-
-

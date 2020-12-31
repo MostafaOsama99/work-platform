@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/screen/edit_team_screen.dart';
+import 'package:project/screen/join_or_create_team.dart';
 import '../widgets/task/task_card.dart';
 
 import '../model/task.dart';
@@ -13,8 +14,9 @@ const COLOR_BACKGROUND = Color.fromRGBO(37, 36, 42, 1);
 class HomePage extends StatefulWidget {
   static const HEIGHT_ANNOUNCE = 75.0;
 
-  final List<List> teams ;
-  const HomePage({this.teams = const []}) ;
+  final List<List> teams;
+
+  const HomePage({this.teams = const []});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -25,13 +27,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-
     final height = MediaQuery.of(context).size.height;
 
     //TODO: subtract bottomNavigationBar height
-    final bodyHeight = height -
-        MediaQuery.of(context).padding.top -
-        HEIGHT_APPBAR;
+    final bodyHeight =
+        height - MediaQuery.of(context).padding.top - HEIGHT_APPBAR;
 
     return Scaffold(
       // backgroundColor: COLOR_BACKGROUND,
@@ -62,17 +62,18 @@ class _HomePageState extends State<HomePage> {
                   _changeTeam(context, height);
                 })
           ],
-          title:
-          OutlineButton(
+          title: OutlineButton(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             highlightedBorderColor: Colors.teal.shade300,
-           // highlightColor: Colors.white,
+            // highlightColor: Colors.white,
             color: Colors.black,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
                 side: BorderSide(width: 2)),
             onPressed: () {
-              Navigator.push(context,MaterialPageRoute(builder: (context) => EditTeamScreen()));
+              //TODO: push replacement not working to remove the current dialog tap
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => EditTeamScreen()));
             },
             child: Text(
               'Team Name',
@@ -91,9 +92,9 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white30,
               child: Center(
                   child: Text(
-                    'Announcements ...',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  )),
+                'Announcements ...',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              )),
             ),
             Flexible(
                 flex: 3,
@@ -101,7 +102,8 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 22, top: 16, bottom: 8),
+                      padding:
+                          const EdgeInsets.only(left: 22, top: 16, bottom: 8),
                       child: Text(
                         'Tasks',
                         style: TextStyle(
@@ -159,7 +161,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 child: Theme(
-                  
                   data: Theme.of(context),
                   child: LimitedBox(
                     maxHeight: height * 0.35,
@@ -174,23 +175,28 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           ...widget.teams
                               .map((e) => _teamTile(
-                                  teamName: e[0], roomName: e[1], leaderName: e[2]))
+                                  teamName: e[0],
+                                  roomName: e[1],
+                                  leaderName: e[2]))
                               .toList(),
                           SizedBox(
                             height: 40,
                             child: FlatButton(
-                              onPressed: () {  },
-                              child: Row(crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              onPressed: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          JoinTeamScreen())),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-
-                                     Text(
-                                      'Join or create team',
-                                      style: HomePage.textStyle,
-                                    ),
-                                     //
-                                     Icon(Icons.add_circle, color: Colors.blue),
-
+                                  Text(
+                                    'Join or create team',
+                                    style: HomePage.textStyle,
+                                  ),
+                                  //
+                                  Icon(Icons.add_circle, color: Colors.blue),
                                 ],
                               ),
                             ),
@@ -212,7 +218,7 @@ class _HomePageState extends State<HomePage> {
             curve: Curves.easeOut,
           ).drive(Tween<Offset>(
             begin: Offset(0, -1),
-            end: Offset(0,(HEIGHT_APPBAR *1.4) / height ),
+            end: Offset(0, (HEIGHT_APPBAR * 1.4) / height),
           )),
           child: child,
         );
@@ -220,9 +226,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
-
-  ///built for each team in the list 
+  ///built for each team in the list
   Widget _teamTile(
       {@required String teamName, @required roomName, @required leaderName}) {
     return ClipRRect(
@@ -242,14 +246,14 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(teamName,
-                            style:
-                                TextStyle(color: Colors.white, )),
+                            style: TextStyle(
+                              color: Colors.white,
+                            )),
                         Padding(
                           padding: const EdgeInsets.only(left: 12),
                           child: Text(
                             roomName,
-                            style:
-                                TextStyle(color: Colors.white70),
+                            style: TextStyle(color: Colors.white70),
                           ),
                         )
                       ],
@@ -285,10 +289,6 @@ class Tasks extends StatelessWidget {
         itemBuilder: (context, i) => TaskCard(tasks[i]));
   }
 }
-
-
-
-
 
 _changeTeamModal(BuildContext context, List<List> teams) {
   return showModalBottomSheet(

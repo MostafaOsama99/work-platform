@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/screen/join_or_create_team.dart';
 
 const Duration _kExpand = Duration(milliseconds: 200);
 
@@ -32,6 +33,7 @@ class ExpansionTile extends StatefulWidget {
     this.children = const <Widget>[],
     this.trailing,
     this.initiallyExpanded = false,
+    this.onTap,
   })  : assert(initiallyExpanded != null),
         super(key: key);
 
@@ -72,18 +74,22 @@ class ExpansionTile extends StatefulWidget {
   /// Specifies if the list tile is initially expanded (true) or collapsed (false, the default).
   final bool initiallyExpanded;
 
+  final Function onTap;
+
   @override
-  _ExpansionTileState createState() => _ExpansionTileState();
+  ExpansionTileState createState() => ExpansionTileState();
 }
 
-class _ExpansionTileState extends State<ExpansionTile>
+// Note: this state class now is public,
+// to be able to generate a key for this class
+class ExpansionTileState extends State<ExpansionTile>
     with SingleTickerProviderStateMixin {
   static final Animatable<double> _easeOutTween =
-  CurveTween(curve: Curves.easeOut);
+      CurveTween(curve: Curves.easeOut);
   static final Animatable<double> _easeInTween =
-  CurveTween(curve: Curves.easeIn);
+      CurveTween(curve: Curves.easeIn);
   static final Animatable<double> _halfTween =
-  Tween<double>(begin: 0.0, end: 0.5);
+      Tween<double>(begin: 0.0, end: 0.5);
 
   final ColorTween _borderColorTween = ColorTween();
   final ColorTween _headerColorTween = ColorTween();
@@ -123,7 +129,7 @@ class _ExpansionTileState extends State<ExpansionTile>
     super.dispose();
   }
 
-  void _handleTap() {
+  void handleTap() {
     setState(() {
       _isExpanded = !_isExpanded;
       if (_isExpanded) {
@@ -146,49 +152,58 @@ class _ExpansionTileState extends State<ExpansionTile>
     final Color borderSideColor = _borderColor.value ?? Colors.transparent;
     final Color titleColor = _headerColor.value;
 
-    return Container(
-      decoration: BoxDecoration(
-          color: _backgroundColor.value ?? Colors.transparent,
-          border: Border(
-            top: BorderSide(color: borderSideColor),
-            bottom: BorderSide(color: borderSideColor),
-          )),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          IconTheme.merge(
-            data: IconThemeData(color: _iconColor.value),
-            child: Container(
-              color: widget.headerBackgroundColor ?? Colors.black,
-              child: ListTile(
-                onTap: _handleTap,
-                leading: widget.leading,
-                title: DefaultTextStyle(
-                  style: Theme.of(context)
-                      .textTheme
-                      .subhead
-                      .copyWith(color: titleColor),
-                  child: widget.title,
-                ),
-                trailing: widget.trailing ??
-                    RotationTransition(
-                      turns: _iconTurns,
-                      child: Icon(
-                        Icons.expand_more,
-                        color: widget.iconColor ?? Colors.grey,
-                      ),
-                    ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        IconTheme.merge(
+          data: IconThemeData(color: _iconColor.value),
+          child: Card(
+            color: _isExpanded
+                ? (widget.headerBackgroundColor ?? Colors.transparent)
+                : Colors.blueGrey.shade800,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
               ),
+              onTap: () {
+                //check if current opened card is this card
+                if (widget.key == JoinTeamScreen.currentOpened) return;
+                //close current open
+                JoinTeamScreen.currentOpened.currentState.handleTap();
+                //save this card as current open
+                JoinTeamScreen.currentOpened = widget.key;
+                //open this card
+                handleTap();
+              },
+              leading: widget.leading,
+              title: DefaultTextStyle(
+                style: Theme.of(context)
+                    .textTheme
+                    .subhead
+                    .copyWith(color: titleColor),
+                child: widget.title,
+              ),
+              trailing: widget.trailing ??
+                  RotationTransition(
+                    turns: _iconTurns,
+                    child: Icon(
+                      Icons.expand_more,
+                      color: widget.iconColor ?? Colors.grey,
+                    ),
+                  ),
             ),
           ),
-          ClipRect(
-            child: Align(
-              heightFactor: _heightFactor.value,
-              child: child,
-            ),
+        ),
+        ClipRect(
+          child: Align(
+            heightFactor: _heightFactor.value,
+            child: child,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
