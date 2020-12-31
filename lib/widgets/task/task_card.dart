@@ -111,6 +111,7 @@ class _CheckPointState extends State<CheckPoint> {
       height: 32,
       child: InkWell(
         borderRadius: BorderRadius.circular(15),
+        highlightColor: Colors.black26,
         onTap: () => setState(() => _value = !_value),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
