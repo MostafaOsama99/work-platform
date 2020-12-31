@@ -1,3 +1,4 @@
+import 'package:circular_check_box/circular_check_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/model/task.dart';
@@ -20,7 +21,7 @@ class TaskCard extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-      //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -30,6 +31,13 @@ class TaskCard extends StatelessWidget {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: Icon(
+                  Icons.alarm,
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
               //${DateFormat('d/M/yy',task.deadline.toString())}
               Text(
                 '${task.deadline.day}/${task.deadline.month}/${task.deadline.year.toString().substring(2)}',
@@ -42,8 +50,10 @@ class TaskCard extends StatelessWidget {
           //   value: true,
           // ),
 
-          if(task.checkPoints != null)
-          ...task.checkPoints.entries.map((e) => CheckPoint(title: e.key,value: e.value)).toList(),
+          if (task.checkPoints != null)
+            ...task.checkPoints.entries
+                .map((e) => CheckPoint(title: e.key, value: e.value))
+                .toList(),
           //List.generate(task.checkPoints.length, (index) => CheckPoint(title: task.checkPoints.,value: value))
           //task.checkPoints.map((key, value) => CheckPoint(title: title,value: value))
           //CheckPoint(title: 'this is a check point', value: false),
@@ -67,7 +77,19 @@ class TaskCard extends StatelessWidget {
 class CheckPoint extends StatefulWidget {
   final title, value;
 
-  const CheckPoint({Key key, @required this.title,this.value = false})
+  static const TS_DONE = TextStyle(
+    fontSize: 16,
+    color: Colors.grey,
+    fontStyle: FontStyle.italic,
+    decoration: TextDecoration.lineThrough,
+    decorationStyle: TextDecorationStyle.solid,
+  );
+
+  // ignore: non_constant_identifier_names
+  static final TS_WORKING =
+      TextStyle(fontSize: 16, color: Colors.white.withOpacity(0.8));
+
+  const CheckPoint({Key key, @required this.title, this.value = false})
       : super(key: key);
 
   @override
@@ -75,7 +97,7 @@ class CheckPoint extends StatefulWidget {
 }
 
 class _CheckPointState extends State<CheckPoint> {
-  bool _value ;
+  bool _value;
 
   @override
   void initState() {
@@ -86,27 +108,30 @@ class _CheckPointState extends State<CheckPoint> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      //height: 30,
-      child: CheckboxListTile(
-        contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-        dense: true,
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            fontSize: 16,
-              color: Colors.white70,
-              fontStyle: FontStyle.italic,
-              decoration: _value ? TextDecoration.lineThrough : null,
-              decorationStyle:  TextDecorationStyle.solid,
+      height: 32,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(15),
+        onTap: () => setState(() => _value = !_value),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.title,
+                style: _value ? CheckPoint.TS_DONE : CheckPoint.TS_WORKING,
+              ),
+              CircularCheckBox(
+                  value: _value,
+                  checkColor: Theme.of(context).accentIconTheme.color,
+                  inactiveColor: Colors.black45,
+                  materialTapTargetSize: MaterialTapTargetSize.padded,
+                  onChanged: (bool value) {
+                    //_value = !_value;
+                  }),
+            ],
           ),
         ),
-        controlAffinity: ListTileControlAffinity.platform,
-        onChanged: (bool value) {
-          setState(() {
-            _value = value;
-          });
-        },
-        value: _value,
       ),
     );
   }
