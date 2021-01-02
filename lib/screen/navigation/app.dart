@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:project/screen/home_page_screen.dart';
 import '../auth/auth_screen.dart';
-import 'package:project/screen/main_screen/chats_screen.dart';
-import 'package:project/screen/main_screen/home_screen.dart';
-import 'package:project/screen/main_screen/statistics_screen.dart';
-import 'bottom_navigation.dart';
+import '../../screen/main_screen/chats_screen.dart';
+import '../../screen/main_screen/statistics_screen.dart';
 import 'tab_item.dart';
-import 'tab_navigator.dart';
+
+/*
+* working fine but each tab loses the state
+* */
 
 class App extends StatefulWidget {
   @override
@@ -14,6 +16,8 @@ class App extends StatefulWidget {
 
 class AppState extends State<App> {
   var _currentTab = TabItem.home;
+
+  //to save each tapView state
   final _navigatorKeys = {
     TabItem.home: GlobalKey<NavigatorState>(),
     TabItem.statistics: GlobalKey<NavigatorState>(),
@@ -48,50 +52,56 @@ class AppState extends State<App> {
         return isFirstRouteInCurrentTab;
       },
       child: Scaffold(
+        /*
+        * the main view here is a stack with children Offstage for each tapView
+          * Offstage holding a child and when the value is true it shows up the child
+        * */
         body: Stack(children: <Widget>[
           Offstage(
             offstage: _currentTab != TabItem.home,
             child: Navigator(
-              key: GlobalKey<NavigatorState>(),
+              key: _navigatorKeys[TabItem.home],
               initialRoute: Routes.home,
               onGenerateRoute: (routeSettings) {
-                WidgetBuilder builder ;
-                switch (routeSettings.name)
-                {
-                  case Routes.home: builder = (_)=> HomeScreen();
-                  break;
-                  case Routes.auth: builder = (_)=> AuthScreen();
-                  break;
+                WidgetBuilder builder;
+
+                /// here we define all named routes for each tap
+
+                switch (routeSettings.name) {
+                  case Routes.home:
+                    builder = (_) => HomePage();
+                    break;
+                  case Routes.auth:
+                    builder = (_) => AuthScreen();
+                    break;
                 }
-                return MaterialPageRoute(builder: builder,settings: routeSettings);
-                  },
+                return MaterialPageRoute(
+                    builder: builder, settings: routeSettings);
+              },
             ),
           ),
-
           Offstage(
             offstage: _currentTab != TabItem.statistics,
             child: Navigator(
-              key: GlobalKey<NavigatorState>(),
+              key: _navigatorKeys[TabItem.statistics],
               onGenerateRoute: (routeSettings) =>
                   MaterialPageRoute(builder: (context) => StatisticsScreen()),
             ),
           ),
-
           Offstage(
             offstage: _currentTab != TabItem.chats,
             child: Navigator(
-              key: GlobalKey<NavigatorState>(),
+              key: _navigatorKeys[TabItem.chats],
               //initialRoute: '/home',
               onGenerateRoute: (routeSettings) =>
                   MaterialPageRoute(builder: (context) => ChatsScreen()),
             ),
           ),
-
         ]),
-
 
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
+
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -106,7 +116,6 @@ class AppState extends State<App> {
               label: 'Chats',
             ),
           ],
-
           currentIndex: _currentTab.index,
           selectedItemColor: Colors.amber[800],
           onTap: (index) => _selectTab(
@@ -116,5 +125,4 @@ class AppState extends State<App> {
       ),
     );
   }
-
 }

@@ -18,6 +18,6 @@ final Map<TabItem, Widget > tabWidget = {
 
 //assign all route names here
 class Routes{
-  static const home = '/home';
+  static const home = '/';
   static const auth = '/auth';
 }

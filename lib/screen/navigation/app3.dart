@@ -4,6 +4,11 @@ import 'package:project/screen/auth/auth_screen.dart';
 import 'package:project/screen/main_screen/chats_screen.dart';
 import 'package:project/screen/main_screen/home_screen.dart';
 
+
+/*
+* back button not working to remove the second page
+* */
+
 class App3 extends StatefulWidget {
   @override
   _App3State createState() => _App3State();
