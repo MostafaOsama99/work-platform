@@ -92,9 +92,9 @@ class _HomePageState extends State<HomePage> {
               color: Colors.white30,
               child: Center(
                   child: Text(
-                'Announcements ...',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              )),
+                    'Announcements ...',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  )),
             ),
             Flexible(
                 flex: 3,
@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Padding(
                       padding:
-                          const EdgeInsets.only(left: 22, top: 16, bottom: 8),
+                      const EdgeInsets.only(left: 22, top: 16, bottom: 8),
                       child: Text(
                         'Tasks',
                         style: TextStyle(
@@ -121,7 +121,9 @@ class _HomePageState extends State<HomePage> {
                             progress: 70,
                             description: 'description',
                             name: 'Task name',
-                            deadline: DateTime.now()),
+                            deadline: DateTime.now().add(Duration(days: 15)),
+                            checkPoints: {'Finish design': true, 'Animation':false, 'Task card':false}
+                        ),
                         Task(
                             progress: 30,
                             description: 'description',
@@ -175,9 +177,9 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           ...widget.teams
                               .map((e) => _teamTile(
-                                  teamName: e[0],
-                                  roomName: e[1],
-                                  leaderName: e[2]))
+                              teamName: e[0],
+                              roomName: e[1],
+                              leaderName: e[2]))
                               .toList(),
                           SizedBox(
                             height: 40,
@@ -189,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Join or create team',
@@ -284,7 +286,7 @@ class Tasks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        // scrollDirection: Axis.horizontal,
+      // scrollDirection: Axis.horizontal,
         itemCount: tasks.length,
         itemBuilder: (context, i) => TaskCard(tasks[i]));
   }

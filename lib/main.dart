@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:project/screen/auth/auth_screen.dart';
+import 'package:project/screen/edit_team_screen.dart';
 import 'package:project/screen/home_page_screen.dart';
-
+import 'package:project/screen/join_or_create_team.dart';
+import 'package:project/screen/navigation/single_task_view.dart';
 void main() {
   runApp(MyApp());
 }
@@ -46,7 +49,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color.fromRGBO(27, 32, 41, 1) //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
        ),
        themeMode: ThemeMode.dark,
-      home: HomePage(),
+      home: SingleTask(),
 
     );
   }
