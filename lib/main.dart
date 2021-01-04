@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project/screen/home_page_screen.dart';
-import 'package:project/screen/navigation/app.dart';
-import 'package:project/screen/navigation/app2.dart';
-import 'package:project/screen/navigation/app3.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,7 +19,7 @@ class MyApp extends StatelessWidget {
         accentColorBrightness: Brightness.light,
         buttonTheme: ButtonTheme.of(context).copyWith(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
@@ -62,51 +59,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// class Expansiontile extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         centerTitle: true,
-//         title: Text(
-//             'Expansion Tile'
-//         ),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.symmetric(horizontal: 30.0),
-//         child: Column(
-//           children: <Widget>[
-//             SizedBox(height:20.0),
-//             ExpansionTile(
-//               title: Text(
-//                 "Title",
-//                 style: TextStyle(
-//                     fontSize: 18.0,
-//                     fontWeight: FontWeight.bold
-//                 ),
-//               ),
-//               children: <Widget>[
-//                 ExpansionTile(
-//                   title: Text(
-//                     'Sub title',
-//                   ),
-//                   children: <Widget>[
-//                     ListTile(
-//                       title: Text('data'),
-//                     )
-//                   ],
-//                 ),
-//                 ListTile(
-//                   title: Text(
-//                       'data'
-//                   ),
-//                 )
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

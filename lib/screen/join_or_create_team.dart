@@ -1,10 +1,12 @@
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project/widgets/task/custom_expansion_title.dart';
 import 'package:project/widgets/task/add_teams_button.dart';
 import 'package:project/widgets/task/custom_expansion_title.dart' as custom;
 
 const TS_TITLE =
-    TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
+TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
 
 const HEIGHT_PADDING = 16.0;
 
@@ -51,14 +53,15 @@ class JoinTeamScreen extends StatefulWidget {
 
 class _JoinTeamScreenState extends State<JoinTeamScreen> {
   static final _formKey = GlobalKey<FormState>();
-
+  String nameError="";
+  String descriptionError="";
   //key for each ExpansionTile
   final _joinTeamKey =
-      GlobalKey<ExpansionTileState>(debugLabel: '_joinTeamKey');
+  GlobalKey<ExpansionTileState>(debugLabel: '_joinTeamKey');
   final _createTeamKey =
-      GlobalKey<ExpansionTileState>(debugLabel: '_createTeamKey');
+  GlobalKey<ExpansionTileState>(debugLabel: '_createTeamKey');
   final _createRoomKey =
-      GlobalKey<ExpansionTileState>(debugLabel: '_createRoomKey');
+  GlobalKey<ExpansionTileState>(debugLabel: '_createRoomKey');
 
   @override
   void initState() {
@@ -154,7 +157,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                     onFieldSubmitted: (_) {},
                     decoration: TEXT_FIELD_DECORATION.copyWith(
                       hintText: 'Description',
-                      errorStyle: TextStyle(height: 1),
+
                     ),
                   ),
                 ),
@@ -241,26 +244,67 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                   width: width,
                   child: TextFormField(
                     validator: (value) {
-                      if (value.trim().length < 3) return 'too short name';
+                      if (value.trim().length < 3){
+                        setState(() {
+                          nameError= 'too short name';
+                        });
+
+                        print(nameError);
+                      }
+                      else {
+                        setState(() {
+                          nameError="";
+                        });
+
+                      }
                       return null;
                     },
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) {},
                     decoration: TEXT_FIELD_DECORATION.copyWith(
                       hintText: 'name',
-                      errorStyle: TextStyle(height: 1),
                     ),
                   ),
                 ),
+
+                (nameError==null) ? null : Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 40,top: 12),
+                      child: Text(nameError,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
+                    ),
+                    Spacer(flex: 1,)
+                  ],
+                ),
+                // TextFormField(
+                //     onSaved: (v){},
+                //     keyboardType: TextInputType.emailAddress,
+                //     decoration: InputDecoration(
+                //
+                //
+                //         labelText: "",
+                //         labelStyle: TextStyle(color: Colors.grey, fontSize: 5),
+                //         contentPadding: EdgeInsets.only(bottom: 0),
+                //         focusedBorder: UnderlineInputBorder(
+                //             borderSide: BorderSide(color: Colors.white)))),
                 SizedBox(height: HEIGHT_PADDING),
                 SizedBox(
                   height: 40,
                   width: width,
                   child: TextFormField(
                     validator: (value) {
-                      if (value.trim().length < 3) {
-                        //return 'Description of room is Required';
-                        return '';
+                      if (value.trim().length < 3){
+                        setState(() {
+                          descriptionError= 'Description field is required';
+                        });
+
+                        print(descriptionError);
+                      }
+                      else {
+                        setState(() {
+                          descriptionError="";
+                        });
+
                       }
                       return null;
                     },
@@ -272,6 +316,15 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                       // errorStyle: TextStyle(height: 1),
                     ),
                   ),
+                ),
+                (descriptionError==null) ? null : Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 40,top: 15),
+                      child: Text(descriptionError,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
+                    ),
+                    Spacer(flex: 1,)
+                  ],
                 ),
                 SizedBox(height: HEIGHT_PADDING),
                 addTeamsButton(

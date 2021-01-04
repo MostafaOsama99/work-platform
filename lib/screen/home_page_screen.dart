@@ -121,9 +121,7 @@ class _HomePageState extends State<HomePage> {
                             progress: 70,
                             description: 'description',
                             name: 'Task name',
-                            deadline: DateTime.now().add(Duration(days: 15)),
-                          checkPoints: {'Finish design': true, 'Animation':false, 'Task card':false}
-                        ),
+                            deadline: DateTime.now()),
                         Task(
                             progress: 30,
                             description: 'description',
