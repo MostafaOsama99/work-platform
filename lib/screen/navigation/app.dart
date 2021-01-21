@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project/screen/home_page_screen.dart';
+
 import '../auth/auth_screen.dart';
+import '../../screen/home_page_screen.dart';
+import '../../screen/team_screen.dart';
 import '../../screen/main_screen/chats_screen.dart';
 import '../../screen/main_screen/statistics_screen.dart';
 import 'tab_item.dart';
@@ -39,6 +41,7 @@ class AppState extends State<App> {
       onWillPop: () async {
         final isFirstRouteInCurrentTab =
             !await _navigatorKeys[_currentTab].currentState.maybePop();
+        //TODO: change home route here
         if (isFirstRouteInCurrentTab) {
           // if not on the 'main' tab
           if (_currentTab != TabItem.home) {
@@ -61,7 +64,7 @@ class AppState extends State<App> {
             offstage: _currentTab != TabItem.home,
             child: Navigator(
               key: _navigatorKeys[TabItem.home],
-              initialRoute: Routes.home,
+              initialRoute:  Routes.team, //Routes.home,
               onGenerateRoute: (routeSettings) {
                 WidgetBuilder builder;
 
@@ -74,6 +77,10 @@ class AppState extends State<App> {
                   case Routes.auth:
                     builder = (_) => AuthScreen();
                     break;
+                  case Routes.team:
+                    builder = (_) => TeamScreen('teamName');
+                    break;
+
                 }
                 return MaterialPageRoute(
                     builder: builder, settings: routeSettings);
@@ -99,27 +106,34 @@ class AppState extends State<App> {
           ),
         ]),
 
-        bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
+        bottomNavigationBar: SizedBox(
+          height: 56,
 
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20 ), topRight: Radius.circular(20)),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.stacked_bar_chart),
+                  label: 'statistics',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.chat),
+                  label: 'Chats',
+                ),
+              ],
+              currentIndex: _currentTab.index,
+              selectedItemColor: Colors.amber[800],
+              onTap: (index) => _selectTab(
+                TabItem.values[index],
+              ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.stacked_bar_chart),
-              label: 'statistics',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: 'Chats',
-            ),
-          ],
-          currentIndex: _currentTab.index,
-          selectedItemColor: Colors.amber[800],
-          onTap: (index) => _selectTab(
-            TabItem.values[index],
           ),
         ),
       ),

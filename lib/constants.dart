@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 // maximum height for TextFormField error text height
 //   usually between 0-1
 const ERROR_TEXT_STYLE = 0.4;
-const COLOR_BACKGROUND = Color.fromRGBO(37, 36, 42, 1);
+const COLOR_BACKGROUND = Color.fromRGBO(27, 32, 41, 1);
+const COLOR_ACCENT = Color.fromRGBO(13, 56, 120, 1);
 const PADDING_VERTICAL = 12.0;
 
 const HEIGHT_APPBAR = 50.0;

@@ -4,12 +4,12 @@ import 'package:project/constants.dart';
 
 // ignore: non_constant_identifier_names
 final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
-  fillColor: Colors.blueGrey.shade800,
+  fillColor: COLOR_BACKGROUND, //Colors.blueGrey.shade800,
   filled: true,
   contentPadding: const EdgeInsets.all(16),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
-    borderSide: BorderSide(color: const Color.fromRGBO(39, 142, 165, 1)),
+    borderSide: BorderSide(color: const Color.fromRGBO(13, 56, 120, 1)),
   ),
   border: OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
@@ -158,7 +158,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Colors.blueGrey.shade800.withOpacity(0.7),
+          color: COLOR_BACKGROUND,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -169,7 +169,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
               radius: 22,
               child: Text(name[0] + name[lastLitter],
                   style: TextStyle(fontSize: 16)),
-              backgroundColor: Colors.yellow,
+            backgroundColor: COLOR_ACCENT,
             ),
               SizedBox(width: 12),
             Flexible(

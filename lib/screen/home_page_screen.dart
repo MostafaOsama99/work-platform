@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/demoData.dart';
 import 'package:project/screen/edit_team_screen.dart';
 import 'package:project/screen/join_or_create_team.dart';
 import '../widgets/task/task_card.dart';
@@ -37,47 +38,50 @@ class _HomePageState extends State<HomePage> {
       // backgroundColor: COLOR_BACKGROUND,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(HEIGHT_APPBAR),
-        child: AppBar(
-          centerTitle: true,
-          leading: IconButton(
-            onPressed: () {},
-            splashRadius: 24,
-            iconSize: 20,
-            icon: CircleAvatar(
-              // backgroundColor: Colors.amber,
-              child: Text(
-                'UN',
-                style: TextStyle(fontSize: 16),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(20)),
+          child: AppBar(
+            centerTitle: true,
+            leading: IconButton(
+              onPressed: () {},
+              splashRadius: 24,
+              iconSize: 20,
+              icon: CircleAvatar(
+                // backgroundColor: Colors.amber,
+                child: Text(
+                  'UN',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             ),
-          ),
-          actions: [
-            IconButton(
-                icon: Icon(
-                  Icons.arrow_drop_down,
-                  // color: Colors.amber,
-                ),
-                splashRadius: 20,
-                onPressed: () {
-                  _changeTeam(context, height);
-                })
-          ],
-          title: OutlineButton(
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            highlightedBorderColor: Colors.teal.shade300,
-            // highlightColor: Colors.white,
-            color: Colors.black,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-                side: BorderSide(width: 2)),
-            onPressed: () {
-              //TODO: push replacement not working to remove the current dialog tap
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => EditTeamScreen()));
-            },
-            child: Text(
-              'Team Name',
-              style: TextStyle(color: Colors.white, fontSize: 18),
+            actions: [
+              IconButton(
+                  icon: Icon(
+                    Icons.arrow_drop_down,
+                    // color: Colors.amber,
+                  ),
+                  splashRadius: 20,
+                  onPressed: () {
+                    _changeTeam(context, height);
+                  })
+            ],
+            title: OutlineButton(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+              highlightedBorderColor: Colors.teal.shade300,
+              // highlightColor: Colors.white,
+              color: Colors.black,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: BorderSide(width: 2)),
+              onPressed: () {
+                //TODO: push replacement not working to remove the current dialog tap
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EditTeamScreen()));
+              },
+              child: Text(
+                'Team Name',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
             ),
           ),
         ),
@@ -87,15 +91,15 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              height: 75,
-              color: Colors.white30,
-              child: Center(
-                  child: Text(
-                'Announcements ...',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              )),
-            ),
+            // Container(
+            //   height: 75,
+            //   color: Colors.white30,
+            //   child: Center(
+            //       child: Text(
+            //     'Announcements ...',
+            //     style: TextStyle(color: Colors.white, fontSize: 20),
+            //   )),
+            // ),
             Flexible(
                 flex: 3,
                 child: Column(
@@ -113,25 +117,14 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(
-                      height: 300,
+                      height: 450,
 
                       //TODO: make list dynamic
-                      child: Tasks([
-                        Task(
-                            progress: 70,
-                            description: 'description',
-                            name: 'Task name',
-                            deadline: DateTime.now()),
-                        Task(
-                            progress: 30,
-                            description: 'description',
-                            name: 'Task name',
-                            deadline: DateTime.now())
-                      ]),
+                      child: Tasks(demoTasks),
                     ),
                   ],
                 )),
-            Flexible(child: Container()),
+           // Flexible(child: Container()),
           ],
         ),
       ),

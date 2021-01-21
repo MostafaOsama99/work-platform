@@ -182,14 +182,14 @@ class _SingleTaskState extends State<SingleTask> {
                   progress: 70,
                   description: 'description',
                   name: 'Task name',
-                  deadline: DateTime.now().add(Duration(days: 15)),
-                  checkPoints: {'Finish design': true, 'Animation':false, 'Task card':false}
+                  datePlannedEnd: DateTime.now().add(Duration(days: 15)),
+                //  checkPoints: {'Finish design': true, 'Animation':false, 'Task card':false}
               ),
               Task(
                   progress: 30,
                   description: 'description',
                   name: 'Task name',
-                  deadline: DateTime.now())
+                  datePlannedEnd: DateTime.now())
             ]),
           ),
           Row(

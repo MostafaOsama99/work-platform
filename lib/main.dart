@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         backgroundColor: Color.fromRGBO(37, 36, 42, 1),
         primarySwatch: Colors.grey,
-        accentColor: Color.fromRGBO(40, 49, 230, 1),
+        accentColor: Color.fromRGBO(13, 56, 120, 1),
         accentColorBrightness: Brightness.light,
         buttonTheme: ButtonTheme.of(context).copyWith(
           shape:
@@ -31,10 +31,11 @@ class MyApp extends StatelessWidget {
           primaryColor: const Color.fromARGB(31, 66, 135, 1),
           //Colors.black
           backgroundColor: const Color.fromRGBO(19, 76, 161, 1),
-          accentColor: const Color.fromRGBO(39, 142, 165, 1),
+          accentColor: const Color.fromRGBO(13, 56, 120, 1),
           //Colors.white,
           accentIconTheme: IconThemeData(
-              color: Color.fromRGBO(33, 230, 193, 1)),
+              color: Color.fromRGBO(13, 56, 120, 1), //Color.fromRGBO(33, 230, 193, 1),
+          ),
           dividerColor: Colors.grey.withOpacity(0.3),
           buttonTheme: ButtonTheme.of(context).copyWith(
             shape:
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
           fontFamily: 'pt_sans',
-          scaffoldBackgroundColor: const Color.fromRGBO(27, 32, 41,
+          scaffoldBackgroundColor: const Color.fromRGBO(17, 20, 25,
               1) //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
       ),
       themeMode: ThemeMode.dark,

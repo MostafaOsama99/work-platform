@@ -57,6 +57,9 @@ flutter:
   assets:
     - assets/icons/facebook_icon.png
     - assets/icons/google_icon.png
+    - assets/icons/subtask.png
+    - assets/icons/subtask-dependent.png
+    - assets/icons/task.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
