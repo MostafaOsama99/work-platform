@@ -8,6 +8,7 @@ import 'package:project/widgets/task/add_teams_button.dart';
 import 'package:project/model/task.dart';
 import 'package:project/widgets/task/task_card.dart';
 import 'package:flutter_filereader/flutter_filereader.dart';
+
 final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
   fillColor: Colors.blueGrey.shade800,
   filled: true,
@@ -21,15 +22,14 @@ final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
   ),
 );
 
-class SingleTask extends StatefulWidget{
-
+class SingleTask extends StatefulWidget {
   List<Widget> users;
+
   @override
   _SingleTaskState createState() => _SingleTaskState();
 }
 
 class _SingleTaskState extends State<SingleTask> {
-
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
 
@@ -45,31 +45,32 @@ class _SingleTaskState extends State<SingleTask> {
   ];
 
   @override
-
-
   void initState() {
     super.initState();
-   widget.users = List.generate(names.length, (index) => _userTileName(names[index]));
+    widget.users =
+        List.generate(names.length, (index) => _userTileName(names[index]));
     //names.forEach((name) => users.add(_userTile(name)));
     _nameController.text = 'Team Name';
     _descriptionController.text =
-    '''this an example of a long description to test the three line in description text form field 
+        '''this an example of a long description to test the three line in description text form field 
     this an example of a long description to test the three line in description text form field 
     this an example of a long description to test the three line in description text form field 
     this an example of a long description to test the three line in description text form field 
     ''';
   }
 
-   File file;
-    void getFile ()async{
-      FilePickerResult result = await FilePicker.platform.pickFiles();
+  File file;
 
-      if(result != null) {
-         file = File(result.files.single.path);
-      } else {
-        // User canceled the picker
-      }
+  void getFile() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      file = File(result.files.single.path);
+    } else {
+      // User canceled the picker
     }
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -80,64 +81,62 @@ class _SingleTaskState extends State<SingleTask> {
 
     // TODO: implement build
     return Scaffold(
-
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(HEIGHT_APPBAR),
         child: AppBar(
-           title: Text(
-             "Team name",style: TextStyle(fontSize: 18),
-           ),
+          title: Text(
+            "Team name",
+            style: TextStyle(fontSize: 18),
+          ),
           actions: [
             Row(
               children: [
-                  names.length>3 ? Row(
-                    children: [
-
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5,right: 3),
-                        child: InkWell(
-                          onTap: (){
-                            _viewAllTeams(context,height );
-                          },
-                          child: CircleAvatar(
-                            backgroundColor: Colors.grey,
-                            child: Text("+${names.length-3}",style: TextStyle(color: Colors.white),),
+                names.length > 3
+                    ? Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5, right: 3),
+                            child: InkWell(
+                              onTap: () {
+                                _viewAllTeams(context, height);
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: Colors.grey,
+                                child: Text(
+                                  "+${names.length - 3}",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 145,
+                          SizedBox(
+                            width: 145,
+                            child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 3,
+                                itemBuilder: (context, i) {
+                                  return _userTileName("${names[i]}");
+                                }),
+                          ),
+                        ],
+                      )
+                    : SizedBox(
+                        width: 185,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: 3,
-                            itemBuilder: (context,i){
-
+                            itemCount: 4,
+                            itemBuilder: (context, i) {
                               return _userTileName("${names[i]}");
                             }),
-                      ),
-                    ],
-                  ) :SizedBox(
-                    width: 185,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 4,
-                        itemBuilder: (context,i){
-
-                          return _userTileName("${names[i]}");
-                        }),
-                  )
+                      )
               ],
             )
-
           ],
         ),
       ),
-
-
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
-
           Padding(
             padding: const EdgeInsets.only(left: 0, bottom: 2, right: 16),
             child: Row(
@@ -170,8 +169,11 @@ class _SingleTaskState extends State<SingleTask> {
             decoration: TEXT_FIELD_DECORATION_2,
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 15,bottom: 10),
-            child: Text("Check points",style: TextStyle(fontSize: 18,color: Colors.white),),
+            padding: const EdgeInsets.only(top: 15, bottom: 10),
+            child: Text(
+              "Check points",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
           ),
           SizedBox(
             height: 300,
@@ -183,8 +185,12 @@ class _SingleTaskState extends State<SingleTask> {
                   description: 'description',
                   name: 'Task name',
                   deadline: DateTime.now().add(Duration(days: 15)),
-                  checkPoints: {'Finish design': true, 'Animation':false, 'Task card':false}
-              ),
+                  checkPoints: {
+                    'Finish design': true,
+                    ''
+                        'Animation': false,
+                    'Task card': false
+                  }),
               Task(
                   progress: 30,
                   description: 'description',
@@ -195,13 +201,15 @@ class _SingleTaskState extends State<SingleTask> {
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 20,left:0),
+                padding: EdgeInsets.only(top: 20, left: 0),
                 child: Text('Attachments',
                     style: TextStyle(color: Colors.white, fontSize: 16)),
               ),
-              Spacer(flex: 2,),
+              Spacer(
+                flex: 2,
+              ),
               Padding(
-                padding: EdgeInsets.only(top: 20,right: 12),
+                padding: EdgeInsets.only(top: 20, right: 12),
                 child: IconButton(
                     splashRadius: 20,
                     splashColor: Color.fromRGBO(8, 77, 99, 1),
@@ -210,83 +218,80 @@ class _SingleTaskState extends State<SingleTask> {
                       color: Colors.grey,
                     ),
                     onPressed: () {
-                      setState(() {
-
-                      });
+                      setState(() {});
                     }),
               ),
             ],
-          )
-         , FlatButton(
-              onPressed: (){
-               getFile();
-               print("this is path ${file.path}");
+          ),
+          FlatButton(
+              onPressed: () {
+                getFile();
+                print("this is path ${file.path}");
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("add",style: TextStyle(fontSize: 15,color: Colors.white),),
-                 SizedBox(width: 5,),
-                  Icon(Icons.attachment_outlined,color: Colors.white,size: 15,)
+                  Text(
+                    "add",
+                    style: TextStyle(fontSize: 15, color: Colors.white),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(
+                    Icons.attachment_outlined,
+                    color: Colors.white,
+                    size: 15,
+                  )
                 ],
               )),
-
-
-        Padding(
-          padding: EdgeInsets.only(top: 15),
-          child: Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-
-  children: [
-
-    Text('Activity',
-        style: TextStyle(color: Colors.white, fontSize: 18),),
-
-    Padding(
-    padding: const EdgeInsets.only(bottom: 15,top: 10),
-    child: SizedBox(
-      height: 200,
-      child: ListView.builder(
-          itemCount: 5,
-          itemBuilder: (context,i){
-
-            return commentsViewer();
-          }),
-    ),
-  ),
-    Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width*0.66
-            ,child: TextFormField(
-              textInputAction: TextInputAction.done,
-              onFieldSubmitted: (_) {},
-              autofocus: false,
-              decoration: TEXT_FIELD_DECORATION.copyWith(
-                  hintText: 'Add comment',
-                  prefixIcon: Icon(Icons.mode_comment_outlined),
-              ),
-
-
-            ),
-          ),
-
           Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: addTeamsButton(
-                hintText: "Send", onPressed: () {}),
+            padding: EdgeInsets.only(top: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Activity',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 15, top: 10),
+                  child: SizedBox(
+                    height: 200,
+                    child: ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, i) {
+                          return commentsViewer();
+                        }),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.66,
+                        child: TextFormField(
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) {},
+                          autofocus: false,
+                          decoration: TEXT_FIELD_DECORATION.copyWith(
+                            hintText: 'Add comment',
+                            prefixIcon: Icon(Icons.mode_comment_outlined),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 10),
+                        child:
+                            addTeamsButton(hintText: "Send", onPressed: () {}),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           )
-        ],
-      ),
-    ),
-
-
-
-  ],
-          ),
-        )
         ],
       ),
     );
@@ -328,8 +333,7 @@ class _SingleTaskState extends State<SingleTask> {
                         maxWidth: 200,
                         child: ListView.builder(
                             itemCount: names.length,
-                            itemBuilder: (context,i){
-
+                            itemBuilder: (context, i) {
                               return _userTile(names[i]);
                             }),
                       ),
@@ -357,36 +361,28 @@ class _SingleTaskState extends State<SingleTask> {
   }
 }
 
-Widget commentsViewer (){
+Widget commentsViewer() {
   return ListTile(
-    contentPadding: EdgeInsets.only(right: 40,top: 10),
+    contentPadding: EdgeInsets.only(right: 40, top: 10),
     leading: CircleAvatar(
       radius: 25,
       child: Icon(Icons.person),
       backgroundColor: Colors.grey[400],
     ),
     title: (Container(
-
         child: Padding(
-          padding: EdgeInsets.only(
-              top: 5,
-              left: 8,
-              right: 8,
-              bottom: 8),
+          padding: EdgeInsets.only(top: 5, left: 8, right: 8, bottom: 8),
           child: Column(
-            crossAxisAlignment:
-            CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding:
-                EdgeInsets.only(bottom: 3),
+                padding: EdgeInsets.only(bottom: 3),
                 child: Text(
                   "Name",
                   style: TextStyle(
                       fontSize: 18,
                       color: Colors.black,
-                      fontWeight:
-                      FontWeight.bold),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               Text(
@@ -399,12 +395,11 @@ Widget commentsViewer (){
         width: 20,
         decoration: BoxDecoration(
           color: Colors.grey[300],
-          borderRadius:
-          BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(5),
         ))),
   );
-
 }
+
 Widget _userTileName(String name) {
   var lastLitter = name.indexOf(' ') + 1;
   return Row(
@@ -412,7 +407,7 @@ Widget _userTileName(String name) {
     crossAxisAlignment: CrossAxisAlignment.end,
     children: [
       Padding(
-        padding: const EdgeInsets.only(left: 1,right: 1,bottom: 2),
+        padding: const EdgeInsets.only(left: 1, right: 1, bottom: 2),
         child: Container(
           height: 40,
           decoration: BoxDecoration(
@@ -430,6 +425,7 @@ Widget _userTileName(String name) {
     ],
   );
 }
+
 _edit(BuildContext context, TextEditingController controller,
     {int maxLines = 1}) {
   final _formKey = GlobalKey<FormState>();
@@ -563,7 +559,7 @@ class Tasks extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      // scrollDirection: Axis.horizontal,
+        // scrollDirection: Axis.horizontal,
         itemCount: tasks.length,
         itemBuilder: (context, i) => TaskCard(tasks[i]));
   }

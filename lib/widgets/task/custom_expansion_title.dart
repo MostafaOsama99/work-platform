@@ -170,11 +170,10 @@ class ExpansionTileState extends State<ExpansionTile>
               ),
               onTap: () {
                 //check if current opened card is this card
-                if (widget.key == JoinTeamScreen.currentOpened) return;
+
                 //close current open
-                JoinTeamScreen.currentOpened.currentState.handleTap();
+
                 //save this card as current open
-                JoinTeamScreen.currentOpened = widget.key;
                 //open this card
                 handleTap();
               },
