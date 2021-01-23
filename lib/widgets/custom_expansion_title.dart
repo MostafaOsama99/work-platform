@@ -182,9 +182,12 @@ class ExpansionTileState extends State<ExpansionTile>
               trailing: widget.trailing ??
                   RotationTransition(
                     turns: _iconTurns,
-                    child: Icon(
-                      Icons.expand_more,
-                      color: widget.iconColor ?? Colors.grey,
+                    child: IconButton(
+                      splashRadius: 20,
+                      icon: Icon(
+                        Icons.expand_more,
+                        color: widget.iconColor ?? Colors.grey,
+                      ), onPressed: () {  },
                     ),
                   ),
             ),
