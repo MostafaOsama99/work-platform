@@ -1,20 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:project/constants.dart';
 
-// ignore: non_constant_identifier_names
-final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
-  fillColor: COLOR_BACKGROUND, //Colors.blueGrey.shade800,
-  filled: true,
-  contentPadding: const EdgeInsets.all(16),
-  focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(20),
-    borderSide: BorderSide(color: const Color.fromRGBO(13, 56, 120, 1)),
-  ),
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(20),
-  ),
-);
+import '../constants.dart';
 
 class EditTeamScreen extends StatefulWidget {
   @override
@@ -58,17 +44,21 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(HEIGHT_APPBAR),
-        child: AppBar(
-          leading: IconButton(
-              padding: EdgeInsets.all(0),
-              onPressed: () => Navigator.pop(context),
-              icon: Icon(
-                Icons.chevron_left,
-                color: Colors.white,
-                size: 35,
-              )),
-          title: Text('Edit Team'),
-          centerTitle: true,
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20)),
+          child: AppBar(
+            leading: IconButton(
+                padding: EdgeInsets.all(0),
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                )),
+            title: Text('Edit Team'),
+            centerTitle: true,
+          ),
         ),
       ),
       body: ListView(
@@ -169,9 +159,9 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
               radius: 22,
               child: Text(name[0] + name[lastLitter],
                   style: TextStyle(fontSize: 16)),
-            backgroundColor: COLOR_ACCENT,
+              backgroundColor: COLOR_ACCENT,
             ),
-              SizedBox(width: 12),
+            SizedBox(width: 12),
             Flexible(
                 flex: 5,
                 child: Text(name,
@@ -202,7 +192,8 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
         isDismissible: true,
         isScrollControlled: true,
         context: context,
-        backgroundColor: Color.fromRGBO(8, 77, 99, 1),
+        backgroundColor: COLOR_SCAFFOLD,
+        //Color.fromRGBO(8, 77, 99, 1),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(25), topRight: Radius.circular(25))),
@@ -225,6 +216,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: TextFormField(
                         autofocus: true,
+                        style: TextStyle(color: Colors.white),
                         maxLines: maxLines,
                         textInputAction: maxLines == 1
                             ? TextInputAction.done
@@ -234,10 +226,12 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                         },
                         initialValue: controller.value.text,
                         decoration: TEXT_FIELD_DECORATION.copyWith(
+                            fillColor: COLOR_BACKGROUND,
                             errorStyle: TextStyle(height: 1),
                             contentPadding: const EdgeInsets.all(12),
                             focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20))),
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(color: COLOR_ACCENT))),
                         validator: _validate,
                         onFieldSubmitted: (_) => _submit(),
                       ),
@@ -245,19 +239,22 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        MaterialButton(
-                            minWidth: 100,
-                            height: 35,
-                            color: Colors.red,
-                            child: Center(child: Icon(Icons.cancel)),
+                        OutlineButton(
+                            borderSide:
+                                BorderSide(color: COLOR_ACCENT, width: 2),
+                            highlightedBorderColor: Colors.red,
+                            child: Transform.rotate(
+                                angle: (22/7) / 4, //45 degree
+                                child: Icon(Icons.add, color: Colors.red)),
                             onPressed: () {
                               Navigator.of(context).pop();
                             }),
-                        MaterialButton(
-                            minWidth: 100,
-                            height: 35,
-                            color: Colors.green,
-                            child: Center(child: Icon(Icons.done)),
+                        OutlineButton(
+                            highlightColor: COLOR_BACKGROUND,
+                            borderSide:
+                                BorderSide(color: COLOR_ACCENT, width: 2),
+                            highlightedBorderColor: Colors.green,
+                            child: Icon(Icons.done, color: Colors.green),
                             onPressed: _submit)
                       ],
                     )

@@ -5,6 +5,7 @@ import '../widgets/task/task_card.dart';
 
 import '../constants.dart';
 import '../demoData.dart';
+import 'edit_team_screen.dart';
 
 class TeamScreen extends StatelessWidget {
   final teamName;
@@ -18,7 +19,9 @@ class TeamScreen extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(HEIGHT_APPBAR),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20)),
           child: AppBar(
             leading: IconButton(
                 padding: EdgeInsets.all(0),
@@ -29,6 +32,18 @@ class TeamScreen extends StatelessWidget {
                 )),
             title: Text(teamName),
             centerTitle: true,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.settings),
+                splashRadius: 21,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditTeamScreen()));
+                },
+              )
+            ],
           ),
         ),
       ),

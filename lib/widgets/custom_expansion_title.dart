@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/screen/join_or_create_team.dart';
 
-const Duration _kExpand = Duration(milliseconds: 200);
+const Duration _kExpand = Duration(milliseconds: 300);
 
 /// A single-line [ListTile] with a trailing button that expands or collapses
 /// the tile to reveal or hide the [children].
@@ -80,8 +80,8 @@ class ExpansionTile extends StatefulWidget {
   ExpansionTileState createState() => ExpansionTileState();
 }
 
-// Note: this state class now is public,
-// to be able to generate a key for this class
+/// Note: this state class now is public,
+/// to be able to generate a key for this class
 class ExpansionTileState extends State<ExpansionTile>
     with SingleTickerProviderStateMixin {
   static final Animatable<double> _easeOutTween =
@@ -169,13 +169,7 @@ class ExpansionTileState extends State<ExpansionTile>
                 borderRadius: BorderRadius.circular(15),
               ),
               onTap: () {
-                //check if current opened card is this card
-
-                //close current open
-
-                //save this card as current open
-                //open this card
-                handleTap();
+                widget.onTap == null? handleTap(): widget.onTap();
               },
               leading: widget.leading,
               title: DefaultTextStyle(

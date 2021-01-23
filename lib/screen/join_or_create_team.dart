@@ -1,9 +1,9 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:project/widgets/task/custom_expansion_title.dart';
+import 'file:///D:/GP/project/lib/widgets/custom_expansion_title.dart';
 import 'package:project/widgets/task/add_teams_button.dart';
-import 'package:project/widgets/task/custom_expansion_title.dart' as custom;
+import 'file:///D:/GP/project/lib/widgets/custom_expansion_title.dart' as custom;
 
 const TS_TITLE =
 TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
@@ -72,6 +72,17 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
     super.initState();
   }
 
+  onTileTap(tileKey){
+    //check if current opened card is this card
+    if (tileKey == JoinTeamScreen.currentOpened) return;
+    //close current open
+    JoinTeamScreen.currentOpened.currentState.handleTap();
+    //save this card as current open
+    JoinTeamScreen.currentOpened = tileKey;
+    //open this card
+    JoinTeamScreen.currentOpened.currentState.handleTap();
+  }
+
   @override
   Widget build(BuildContext context) {
     //TODO: device width may be added to provider & calculate only once
@@ -90,6 +101,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
           children: [
             custom.ExpansionTile(
               key: _joinTeamKey,
+              onTap: () =>onTileTap(_joinTeamKey),
               headerBackgroundColor: Theme.of(context).appBarTheme.color,
               iconColor: Theme.of(context).accentIconTheme.color,
               title: Text(
@@ -131,6 +143,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
             //
             custom.ExpansionTile(
               key: _createTeamKey,
+              onTap: () =>onTileTap(_createTeamKey),
               headerBackgroundColor: Theme.of(context).appBarTheme.color,
               iconColor: Theme.of(context).accentIconTheme.color,
               title: Text('Create Team', style: TS_TITLE),
@@ -231,6 +244,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
             //
             custom.ExpansionTile(
               key: _createRoomKey,
+              onTap: () =>onTileTap(_createRoomKey),
               headerBackgroundColor: Theme.of(context).appBarTheme.color,
               iconColor: Theme.of(context).accentIconTheme.color,
               title: Text(

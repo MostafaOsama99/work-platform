@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 const ERROR_TEXT_STYLE = 0.4;
 const COLOR_BACKGROUND = Color.fromRGBO(27, 32, 41, 1);
 const COLOR_ACCENT = Color.fromRGBO(13, 56, 120, 1);
+const COLOR_SCAFFOLD = Color.fromRGBO(17, 20, 25, 1);
 const PADDING_VERTICAL = 12.0;
 
 const HEIGHT_APPBAR = 50.0;
@@ -40,6 +41,23 @@ final TEXT_FIELD_DECORATION = InputDecoration(
   //   borderRadius: BorderRadius.circular(25.7),
   // ),
 );
+
+// ignore: non_constant_identifier_names
+final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
+  fillColor: COLOR_BACKGROUND,
+  //Colors.blueGrey.shade800,
+  filled: true,
+  contentPadding: const EdgeInsets.all(16),
+  focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(20),
+    borderSide: BorderSide(color: Colors.transparent),
+  ),
+  enabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.circular(20),
+    borderSide: BorderSide(color: Colors.transparent),
+  ),
+);
+
 
 bool isEmail(String em) {
   String p =

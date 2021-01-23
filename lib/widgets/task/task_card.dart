@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:circular_check_box/circular_check_box.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
+import '../../screen/task_screen.dart';
 import '../../constants.dart';
 import '../../model/task.dart' as model;
 
@@ -60,185 +61,194 @@ class TaskCard extends StatelessWidget {
       width: size.width - 32,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        //border: Border.all(color: Theme.of(context).appBarTheme.color, width: 1),
+        border: Border.all(color: Theme.of(context).appBarTheme.color, width: 1),
         color: COLOR_BACKGROUND,
         //    color: Colors.white10
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 45,
-                  height: 45,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context)
-                        .scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
+      child: InkWell(
+        splashColor: Colors.red,
+        onTap: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => TaskScreen(task)));
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 45,
+                    height: 45,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Theme.of(context)
+                          .scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
+                    ),
+                    child: Image.asset(taskIcon, color: taskAccentColor),
                   ),
-                  child: Image.asset(taskIcon, color: taskAccentColor),
-                ),
-                SizedBox(width: 8),
-                SizedBox(
-                  width: size.width * 0.5,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  SizedBox(width: 8),
+                  SizedBox(
+                    width: size.width * 0.5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          task.name,
+                          softWrap: false,
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(color: Colors.white, fontSize: 17),
+                        ),
+                        SizedBox(height: 4),
+
+
+                          Row(children:
+                          task.parentCheckpoint != null
+                              ? [
+                            Icon(Icons.adjust, color: taskAccentColor,size: 18,),
+                            SizedBox(width: 4),
+                            Text(
+                              task.parentCheckpoint.name,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ]
+                              :
+                          [
+                            _buildUserAvatar(task.taskCreator),
+                            Text(task.taskCreator,
+                                style: TextStyle(color: Colors.white)),
+                          ]
+
+                            ,),
+                        // if(task.projectName != null)
+                        // RichText(
+                        //   text: TextSpan(
+                        //     children: <TextSpan>[
+                        //       TextSpan(
+                        //           text: '  project: ',
+                        //           style: TextStyle(
+                        //               color: Colors.grey,
+                        //               fontStyle: FontStyle.italic,
+                        //               fontSize: 16)),
+                        //       TextSpan(
+                        //           text: task.projectName,
+                        //           style: TextStyle(
+                        //               color: Colors.white, fontSize: 15)),
+                        //     ],
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ),
+                  Spacer(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        task.name,
-                        softWrap: false,
-                        overflow: TextOverflow.fade,
-                        style: TextStyle(color: Colors.white, fontSize: 17),
+                        formatDate(task.datePlannedStart),
+                        style: TextStyle(color: Colors.grey, fontSize: 15),
                       ),
                       SizedBox(height: 4),
-
-
-                        Row(children:
-                        task.parentCheckpoint != null
-                            ? [
-                          Icon(Icons.adjust, color: Colors.amber,size: 18,),
-                          SizedBox(width: 4),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: Icon(
+                              Icons.calendar_today_rounded,
+                              size: 21,
+                              color:
+                                  Colors.white, //Theme.of(context).accentColor,
+                            ),
+                          ),
                           Text(
-                            task.parentCheckpoint.name,
-                            style: TextStyle(color: Colors.white),
+                            formatDate(task.datePlannedEnd),
+                            style: TextStyle(color: Colors.grey, fontSize: 15),
                           ),
-                        ]
-                            :
-                        [
-                          _buildUserAvatar(task.taskCreator),
-                          Text(task.taskCreator,
-                              style: TextStyle(color: Colors.white)),
-                        ]
-
-                          ,),
-                      // if(task.projectName != null)
-                      // RichText(
-                      //   text: TextSpan(
-                      //     children: <TextSpan>[
-                      //       TextSpan(
-                      //           text: '  project: ',
-                      //           style: TextStyle(
-                      //               color: Colors.grey,
-                      //               fontStyle: FontStyle.italic,
-                      //               fontSize: 16)),
-                      //       TextSpan(
-                      //           text: task.projectName,
-                      //           style: TextStyle(
-                      //               color: Colors.white, fontSize: 15)),
-                      //     ],
-                      //   ),
-                      // ),
+                        ],
+                      ),
                     ],
-                  ),
-                ),
-                Spacer(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      formatDate(task.datePlannedStart),
-                      style: TextStyle(color: Colors.grey, fontSize: 15),
+                  )
+                ],
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              child: StepProgressIndicator(
+                totalSteps: 100,
+                currentStep: task.progress.toInt(),
+                size: 13,
+                roundedEdges: const Radius.circular(30),
+                padding: 0,
+                selectedColor: Theme.of(context).appBarTheme.color,
+                // const Color.fromRGBO(45, 142, 175, 1),
+                // Colors.green,
+                unselectedColor: Colors
+                    .black38, // COLOR_BACKGROUND // Color.fromRGBO(31, 66, 156, 1), //Colors.deepPurple.shade600,
+              ),
+            ),
+
+            //  SizedBox(height: 6),
+
+            ///checkpoints
+            if (task.checkPoints != null)
+              ...task.checkPoints.map((cp) => CheckPoint(
+                    key: Key(cp.id),
+                    checkPoint: cp,
+                taskAccentColor: taskAccentColor,
+                  )),
+
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4, top: 4),
+              child: Row(
+                children:
+                // task.parentCheckpoint != null
+                //     ? [
+                //         Icon(Icons.adjust, color: Colors.amber),
+                //         SizedBox(width: 4),
+                //         Text(
+                //           task.parentCheckpoint.name,
+                //           style: TextStyle(color: Colors.white),
+                //         ),
+                //         Spacer(),
+                //         ...task.members.map((m) => _buildUserAvatar(m)),
+                //       ]
+                //     :
+                [
+                        // _buildUserAvatar(task.taskCreator),
+                        // Text(task.taskCreator,
+                        //     style: TextStyle(color: Colors.white)),
+                  if(task.projectName != null)
+                    RichText(
+                      text: TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: '  project: ',
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 15)),
+                          TextSpan(
+                              text: task.projectName,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 15)),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 4),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 6),
-                          child: Icon(
-                            Icons.calendar_today_rounded,
-                            size: 21,
-                            color:
-                                Colors.white, //Theme.of(context).accentColor,
-                          ),
-                        ),
-                        Text(
-                          formatDate(task.datePlannedEnd),
-                          style: TextStyle(color: Colors.grey, fontSize: 15),
-                        ),
+
+                        Spacer(),
+                        ...task.members.map((m) => _buildUserAvatar(m)),
                       ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: StepProgressIndicator(
-              totalSteps: 100,
-              currentStep: task.progress.toInt(),
-              size: 13,
-              roundedEdges: const Radius.circular(30),
-              padding: 0,
-              selectedColor: Theme.of(context).appBarTheme.color,
-              // const Color.fromRGBO(45, 142, 175, 1),
-              // Colors.green,
-              unselectedColor: Colors
-                  .black38, // COLOR_BACKGROUND // Color.fromRGBO(31, 66, 156, 1), //Colors.deepPurple.shade600,
-            ),
-          ),
-
-          //  SizedBox(height: 6),
-
-          ///checkpoints
-          if (task.checkPoints != null)
-            ...task.checkPoints.map((cp) => CheckPoint(
-                  key: Key(cp.id),
-                  checkPoint: cp,
-              taskAccentColor: taskAccentColor,
-                )),
-
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4, top: 4),
-            child: Row(
-              children:
-              // task.parentCheckpoint != null
-              //     ? [
-              //         Icon(Icons.adjust, color: Colors.amber),
-              //         SizedBox(width: 4),
-              //         Text(
-              //           task.parentCheckpoint.name,
-              //           style: TextStyle(color: Colors.white),
-              //         ),
-              //         Spacer(),
-              //         ...task.members.map((m) => _buildUserAvatar(m)),
-              //       ]
-              //     :
-              [
-                      // _buildUserAvatar(task.taskCreator),
-                      // Text(task.taskCreator,
-                      //     style: TextStyle(color: Colors.white)),
-                if(task.projectName != null)
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: '  project: ',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontStyle: FontStyle.italic,
-                                fontSize: 16)),
-                        TextSpan(
-                            text: task.projectName,
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 15)),
-                      ],
-                    ),
-                  ),
-
-                      Spacer(),
-                      ...task.members.map((m) => _buildUserAvatar(m)),
-                    ],
-            ),
-          )
-        ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -248,7 +258,7 @@ class TaskCard extends StatelessWidget {
       padding: const EdgeInsets.only(right: 4),
       child: CircleAvatar(
         radius: 13,
-        backgroundColor: const Color.fromRGBO(17, 20, 25, 1),
+        backgroundColor: COLOR_SCAFFOLD,
         child: Text(
           "${userName[0]}${userName[(userName.indexOf(' ') + 1)]}",
           style: TextStyle(

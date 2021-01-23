@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 
 //! this model may have a provider
 
+//TODO: add task icon (string) as an attribute & taskAccentColor. to avoid check in each widget for the task type
+
 /// task data model
 class Task {
   //TODO:check if id is string or double

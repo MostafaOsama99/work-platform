@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/screen/room_screen.dart';
 
 import '../auth/auth_screen.dart';
 import '../../screen/home_page_screen.dart';
@@ -92,7 +93,7 @@ class AppState extends State<App> {
             child: Navigator(
               key: _navigatorKeys[TabItem.statistics],
               onGenerateRoute: (routeSettings) =>
-                  MaterialPageRoute(builder: (context) => StatisticsScreen()),
+                  MaterialPageRoute(builder: (context) => RoomScreen()),
             ),
           ),
           Offstage(

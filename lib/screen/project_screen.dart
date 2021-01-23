@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:project/widgets/task/custom_expansion_title_without_changes.dart'
-    as custom1;
+
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+
+import '../widgets/custom_expansion_title.dart' as custom;
 
 const TS_TITLE =
     TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
@@ -167,7 +168,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                 )),
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 10),
-              child: custom1.ExpansionTile(
+              child: custom.ExpansionTile(
                 headerBackgroundColor: Theme.of(context).appBarTheme.color,
                 iconColor: Theme.of(context).accentIconTheme.color,
                 title: Text(

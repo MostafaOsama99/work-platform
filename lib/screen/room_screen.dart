@@ -1,12 +1,8 @@
-import 'dart:ui';
-import 'package:project/widgets/task/project_card_widget.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:intl/intl.dart';
-import 'package:project/widgets/task/custom_expansion_title_without_changes.dart'
-    as custom1;
+
+import '../widgets/custom_expansion_title.dart' as custom;
+import '../widgets/task/project_card_widget.dart';
 
 const TS_TITLE =
     TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
@@ -39,7 +35,7 @@ class _RoomScreenState extends State<RoomScreen> {
     'Habiba Sayed'
   ];
 
-  var isSwitched = 0;
+  bool switchProjects = false;
 
   @override
   Widget build(BuildContext context) {
@@ -74,30 +70,19 @@ class _RoomScreenState extends State<RoomScreen> {
               Spacer(
                 flex: 1,
               ),
-              SizedBox(
-                height: 35,
-                child: ToggleSwitch(
-                  minWidth: 65,
-                  cornerRadius: 20.0,
-                  activeBgColor:
-                      (isSwitched == 0) ? Colors.cyan[700] : Colors.grey,
-                  activeFgColor: Colors.white,
-                  inactiveBgColor:
-                      (isSwitched == 0) ? Colors.grey : Colors.cyan[700],
-                  inactiveFgColor: Colors.white,
-                  labels: ['room', 'projects'],
-                  fontSize: 12,
-                  onToggle: (index) {
-                    setState(() {
-                      isSwitched = index;
-                    });
-                  },
+              IconButton(
+                icon: Icon(
+                  switchProjects ? Icons.copy : Icons.padding,
+                  color: Colors.white,
+                ),
+                onPressed: () => setState(
+                  () => switchProjects = !switchProjects,
                 ),
               ),
             ],
           ),
         ),
-        body: (isSwitched == 0) ? roomWidget(context) : projectWidget(names));
+        body: switchProjects ? roomWidget(context) : projectWidget(names));
   }
 }
 
@@ -116,7 +101,7 @@ Widget roomWidget(context) {
       Padding(
         padding:
             const EdgeInsets.only(top: 10, bottom: 10, right: 15, left: 15),
-        child: custom1.ExpansionTile(
+        child: custom.ExpansionTile(
           headerBackgroundColor: Theme.of(context).appBarTheme.color,
           iconColor: Theme.of(context).accentIconTheme.color,
           title: Text(
@@ -176,7 +161,7 @@ Widget projectWidget(names) {
         child: SizedBox(
             height: 130,
             width: 200,
-            child: CardWidget(
+            child: ProjectCard(
               teamNames: names,
               projectName: "GP Discussion",
               mangerName: "Ahmed",
