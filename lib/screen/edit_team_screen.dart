@@ -54,7 +54,6 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                 onPressed: () => Navigator.pop(context),
                 icon: Icon(
                   Icons.arrow_back,
-                  color: Colors.white,
                 )),
             title: Text('Edit Team'),
             centerTitle: true,
@@ -66,7 +65,6 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
         children: [
           TextField(
               readOnly: true,
-              style: TextStyle(color: Colors.white),
               controller: _nameController,
               decoration: TEXT_FIELD_DECORATION_2.copyWith(
                 suffixIcon: IconButton(
@@ -93,7 +91,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Description',
-                    style: TextStyle(color: Colors.white, fontSize: 16)),
+                    style: TextStyle( fontSize: 16)),
                 IconButton(
                     splashRadius: 20,
                     splashColor: Color.fromRGBO(8, 77, 99, 1),
@@ -115,7 +113,6 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
             controller: _descriptionController,
             maxLines: _expandDes ? null : 4,
             onTap: () => setState(() => _expandDes = !_expandDes),
-            style: TextStyle(color: Colors.white),
             decoration: TEXT_FIELD_DECORATION_2,
           ),
           Divider(
@@ -126,7 +123,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 16, bottom: 8),
             child: Text('Members',
-                style: TextStyle(color: Colors.white, fontSize: 16)),
+                style: TextStyle(fontSize: 16)),
           ),
           ...users
         ],
@@ -165,7 +162,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
             Flexible(
                 flex: 5,
                 child: Text(name,
-                    style: TextStyle(color: Colors.white, fontSize: 15)))
+                    style: TextStyle(fontSize: 15)))
           ],
         ),
       ),
@@ -216,7 +213,6 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: TextFormField(
                         autofocus: true,
-                        style: TextStyle(color: Colors.white),
                         maxLines: maxLines,
                         textInputAction: maxLines == 1
                             ? TextInputAction.done

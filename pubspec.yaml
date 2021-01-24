@@ -62,6 +62,12 @@ flutter:
     - assets/icons/subtask.png
     - assets/icons/subtask-dependent.png
     - assets/icons/task.png
+    - assets/icons/project.png
+    - assets/icons/projects.png
+    - assets/icons/team.png
+    - assets/icons/team-fill-1.png
+    - assets/icons/team-fill-2.png
+    - assets/icons/team-3.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

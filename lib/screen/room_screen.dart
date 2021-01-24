@@ -1,23 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../widgets/project_card_widget.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
-import '../widgets/task/project_card_widget.dart';
 
 const TS_TITLE =
     TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
-final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
-  fillColor: Colors.blueGrey.shade800,
-  filled: true,
-  contentPadding: const EdgeInsets.all(16),
-  focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(20),
-    borderSide: BorderSide(color: const Color.fromRGBO(39, 142, 165, 1)),
-  ),
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(20),
-  ),
-);
 
 class RoomScreen extends StatefulWidget {
   @override
@@ -71,8 +59,8 @@ class _RoomScreenState extends State<RoomScreen> {
                 flex: 1,
               ),
               IconButton(
-                icon: Icon(
-                  switchProjects ? Icons.copy : Icons.padding,
+                icon: Image.asset(
+                  switchProjects ? 'assets/icons/projects.png' : 'assets/icons/team-3.png',
                   color: Colors.white,
                 ),
                 onPressed: () => setState(
@@ -82,7 +70,8 @@ class _RoomScreenState extends State<RoomScreen> {
             ],
           ),
         ),
-        body: switchProjects ? roomWidget(context) : projectWidget(names));
+        body: switchProjects ? projectWidget(names): roomWidget(context),
+        );
   }
 }
 
@@ -148,12 +137,10 @@ Widget projectWidget(names) {
   return ListView(
     children: [
       Padding(
-        padding: EdgeInsets.only(top: 20),
-        child: Center(
-          child: Text(
-            "Projects",
-            style: TextStyle(fontSize: 25, color: Colors.white),
-          ),
+        padding: EdgeInsets.only(top: 16, left: 16),
+        child: Text(
+          "Projects",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
       Padding(

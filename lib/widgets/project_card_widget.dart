@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:project/constants.dart';
 
-import '../../screen/project_screen.dart';
+import '../screen/project_screen.dart';
 
 class ProjectCard extends StatelessWidget {
   final teamNames;

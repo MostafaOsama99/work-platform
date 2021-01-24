@@ -25,7 +25,8 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       darkTheme: ThemeData(
-          brightness: Brightness.light,
+          brightness: Brightness.dark,
+          //textTheme: TextTheme(),
           primarySwatch: Colors.blue,
           //Colors.grey,
           primaryColor: const Color.fromARGB(31, 66, 135, 1),
