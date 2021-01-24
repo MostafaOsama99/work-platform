@@ -33,7 +33,7 @@ class ExpansionTile extends StatefulWidget {
     this.children = const <Widget>[],
     this.trailing,
     this.initiallyExpanded = false,
-    this.onTap,
+    this.onTap,this.onIconPressed
   })  : assert(initiallyExpanded != null),
         super(key: key);
 
@@ -75,7 +75,7 @@ class ExpansionTile extends StatefulWidget {
   final bool initiallyExpanded;
 
   final Function onTap;
-
+  final Function onIconPressed;
   @override
   ExpansionTileState createState() => ExpansionTileState();
 }
@@ -187,7 +187,11 @@ class ExpansionTileState extends State<ExpansionTile>
                       icon: Icon(
                         Icons.expand_more,
                         color: widget.iconColor ?? Colors.grey,
-                      ), onPressed: () {  },
+                      ), onPressed: () {
+
+                      widget.onIconPressed == null? handleTap(): widget.onIconPressed();
+
+                    },
                     ),
                   ),
             ),
@@ -201,6 +205,7 @@ class ExpansionTileState extends State<ExpansionTile>
         ),
       ],
     );
+
   }
 
   @override

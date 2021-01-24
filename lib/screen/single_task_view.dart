@@ -77,8 +77,7 @@ class _SingleTaskState extends State<SingleTask> {
     final height = MediaQuery.of(context).size.height;
 
     //TODO: subtract bottomNavigationBar height
-    final bodyHeight =
-        height - MediaQuery.of(context).padding.top - HEIGHT_APPBAR;
+
 
     // TODO: implement build
     return Scaffold(

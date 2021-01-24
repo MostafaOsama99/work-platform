@@ -9,6 +9,9 @@ const COLOR_SCAFFOLD = Color.fromRGBO(17, 20, 25, 1);
 const PADDING_VERTICAL = 12.0;
 
 const HEIGHT_APPBAR = 50.0;
+const TS_TITLE =
+TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
+
 
 // default TextFormField decoration
 // ignore: non_constant_identifier_names

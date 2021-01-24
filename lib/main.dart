@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:project/screen/edit_team_screen.dart';
+import 'package:project/screen/home_page_screen.dart';
+import 'package:project/screen/join_or_create_team.dart';
+import 'package:project/screen/project_screen.dart';
+import 'package:project/screen/room_screen.dart';
+import 'package:project/screen/single_task_view.dart';
 
 import 'screen/navigation/app.dart';
 
@@ -17,7 +23,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Color.fromRGBO(37, 36, 42, 1),
         primarySwatch: Colors.grey,
         accentColor: Color.fromRGBO(13, 56, 120, 1),
-        accentColorBrightness: Brightness.light,
+        accentColorBrightness: Brightness.dark,
         buttonTheme: ButtonTheme.of(context).copyWith(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
@@ -25,7 +31,8 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       darkTheme: ThemeData(
-          brightness: Brightness.light,
+          textTheme: TextTheme(),
+          brightness: Brightness.dark,
           primarySwatch: Colors.blue,
           //Colors.grey,
           primaryColor: const Color.fromARGB(31, 66, 135, 1),
@@ -34,12 +41,13 @@ class MyApp extends StatelessWidget {
           accentColor: const Color.fromRGBO(13, 56, 120, 1),
           //Colors.white,
           accentIconTheme: IconThemeData(
-              color: Color.fromRGBO(13, 56, 120, 1), //Color.fromRGBO(33, 230, 193, 1),
+            color: Color.fromRGBO(
+                13, 56, 120, 1), //Color.fromRGBO(33, 230, 193, 1),
           ),
           dividerColor: Colors.grey.withOpacity(0.3),
           buttonTheme: ButtonTheme.of(context).copyWith(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
           ),
           splashColor: const Color.fromRGBO(39, 142, 165, 0.5),
           appBarTheme: AppBarTheme(
@@ -52,11 +60,12 @@ class MyApp extends StatelessWidget {
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
           fontFamily: 'pt_sans',
-          scaffoldBackgroundColor: const Color.fromRGBO(17, 20, 25, 1) //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
-      ),
+          scaffoldBackgroundColor: const Color.fromRGBO(17, 20, 25,
+               1) //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
+
+          ),
       themeMode: ThemeMode.dark,
       home: App(),
-
     );
   }
 }

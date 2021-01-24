@@ -7,13 +7,27 @@ import '../constants.dart';
 import '../demoData.dart';
 import 'edit_team_screen.dart';
 
-class TeamScreen extends StatelessWidget {
+class TeamScreen extends StatefulWidget {
   final teamName;
-  final List<Task> tasks = demoTasks;
+  final List<Task> tasks ;
 
-  TeamScreen(this.teamName);
+  TeamScreen({this.teamName,this.tasks});
 
   @override
+  _TeamScreenState createState() => _TeamScreenState();
+}
+
+class _TeamScreenState extends State<TeamScreen> {
+
+  @override
+  void initState() {
+
+    print(widget.tasks);
+    // TODO: implement initState
+    super.initState();
+  }
+  @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
@@ -30,7 +44,7 @@ class TeamScreen extends StatelessWidget {
                   Icons.arrow_back,
                   color: Colors.white,
                 )),
-            title: Text(teamName),
+            title: Text(widget.teamName),
             centerTitle: true,
             actions: <Widget>[
               IconButton(
@@ -49,8 +63,8 @@ class TeamScreen extends StatelessWidget {
       ),
       body: ListView.builder(
           // scrollDirection: Axis.horizontal,
-          itemCount: tasks.length,
-          itemBuilder: (context, i) => TaskCard(tasks[i])),
+          itemCount: widget.tasks.length,
+          itemBuilder: (context, i) => TaskCard(widget.tasks[i])),
     );
   }
 }
