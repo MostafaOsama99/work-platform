@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/demoData.dart';
 import 'package:project/screen/room_screen.dart';
 
 import '../auth/auth_screen.dart';
@@ -79,7 +80,7 @@ class AppState extends State<App> {
                     builder = (_) => AuthScreen();
                     break;
                   case Routes.team:
-                    builder = (_) => TeamScreen('teamName');
+                    builder = (_) => TeamScreen(teamName: "sssss",tasks: demoTasks,);
                     break;
 
                 }

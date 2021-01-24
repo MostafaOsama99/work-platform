@@ -1,9 +1,9 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'file:///D:/GP/project/lib/widgets/custom_expansion_title.dart';
+import '../widgets/custom_expansion_title.dart';
 import 'package:project/widgets/task/add_teams_button.dart';
-import 'file:///D:/GP/project/lib/widgets/custom_expansion_title.dart' as custom;
+import '../widgets/custom_expansion_title.dart' as custom;
 
 const TS_TITLE =
 TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
@@ -102,8 +102,10 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
             custom.ExpansionTile(
               key: _joinTeamKey,
               onTap: () =>onTileTap(_joinTeamKey),
+
+              onIconPressed: ()=>onTileTap(_joinTeamKey),
               headerBackgroundColor: Theme.of(context).appBarTheme.color,
-              iconColor: Theme.of(context).accentIconTheme.color,
+              iconColor: Colors.white,
               title: Text(
                 'Join Team',
                 style: TS_TITLE,
@@ -142,10 +144,11 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
             Divider(endIndent: 25, indent: 25),
             //
             custom.ExpansionTile(
+              onIconPressed: ()=>onTileTap(_createTeamKey),
               key: _createTeamKey,
               onTap: () =>onTileTap(_createTeamKey),
               headerBackgroundColor: Theme.of(context).appBarTheme.color,
-              iconColor: Theme.of(context).accentIconTheme.color,
+              iconColor: Colors.white,
               title: Text('Create Team', style: TS_TITLE),
               children: [
                 SizedBox(height: HEIGHT_PADDING),
@@ -243,10 +246,11 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
             Divider(endIndent: 25, indent: 25),
             //
             custom.ExpansionTile(
+              onIconPressed: ()=>onTileTap(_createRoomKey),
               key: _createRoomKey,
               onTap: () =>onTileTap(_createRoomKey),
               headerBackgroundColor: Theme.of(context).appBarTheme.color,
-              iconColor: Theme.of(context).accentIconTheme.color,
+              iconColor: Colors.white,
               title: Text(
                 'Create Room',
                 style: TS_TITLE,
