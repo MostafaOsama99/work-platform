@@ -103,7 +103,7 @@ class AppState extends State<App> {
               key: _navigatorKeys[TabItem.chats],
               //initialRoute: '/home',
               onGenerateRoute: (routeSettings) =>
-                  MaterialPageRoute(builder: (context) => ChatsScreen()),
+                  MaterialPageRoute(builder: (context) => AuthScreen()),
             ),
           ),
         ]),

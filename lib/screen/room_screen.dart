@@ -9,7 +9,14 @@ import 'package:project/widgets/home/dropDownMenu.dart';
 
 class RoomScreen extends StatefulWidget {
   final List<List> teams;
-  RoomScreen({this.teams=const []});
+
+  RoomScreen(
+      {this.teams = const [
+        ['room 1', 'room 1 manager'],
+        ['room 2', 'room 2 manager'],
+        ['room 3', 'room 3 manager']
+      ]});
+
   @override
   _RoomScreenState createState() => _RoomScreenState();
 }
@@ -31,39 +38,50 @@ class _RoomScreenState extends State<RoomScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Row(
-            children: [
-              Spacer(
-                flex: 2,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Row(
+          children: [
+            Spacer(
+              flex: 2,
+            ),
+            InkWell(
+                onTap: () {
+                  changeTeam(context, MediaQuery.of(context).size.height,
+                      widget.teams);
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      "Room",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.grey[700],
+                    )
+                  ],
+                )),
+            Spacer(
+              flex: 1,
+            ),
+            IconButton(
+              icon: Image.asset(
+                switchProjects
+                    ? 'assets/icons/projects.png'
+                    : 'assets/icons/team-3.png',
+                color: Colors.white,
               ),
-             InkWell(
-                 onTap: (){
-                   changeTeam(context,MediaQuery.of(context).size.height,widget.teams);
-                 },
-                 child: Row(children: [
-                   Text("Room",style: TextStyle(color: Colors.black),),
-                   Icon(Icons.arrow_drop_down,color: Colors.grey[700],)
-
-                 ],)),
-              Spacer(
-                flex: 1,
+              onPressed: () => setState(
+                () => switchProjects = !switchProjects,
               ),
-              IconButton(
-                icon: Image.asset(
-                  switchProjects ? 'assets/icons/projects.png' : 'assets/icons/team-3.png',
-                  color: Colors.white,
-                ),
-                onPressed: () => setState(
-                  () => switchProjects = !switchProjects,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        body: switchProjects ? projectWidget(names,context): roomWidget(context),
-        );
+      ),
+      body:
+          switchProjects ? projectWidget(names, context) : roomWidget(context),
+    );
   }
 }
 
@@ -71,10 +89,11 @@ Widget roomWidget(context) {
   return ListView(
     children: [
       Padding(
-        padding: EdgeInsets.only(top: 25,left: 28),
+        padding: EdgeInsets.only(top: 25, left: 28),
         child: Text(
           "Teams",
-          style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       Padding(
@@ -83,17 +102,17 @@ Widget roomWidget(context) {
         child: custom.ExpansionTile(
           iconColor: Colors.white,
           headerBackgroundColor: Theme.of(context).appBarTheme.color,
-          title: Text(
-            'Team 1'
-
-          ),
+          title: Text('Team 1'),
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 14, right: 12, top: 5),
               child: Row(
                 children: [
+                  Image.asset('assets/icons/task.png',color: Colors.green,height: 20,width: 25,),
+                  SizedBox(width: 8),
                   Text(
-                    'Team 1',style: TextStyle(color: Colors.white),
+                    'task 1',
+                    style: TextStyle(color: Colors.white),
                   ),
                   Spacer(
                     flex: 1,
@@ -118,21 +137,20 @@ Widget roomWidget(context) {
           ],
         ),
       ),
-
-      Divider(color: Colors.teal,
-      indent: 15,
+      Divider(
+        color: Colors.teal,
+        indent: 15,
         endIndent: 15,
-      )
-
-      ,Padding(
+      ),
+      Padding(
         padding:
-        const EdgeInsets.only(top: 10, bottom: 10, right: 15, left: 15),
+            const EdgeInsets.only(top: 10, bottom: 10, right: 15, left: 15),
         child: custom.ExpansionTile(
           headerBackgroundColor: Theme.of(context).appBarTheme.color,
           iconColor: Colors.teal,
           title: Text(
-            'Team 1',style: TextStyle(color: Colors.white),
-
+            'Team 1',
+            style: TextStyle(color: Colors.white),
           ),
           children: [
             Padding(
@@ -140,8 +158,8 @@ Widget roomWidget(context) {
               child: Row(
                 children: [
                   Text(
-                    'Team 1',style: TextStyle(color: Colors.white),
-
+                    'Team 1',
+                    style: TextStyle(color: Colors.white),
                   ),
                   Spacer(
                     flex: 1,
@@ -170,38 +188,38 @@ Widget roomWidget(context) {
   );
 }
 
-Widget projectWidget(names,context) {
+Widget projectWidget(names, context) {
   return ListView(
     children: [
       Padding(
-        padding: EdgeInsets.only(top: 16,left: 16),
+        padding: EdgeInsets.only(top: 16, left: 16),
         child: Text(
           "Projects",
-          style: TextStyle(fontSize: 18, ,fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
         child: LimitedBox(
-          maxHeight: MediaQuery.of(context).size.height,
+            maxHeight: MediaQuery.of(context).size.height,
             maxWidth: 200,
             child: ListView.builder(
                 itemCount: project.length,
-                itemBuilder: (context,i){
-              return SizedBox(
-                height: 130,
-                width: 200,
-                child: ProjectCard(
-                 endDate: project[i].endDate,
-                  projectName: project[i].projectName,
-                  mangerName: project[i].mangerName,
-                  teamNames: project[i].teams[i].teamName,
-                    startDate: project[i].startDate,
-                    description: project[i].description,
-                   teams: project[i].teams,
-                ),
-              );
-            })),
+                itemBuilder: (context, i) {
+                  return SizedBox(
+                    height: 130,
+                    width: 200,
+                    child: ProjectCard(
+                      endDate: project[i].endDate,
+                      projectName: project[i].projectName,
+                      mangerName: project[i].mangerName,
+                      teamNames: project[i].teams[i].teamName,
+                      startDate: project[i].startDate,
+                      description: project[i].description,
+                      teams: project[i].teams,
+                    ),
+                  );
+                })),
       )
     ],
   );

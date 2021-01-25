@@ -118,7 +118,7 @@ class ProjectCard extends StatelessWidget {
                                   padding: EdgeInsets.only(
                                       bottom: 3),
                                   child: _userTileName(
-                                      "${teamNames[i]}"),
+                                      "teamNames"),
                                 );
                               }),
                         ),
@@ -132,7 +132,7 @@ class ProjectCard extends StatelessWidget {
                               width: 73,
                               margin: EdgeInsets.only(top: 0, left: 0, right: 0),
                               decoration: new BoxDecoration(
-                                color: Colors.yellow,
+                                color: COLOR_SCAFFOLD,
                                 border: Border.all(color: Colors.black, width: 0.0),
                                 borderRadius: new BorderRadius.all(Radius.elliptical(90, 50)),
                               ),
@@ -194,19 +194,11 @@ Widget _userIcon(String name) {
 
 
 Widget _userTileName(String name) {
-  var lastLitter = name.indexOf(' ') + 1;
   return Padding(
     padding: const EdgeInsets.only(bottom: 2),
-    child: Container(
-      height: 26,
-      width: 100,
-      margin: EdgeInsets.only(top: 0, left: 0, right: 0,bottom: 0),
-      decoration: new BoxDecoration(
-        color: Colors.yellow,
-        border: Border.all(color: Colors.black, width: 0.0),
-        borderRadius: new BorderRadius.all(Radius.elliptical(90, 50)),
-      ),
-      child: Center(child: Text(name[0] + name[lastLitter])),
+    child: Chip(
+      backgroundColor: COLOR_SCAFFOLD,
+      label: Text(name),
     ),
   );
 }

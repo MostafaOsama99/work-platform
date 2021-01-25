@@ -39,9 +39,9 @@ changeTeam(context, height,teams) {
                       children: [
                         ...teams
                             .map((e) => _teamTile(
-                            teamName: e[0],
-                            roomName: e[1],
-                            leaderName: e[2]))
+                           // teamName: e[0],
+                            roomName: e[0],
+                            leaderName: e[1]))
                             .toList(),
                         SizedBox(
                           height: 40,
@@ -90,7 +90,7 @@ changeTeam(context, height,teams) {
   );
 }
 Widget _teamTile(
-    {@required String teamName, @required roomName, @required leaderName}) {
+    {@required roomName, @required leaderName}) {
   return ClipRRect(
     //  borderRadius: BorderRadius.circular(15),
     child: Padding(
@@ -107,14 +107,14 @@ Widget _teamTile(
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(teamName,
+                      Text(roomName,
                           style: TextStyle(
                             color: Colors.white,
                           )),
                       Padding(
                         padding: const EdgeInsets.only(left: 12),
                         child: Text(
-                          roomName,
+                          '-----',
                           style: TextStyle(color: Colors.white70),
                         ),
                       )
