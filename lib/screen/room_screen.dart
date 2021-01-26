@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:project/constants.dart';
+import 'package:project/widgets/project_card_widget.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
-import '../widgets/task/project_card_widget.dart';
+import 'package:project/screen/project_screen.dart';
 import 'join_or_create_team.dart';
 import 'package:project/demoData.dart';
 import 'package:project/widgets/home/dropDownMenu.dart';
@@ -79,95 +80,23 @@ Widget roomWidget(context) {
           style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
         ),
       ),
-      Padding(
-        padding:
-            const EdgeInsets.only(top: 10, bottom: 10, right: 15, left: 15),
-        child: custom.ExpansionTile(
-          iconColor: Colors.teal,
-          headerBackgroundColor: Theme.of(context).appBarTheme.color,
-          title: Text(
-            'Team 1',style: TextStyle(color: Colors.white),
 
-          ),
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 14, right: 12, top: 5),
-              child: Row(
-                children: [
-                  Text(
-                    'Team 1',style: TextStyle(color: Colors.white),
-                  ),
-                  Spacer(
-                    flex: 1,
-                  ),
-                  Text(
-                    DateFormat('d MMM, yyyy').format(DateTime.now()).toString(),
-                    style: TextStyle(fontSize: 15, color: Colors.white),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 5, top: 3),
-                    child: Text(
-                      "11%",
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.amber,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      SizedBox(
+        height: 1000,
+        child: ListView.builder(
+            itemCount: myTeams.length,
+            itemBuilder: (context,i){
 
-      Divider(color: Colors.teal,
-      indent: 15,
-        endIndent: 15,
+              return teamCard(context,myTeams[i].teamName,myTeams[i].tasks);
+            }),
       )
 
-      ,Padding(
-        padding:
-        const EdgeInsets.only(top: 10, bottom: 10, right: 15, left: 15),
-        child: custom.ExpansionTile(
-          headerBackgroundColor: Theme.of(context).appBarTheme.color,
-          iconColor: Colors.teal,
-          title: Text(
-            'Team 1',style: TextStyle(color: Colors.white),
+      // Divider(color: Colors.teal,
+      // indent: 15,
+      //   endIndent: 15,
+      // )
 
-          ),
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 14, right: 12, top: 5),
-              child: Row(
-                children: [
-                  Text(
-                    'Team 1',style: TextStyle(color: Colors.white),
 
-                  ),
-                  Spacer(
-                    flex: 1,
-                  ),
-                  Text(
-                    DateFormat('d MMM, yyyy').format(DateTime.now()).toString(),
-                    style: TextStyle(fontSize: 15, color: Colors.white),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 5, top: 3),
-                    child: Text(
-                      "11%",
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.amber,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     ],
   );
 }
