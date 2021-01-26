@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:project/constants.dart';
 
 import '../model/task.dart';
 
@@ -31,39 +34,24 @@ class TaskScreen extends StatelessWidget {
         slivers: <Widget>[
           SliverAppBar(
             pinned: true,
-            expandedHeight: 200,
+            // forceElevated: true,
+            collapsedHeight: 50,
+            toolbarHeight: 49.9999,
+            expandedHeight: 180,
             //leadingWidth: 20.0,
+            actions: [
+              IconButton(
+                  icon: Transform.rotate(
+                      angle: (22 / 7) / 4,
+                      child: Icon(
+                        Icons.attach_file,
+                        color: Colors.white,
+                        //size: 20,
+                      )),
+                  onPressed: null)
+            ],
 
             flexibleSpace: BuildFlexibleSpace(task: task),
-            // title: Row(
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   children: [
-            //     Container(
-            //       width: 35,
-            //       height: 35,
-            //       padding: const EdgeInsets.all(8),
-            //       decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.circular(10),
-            //         color: Theme.of(context)
-            //             .scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
-            //       ),
-            //       child: Image.asset(taskIcon, color: taskAccentColor),
-            //     ),
-            //     SizedBox(width: 4),
-            //     Text(
-            //       task.name,
-            //       style: TextStyle(
-            //           color: Colors.white,
-            //           fontSize: 18,
-            //           fontWeight: FontWeight.bold),
-            //     ),
-            //     Spacer(),
-            //     IconButton(
-            //         icon: Transform.rotate(
-            //             angle: (22 / 7) / 4, child: Icon(Icons.attach_file, color: Colors.white,)),
-            //         onPressed: null)
-            //   ],
-            // ),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
@@ -147,19 +135,29 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
   void _positionListener() {
     final FlexibleSpaceBarSettings settings =
         context.inheritFromWidgetOfExactType(FlexibleSpaceBarSettings);
-    bool visible =
-        settings == null || settings.currentExtent <= settings.minExtent;
 
-    // print(settings.minExtent);
-    // print('maxExtent: ${settings.maxExtent}');
+    final deltaExtent = settings.maxExtent - settings.minExtent;
+    final t =
+        (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent)
+            .clamp(0.0, 1.0) as double;
+    final fadeStart = max(0.0, 1.0 - kToolbarHeight / deltaExtent);
+    print('t: $t');
+    print('fade: $fadeStart');
+
+    print(sbWidth);
+    //  print('maxExtent: ${settings.maxExtent}');
+    // print('minExtent: ${settings.minExtent}');
     // print('opacity: ${settings.toolbarOpacity}');
     print('current extent: ${settings.currentExtent}');
-    if (_visible != visible) {
-      setState(() {
-        _visible = visible;
-      });
-    }
+    var x = (settings.currentExtent - settings.minExtent);
+    setState(() {
+      sbWidth = (settings.maxExtent - settings.currentExtent) / 3;
+      topPadding = x * 10 / deltaExtent; //open %
+    });
   }
+
+  var sbWidth = 0.0;
+  var topPadding = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -169,60 +167,144 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
       // collapseMode: CollapseMode.pin,
       centerTitle: false,
       titlePadding: const EdgeInsets.all(0),
+      stretchModes: [StretchMode.zoomBackground],
+      collapseMode: CollapseMode.pin,
       background: Container(
         padding: EdgeInsets.only(top: notificationHeight),
-        height: 200 - notificationHeight,
+        //height: 150 - notificationHeight,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              widget.task.name,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
+            SizedBox(
+              height: 44,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 55, top: 10),
+                child: Row(
+                  children: [
+                    Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Theme.of(context)
+                              .scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
+                        ),
+                        width: 35,
+                        height: 35,
+                        child: Image.asset('assets/icons/project.png',
+                            color: Colors.white)),
+                    SizedBox(width: 8),
+                    Text(widget.task.projectName,
+                        style: TextStyle(fontSize: 15)),
+                  ],
+                ),
+              ),
             ),
-            Text('${widget.task.datePlannedStart}'),
+            Padding(
+              padding: const EdgeInsets.only(right: 16, left: 16),
+              child: SizedBox(
+                height: 40,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(Icons.calendar_today_rounded, size: 18),
+                    Spacer(),
+                    RichText(
+                        text:
+                            TextSpan(style: TextStyle(fontSize: 15), children: [
+                      TextSpan(
+                          text: 'from: ', style: TextStyle(color: Colors.grey)),
+                      //TextSpan(text: '${widget.task.datePlannedStart.day} ${formatDate(widget.task.datePlannedStart)}')
+                    ])),
+                    Expanded(
+                        flex: 15,
+                        child: BuildDateTime(
+                            selectedDate: widget.task.datePlannedStart)),
+                    Spacer(flex: 2),
+                    RichText(
+                        text:
+                            TextSpan(style: TextStyle(fontSize: 15), children: [
+                      TextSpan(
+                          text: 'duo: ', style: TextStyle(color: Colors.grey)),
+                      //TextSpan(text: formatDate(widget.task.datePlannedStart))
+                    ])),
+                    Expanded(
+                        flex: 15,
+                        child: BuildDateTime(
+                            selectedDate: widget.task.datePlannedEnd)),
+                    Spacer(flex: 2),
+                  ],
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Icon(Icons.calendar_today_rounded, size: 18),
+                Spacer(),
+                RichText(
+                    text: TextSpan(style: TextStyle(fontSize: 15), children: [
+                  TextSpan(
+                      text: 'from: ', style: TextStyle(color: Colors.grey)),
+                  //TextSpan(text: '${widget.task.datePlannedStart.day} ${formatDate(widget.task.datePlannedStart)}')
+                ])),
+                Expanded(
+                    flex: 15,
+                    child: BuildDateTime(
+                        selectedDate: widget.task.datePlannedStart)),
+                Spacer(flex: 2),
+                RichText(
+                    text: TextSpan(style: TextStyle(fontSize: 15), children: [
+                  TextSpan(text: 'duo: ', style: TextStyle(color: Colors.grey)),
+                  //TextSpan(text: formatDate(widget.task.datePlannedStart))
+                ])),
+                Expanded(
+                    flex: 15,
+                    child: BuildDateTime(
+                        selectedDate: widget.task.datePlannedEnd)),
+                Spacer(flex: 2),
+              ],
+            ),
+            //
+            // Text(
+            //   widget.task.name,
+            //   style: TextStyle(
+            //       color: Colors.white,
+            //       fontSize: 18,
+            //       fontWeight: FontWeight.bold),
+            // ),
+            // Text('${widget.task.datePlannedStart}'),
+            SizedBox(
+              height: 20,
+            )
           ],
         ),
       ),
       title: Padding(
-        padding: EdgeInsets.only(top: 0),
-        child: Container(
-          height: 35,
-          padding: const EdgeInsets.all(4),
-          color: Colors.green,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                width: 27,
-                height: 27,
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context)
-                      .scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
-                ),
-                child: Image.asset(taskIcon, color: taskAccentColor),
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(width: 8 + sbWidth),
+            Container(
+              width: 35 - topPadding / 1.5,
+              height: 35 - topPadding / 1.5,
+              padding: EdgeInsets.all(6.5 - topPadding / 5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context)
+                    .scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
               ),
-              SizedBox(width: 4),
-              Text(
-                widget.task.name,
-                style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.bold),
-              ),
-              Spacer(),
-              IconButton(
-                  icon: Transform.rotate(
-                      angle: (22 / 7) / 4,
-                      child: Icon(
-                        Icons.attach_file,
-                        color: Colors.white,
-                        size: 20,
-                      )),
-                  onPressed: null)
-            ],
-          ),
+              child: Image.asset(taskIcon, color: taskAccentColor),
+            ),
+            SizedBox(width: 6),
+            Text(
+              widget.task.name,
+              style: TextStyle(
+                  fontSize: 16 - topPadding / 2, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
       ),
     );

@@ -7,30 +7,6 @@ import '../../screen/task_screen.dart';
 import '../../constants.dart';
 import '../../model/task.dart' as model;
 
-String formatDate(DateTime date) {
-  const month = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-  ];
-  String formatDate;
-  formatDate = '${date.day} ${month[date.month - 1]}';
-
-  if (DateTime.now().year != date.year)
-    formatDate = formatDate + ', ${date.year.toString().substring(2)}';
-
-  return formatDate;
-}
-
 class TaskCard extends StatelessWidget {
   final model.Task task;
 

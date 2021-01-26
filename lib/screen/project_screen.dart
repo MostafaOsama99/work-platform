@@ -93,7 +93,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                         SizedBox(
                             height: 20,
                             width: 180,
-                            child: dateTime(
+                            child: BuildDateTime(
                                 selectedDate: widget.startDate, padding: 10)),
                       ],
                     ),
@@ -103,7 +103,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                             style: TextStyle(color: Colors.grey, fontSize: 15)),
                         SizedBox(
                             width: 180,
-                            child: dateTime(
+                            child: BuildDateTime(
                                 selectedDate: widget.endDate, padding: 0)),
                       ],
                     )
@@ -254,32 +254,6 @@ Widget _userTileName(String name) {
         ),
       ),
     ],
-  );
-}
-
-Widget dateTime({selectedDate, double padding}) {
-  return DateTimeField(
-    style: TextStyle(fontSize: 15, color: Colors.white),
-    decoration: InputDecoration(
-        contentPadding: EdgeInsets.only(top: padding),
-        border: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        errorBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-        hintText:
-        DateFormat('EEEE, d MMM, yyyy').format(selectedDate).toString(),
-        hintStyle: TextStyle(color: Colors.white)),
-    format: DateFormat('EEEE, d MMM, yyyy'),
-    onChanged: (_) {},
-    resetIcon: null,
-    onShowPicker: (context, currentValue) {
-      return showDatePicker(
-          context: context,
-          firstDate: DateTime(1900),
-          initialDate: currentValue ?? DateTime.now(),
-          lastDate: DateTime.now().add(Duration(days: 10)));
-    },
   );
 }
 

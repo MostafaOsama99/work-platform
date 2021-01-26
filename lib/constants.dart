@@ -1,4 +1,9 @@
+import 'dart:wasm';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+
 
 // maximum height for TextFormField error text height
 //   usually between 0-1
@@ -68,3 +73,122 @@ bool isEmail(String em) {
   RegExp regExp = new RegExp(p);
   return regExp.hasMatch(em);
 }
+
+String formatDate(DateTime date) {
+  const month = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+  String formatDate;
+  formatDate = '${date.day} ${month[date.month - 1]}';
+
+  if (DateTime.now().year != date.year)
+    formatDate = formatDate + ', ${date.year.toString().substring(2)}';
+
+  return formatDate;
+}
+
+class BuildDateTime extends StatefulWidget {
+
+  final DateTime selectedDate;
+  final double padding;
+
+  const BuildDateTime({Key key, this.selectedDate, this.padding}) : super(key: key);
+
+  @override
+  _BuildDateTimeState createState() => _BuildDateTimeState(selectedDate);
+}
+
+class _BuildDateTimeState extends State<BuildDateTime> {
+
+  DateTime date;
+  _BuildDateTimeState (this.date);
+
+  String dateFormat;
+  @override
+  Widget build(BuildContext context) {
+
+    dateFormat = widget.selectedDate.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy' ;
+
+    return SizedBox(
+      //height: 10,
+      child: DateTimeField(
+        style: TextStyle(fontSize: 15, color: Colors.white),
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 10),
+            border: InputBorder.none,
+            focusedBorder: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            errorBorder: InputBorder.none,
+            disabledBorder: InputBorder.none,
+            //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
+            hintStyle: TextStyle(color: Colors.white)),
+        format: DateFormat(dateFormat),
+        initialValue: widget.selectedDate,
+
+        onChanged: (value) {
+          setState(() {
+            date = value ;
+            print('value: $value');
+            dateFormat = date.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy' ;
+          });
+        },
+        resetIcon: null,
+        onShowPicker: (context, currentValue) {
+          return showDatePicker(
+              context: context,
+              firstDate: DateTime(1900),
+              initialDate: date ?? DateTime.now(),
+              lastDate: DateTime(2100),
+
+          );
+        },
+      ),
+    );
+  }
+}
+
+//
+// Widget buildDateTime({DateTime selectedDate, double padding = 0.0}) {
+//
+//   String dateFormat = selectedDate.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy' ;
+//   return SizedBox(
+//     //height: 80,
+//     child: DateTimeField(
+//       style: TextStyle(fontSize: 15, color: Colors.white),
+//       decoration: InputDecoration(
+//           contentPadding: const EdgeInsets.only(top: 0, left: 0),
+//           border: InputBorder.none,
+//           focusedBorder: InputBorder.none,
+//           enabledBorder: InputBorder.none,
+//           errorBorder: InputBorder.none,
+//           disabledBorder: InputBorder.none,
+//           //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
+//           hintStyle: TextStyle(color: Colors.white)),
+//       format: DateFormat(dateFormat),
+//       initialValue: selectedDate,
+//       onChanged: (value) {
+//         selectedDate = value ;
+//         dateFormat = selectedDate.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy' ;
+//       },
+//       resetIcon: null,
+//       onShowPicker: (context, currentValue) {
+//         return showDatePicker(
+//             context: context,
+//             firstDate: DateTime(2000),
+//             initialDate: selectedDate ?? DateTime.now(),
+//             lastDate: DateTime.now().add(Duration(days:  3650)));
+//       },
+//     ),
+//   );
+// }
