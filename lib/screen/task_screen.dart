@@ -194,8 +194,17 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                         child: Image.asset('assets/icons/project.png',
                             color: Colors.white)),
                     SizedBox(width: 8),
-                    Text(widget.task.projectName,
-                        style: TextStyle(fontSize: 15)),
+                    Text(widget.task.projectName ?? 'not assigned to project!',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: widget.task.projectName == null
+                                ? Colors.grey
+                                : null,
+                            fontStyle: widget.task.projectName == null
+                                ? FontStyle.italic
+                                : null
+
+                        )),
                   ],
                 ),
               ),
