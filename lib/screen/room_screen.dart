@@ -34,38 +34,50 @@ class _RoomScreenState extends State<RoomScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Row(
-            children: [
-              Spacer(
-                flex: 2,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Row(
+          children: [
+            Spacer(
+              flex: 2,
+            ),
+            InkWell(
+                onTap: () {
+                  changeTeam(context, MediaQuery.of(context).size.height,
+                      widget.teams);
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      "Room",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.grey[700],
+                    )
+                  ],
+                )),
+            Spacer(
+              flex: 1,
+            ),
+            IconButton(
+              icon: Image.asset(
+                switchProjects
+                    ? 'assets/icons/projects.png'
+                    : 'assets/icons/team-3.png',
+                color: Colors.white,
               ),
-             InkWell(
-                 onTap: (){
-                   changeTeam(context,MediaQuery.of(context).size.height,widget.teams);
-                 },
-                 child: Row(children: [
-                   Text("Room",style: TextStyle(color: Colors.black),),
-                   Icon(Icons.arrow_drop_down,color: Colors.grey[700],)
-
-                 ],)),
-              Spacer(
-                flex: 1,
+              onPressed: () => setState(
+                () => switchProjects = !switchProjects,
               ),
-              IconButton(
-                icon: Icon(
-                  switchProjects ? Icons.copy : Icons.padding,
-                  color: Colors.white,
-                ),
-                onPressed: () => setState(
-                  () => switchProjects = !switchProjects,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        body: switchProjects ? roomWidget(context) : projectWidget(names,context));
+      ),
+      body:
+          switchProjects ? projectWidget(names, context) : roomWidget(context),
+    );
   }
 
 }
@@ -105,10 +117,10 @@ Widget projectWidget(names,context) {
   return ListView(
     children: [
       Padding(
-        padding: EdgeInsets.only(top: 20,left: 25),
+        padding: EdgeInsets.only(top: 16, left: 16),
         child: Text(
           "Projects",
-          style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
       Padding(
