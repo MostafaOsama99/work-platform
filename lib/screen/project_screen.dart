@@ -7,13 +7,23 @@ import 'package:project/screen/team_screen.dart';
 
 import '../widgets/custom_expansion_title.dart' as custom;
 
-class ProjectScreen extends StatefulWidget{
-final startDate,endDate;
-final String description,mangerName,projectName;
-final attachments;
-final task;
-final teams;
-ProjectScreen({this.startDate,this.endDate,this.description,this.attachments,this.task,this.mangerName,this.projectName,this.teams});
+class ProjectScreen extends StatefulWidget {
+  final startDate, endDate;
+  final String description, mangerName, projectName;
+  final attachments;
+  final task;
+  final teams;
+
+  ProjectScreen(
+      {this.startDate,
+      this.endDate,
+      this.description,
+      this.attachments,
+      this.task,
+      this.mangerName,
+      this.projectName,
+      this.teams});
+
   @override
   _ProjectScreenState createState() => _ProjectScreenState();
 }
@@ -25,8 +35,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
 
   @override
   void initState() {
-    _descriptionController.text =
-    '''${widget.description}
+    _descriptionController.text = '''${widget.description}
     ''';
     // TODO: implement initState
     super.initState();
@@ -40,7 +49,10 @@ class _ProjectScreenState extends State<ProjectScreen> {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 27,
-        title: Text("${widget.projectName}",style: TextStyle(fontSize: 18),),
+        title: Text(
+          "${widget.projectName}",
+          style: TextStyle(fontSize: 18),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
@@ -88,7 +100,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                           padding: const EdgeInsets.only(top: 20),
                           child: Text("from:   ",
                               style:
-                              TextStyle(color: Colors.grey, fontSize: 15)),
+                                  TextStyle(color: Colors.grey, fontSize: 15)),
                         ),
                         SizedBox(
                             height: 20,
@@ -149,15 +161,15 @@ class _ProjectScreenState extends State<ProjectScreen> {
                     )
                   ],
                 )),
-           SizedBox(
-             height: 500,
-             child: ListView.builder(
-                 itemCount: widget.teams.length,
-                 itemBuilder: (context,i){
-
-               return teamCard(context, widget.teams[i].teamName,widget.teams[i].tasks);
-             }),
-           )
+            SizedBox(
+              height: 500,
+              child: ListView.builder(
+                  itemCount: widget.teams.length,
+                  itemBuilder: (context, i) {
+                    return teamCard(context, widget.teams[i].teamName,
+                        widget.teams[i].tasks);
+                  }),
+            )
           ],
         ),
       ),
@@ -165,65 +177,70 @@ class _ProjectScreenState extends State<ProjectScreen> {
   }
 }
 
-Widget teamCard (context,String teamName,tasks){
-
-  return  Padding(
+Widget teamCard(context, String teamName, tasks) {
+  return Padding(
     padding: const EdgeInsets.only(top: 10, bottom: 10),
     child: custom.ExpansionTile(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context){
-          return TeamScreen(teamName: teamName,tasks: tasks,);
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return TeamScreen(
+            teamName: teamName,
+            tasks: tasks,
+          );
         }));
       },
       iconColor: Colors.teal,
       headerBackgroundColor: Theme.of(context).appBarTheme.color,
       title: Text(
-        '${teamName}',
+        '${teamName} ',
         style: TS_TITLE,
       ),
       children: [
-      LimitedBox(
-        maxWidth: 500,
-        maxHeight: 100,
-        child: ListView.builder(
-            itemCount: tasks.length,
-            itemBuilder: (context,i){
-
-          return subTaskWidget(tasks[i].name, DateTime.now(), "10");
-        }),
-      )
+        LimitedBox(
+          maxWidth: 500,
+          maxHeight: 100,
+          child: ListView.builder(
+              itemCount: tasks.length,
+              itemBuilder: (context, i) {
+                return subTaskWidget(tasks[i].name, tasks[i].datePlannedEnd,
+                    tasks[i].progress, context);
+              }),
+        )
       ],
     ),
   );
 }
 
-Widget subTaskWidget (String teamName,date,percentage){
-
-  return   Padding(
+Widget subTaskWidget(String teamName, date, percentage, context) {
+  return Padding(
     padding: EdgeInsets.only(left: 10, right: 10, top: 10),
     child: Row(
       children: [
-        Text(
-          teamName,
-          style: TS_TITLE,
+        Padding(
+          padding: const EdgeInsets.only(top: 1),
+          child: SizedBox(
+            height: 28,
+            width: MediaQuery.of(context).size.width * 0.5,
+            child: Text(
+              teamName,
+              overflow: TextOverflow.clip,
+              style: TS_TITLE,
+            ),
+          ),
         ),
         Spacer(
           flex: 1,
         ),
         Text(
-          DateFormat('d MMM, yyyy')
-              .format(date)
-              .toString(),
+          DateFormat('d MMM, yyyy').format(date).toString(),
           style: TextStyle(fontSize: 15, color: Colors.white),
         ),
         Padding(
           padding: EdgeInsets.only(left: 5, top: 3),
           child: Text(
-            percentage,
+            "$percentage%",
             style: TextStyle(
-                fontSize: 13,
-                color: Colors.amber,
-                fontWeight: FontWeight.bold),
+                fontSize: 13, color: Colors.amber, fontWeight: FontWeight.bold),
           ),
         )
       ],
@@ -268,7 +285,7 @@ Widget dateTime({selectedDate, double padding}) {
         errorBorder: InputBorder.none,
         disabledBorder: InputBorder.none,
         hintText:
-        DateFormat('EEEE, d MMM, yyyy').format(selectedDate).toString(),
+            DateFormat('EEEE, d MMM, yyyy').format(selectedDate).toString(),
         hintStyle: TextStyle(color: Colors.white)),
     format: DateFormat('EEEE, d MMM, yyyy'),
     onChanged: (_) {},
@@ -282,4 +299,3 @@ Widget dateTime({selectedDate, double padding}) {
     },
   );
 }
-
