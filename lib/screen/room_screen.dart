@@ -6,7 +6,7 @@ import '../widgets/task/project_card_widget.dart';
 import 'join_or_create_team.dart';
 import 'package:project/demoData.dart';
 import 'package:project/widgets/home/dropDownMenu.dart';
-import 'package:project/widgets/room_screen.dart';
+
 class RoomScreen extends StatefulWidget {
   final List<List> teams;
   RoomScreen({this.teams=const []});
@@ -79,23 +79,95 @@ Widget roomWidget(context) {
           style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
         ),
       ),
+      Padding(
+        padding:
+            const EdgeInsets.only(top: 10, bottom: 10, right: 15, left: 15),
+        child: custom.ExpansionTile(
+          iconColor: Colors.teal,
+          headerBackgroundColor: Theme.of(context).appBarTheme.color,
+          title: Text(
+            'Team 1',style: TextStyle(color: Colors.white),
 
-      SizedBox(
-        height: 1000,
-        child: ListView.builder(
-            itemCount: myTeams.length,
-            itemBuilder: (context,i){
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 14, right: 12, top: 5),
+              child: Row(
+                children: [
+                  Text(
+                    'Team 1',style: TextStyle(color: Colors.white),
+                  ),
+                  Spacer(
+                    flex: 1,
+                  ),
+                  Text(
+                    DateFormat('d MMM, yyyy').format(DateTime.now()).toString(),
+                    style: TextStyle(fontSize: 15, color: Colors.white),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5, top: 3),
+                    child: Text(
+                      "11%",
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.amber,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
 
-          return teamCard(context,myTeams[i].teamName,myTeams[i].tasks);
-        }),
+      Divider(color: Colors.teal,
+      indent: 15,
+        endIndent: 15,
       )
 
-      // Divider(color: Colors.teal,
-      // indent: 15,
-      //   endIndent: 15,
-      // )
+      ,Padding(
+        padding:
+        const EdgeInsets.only(top: 10, bottom: 10, right: 15, left: 15),
+        child: custom.ExpansionTile(
+          headerBackgroundColor: Theme.of(context).appBarTheme.color,
+          iconColor: Colors.teal,
+          title: Text(
+            'Team 1',style: TextStyle(color: Colors.white),
 
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 14, right: 12, top: 5),
+              child: Row(
+                children: [
+                  Text(
+                    'Team 1',style: TextStyle(color: Colors.white),
 
+                  ),
+                  Spacer(
+                    flex: 1,
+                  ),
+                  Text(
+                    DateFormat('d MMM, yyyy').format(DateTime.now()).toString(),
+                    style: TextStyle(fontSize: 15, color: Colors.white),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 5, top: 3),
+                    child: Text(
+                      "11%",
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.amber,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     ],
   );
 }

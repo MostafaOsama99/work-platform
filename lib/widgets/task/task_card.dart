@@ -103,7 +103,7 @@ class TaskCard extends StatelessWidget {
                           task.name,
                           softWrap: false,
                           overflow: TextOverflow.fade,
-                          style: TextStyle(color: Colors.white, fontSize: 17),
+                          style: TextStyle( fontSize: 17),
                         ),
                         SizedBox(height: 4),
 
@@ -115,14 +115,12 @@ class TaskCard extends StatelessWidget {
                             SizedBox(width: 4),
                             Text(
                               task.parentCheckpoint.name,
-                              style: TextStyle(color: Colors.white),
                             ),
                           ]
                               :
                           [
                             _buildUserAvatar(task.taskCreator),
-                            Text(task.taskCreator,
-                                style: TextStyle(color: Colors.white)),
+                            Text(task.taskCreator),
                           ]
 
                             ,),
@@ -214,7 +212,7 @@ class TaskCard extends StatelessWidget {
                 //         SizedBox(width: 4),
                 //         Text(
                 //           task.parentCheckpoint.name,
-                //           style: TextStyle(color: Colors.white),
+                //         ,
                 //         ),
                 //         Spacer(),
                 //         ...task.members.map((m) => _buildUserAvatar(m)),
@@ -223,7 +221,7 @@ class TaskCard extends StatelessWidget {
                 [
                         // _buildUserAvatar(task.taskCreator),
                         // Text(task.taskCreator,
-                        //     style: TextStyle(color: Colors.white)),
+                        //     ),
                   if(task.projectName != null)
                     RichText(
                       text: TextSpan(
@@ -236,8 +234,7 @@ class TaskCard extends StatelessWidget {
                                   fontSize: 15)),
                           TextSpan(
                               text: task.projectName,
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 15)),
+                              style: TextStyle( fontSize: 15)),
                         ],
                       ),
                     ),
@@ -262,7 +259,6 @@ class TaskCard extends StatelessWidget {
         child: Text(
           "${userName[0]}${userName[(userName.indexOf(' ') + 1)]}",
           style: TextStyle(
-            color: Colors.white,
             fontSize: 12,
           ),
         ),
@@ -286,7 +282,7 @@ class CheckPoint extends StatefulWidget {
   );
 
   // ignore: non_constant_identifier_names
-  static final TS_WORKING = TextStyle(fontSize: 15, color: Colors.white);
+  static final TS_WORKING = TextStyle(fontSize: 15);
 
   @override
   _CheckPointState createState() => _CheckPointState();
