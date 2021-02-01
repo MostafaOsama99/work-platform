@@ -17,6 +17,10 @@ const HEIGHT_APPBAR = 50.0;
 const TS_TITLE =
 TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
 
+const KIconSize = 18.0;
+
+const KIconColor = Colors.white;
+
 
 // default TextFormField decoration
 // ignore: non_constant_identifier_names

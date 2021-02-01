@@ -20,7 +20,7 @@ class TaskCard extends StatelessWidget {
     Color taskAccentColor;
     String taskIcon;
 
-    if (task.dependentTaskId != null) {
+    if (task.dependentTask != null) {
       taskAccentColor = Colors.purple;
       taskIcon = 'assets/icons/subtask-dependent.png';
     } else if (task.parentCheckpoint != null) {
@@ -136,8 +136,7 @@ class TaskCard extends StatelessWidget {
                             child: Icon(
                               Icons.calendar_today_rounded,
                               size: 21,
-                              color:
-                                  Colors.white, //Theme.of(context).accentColor,
+                              color:KIconColor, //Theme.of(context).accentColor,
                             ),
                           ),
                           Text(
@@ -187,7 +186,7 @@ class TaskCard extends StatelessWidget {
                 //         Icon(Icons.adjust, color: Colors.amber),
                 //         SizedBox(width: 4),
                 //         Text(
-                //           task.parentCheckpoint.name,
+                //           task.pa  rentCheckpoint.name,
                 //         ,
                 //         ),
                 //         Spacer(),

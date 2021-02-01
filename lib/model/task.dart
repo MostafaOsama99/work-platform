@@ -17,7 +17,8 @@ class Task {
 
   final double progress;
 
-  final String dependentTaskId;
+  //TODO:check Task dataType here !
+  final Task dependentTask;
 
   /// if this task is a subtask, [parentCheckpoint] going to curry the parent task checkpoint
   final CheckPoint parentCheckpoint;
@@ -36,7 +37,7 @@ class Task {
       this.datePlannedStart,
       this.progress = 0,
       this.projectName,
-      this.dependentTaskId,
+      this.dependentTask,
       this.checkPoints,
       this.members});
 

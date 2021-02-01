@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project/widgets/task/description_widget.dart';
+import 'package:project/widgets/task/editTextField_method.dart';
 
 import '../constants.dart';
 
@@ -9,9 +11,6 @@ class EditTeamScreen extends StatefulWidget {
 
 class _EditTeamScreenState extends State<EditTeamScreen> {
   final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
-
-  bool _expandDes = false;
 
   var names = [
     'Ahmed Mohamed',
@@ -23,6 +22,10 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
     'Habiba Sayed'
   ];
 
+  var description=
+  '''this an example of a l
+    ''';
+
   List<Widget> users;
 
   @override
@@ -31,12 +34,6 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
     users = List.generate(names.length, (index) => _userTile(names[index]));
     //names.forEach((name) => users.add(_userTile(name)));
     _nameController.text = 'Team Name';
-    _descriptionController.text =
-        '''this an example of a long description to test the three line in description text form field 
-    this an example of a long description to test the three line in description text form field 
-    this an example of a long description to test the three line in description text form field 
-    this an example of a long description to test the three line in description text form field 
-    ''';
   }
 
   @override
@@ -76,7 +73,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                     ),
                     onPressed: () {
                       setState(() {
-                        _edit(context, _nameController);
+                        editTextField(context, _nameController);
                       });
                     }),
               )),
@@ -85,36 +82,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
             indent: 30,
             endIndent: 30,
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 2, right: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Description',
-                    style: TextStyle( fontSize: 16)),
-                IconButton(
-                    splashRadius: 20,
-                    splashColor: Color.fromRGBO(8, 77, 99, 1),
-                    icon: Icon(
-                      Icons.edit,
-                      color: Colors.grey,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _edit(context, _descriptionController, maxLines: 4);
-                      });
-                    }),
-              ],
-            ),
-          ),
-          TextField(
-            readOnly: true,
-            autofocus: false,
-            controller: _descriptionController,
-            maxLines: _expandDes ? null : 4,
-            onTap: () => setState(() => _expandDes = !_expandDes),
-            decoration: TEXT_FIELD_DECORATION_2,
-          ),
+          DescriptionWidget(description, MediaQuery.of(context).size.width),
           Divider(
             height: 16,
             indent: 30,
@@ -167,98 +135,5 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
         ),
       ),
     );
-  }
-
-  _edit(BuildContext context, TextEditingController controller,
-      {int maxLines = 1}) {
-    final _formKey = GlobalKey<FormState>();
-
-    String _validate(String value) {
-      if (value.length <= 3) return 'too short name !';
-      return null;
-    }
-
-    _submit() {
-      if (_formKey.currentState.validate()) {
-        _formKey.currentState.save();
-        Navigator.of(context).pop();
-      }
-    }
-
-    return showModalBottomSheet(
-        isDismissible: true,
-        isScrollControlled: true,
-        context: context,
-        backgroundColor: COLOR_SCAFFOLD,
-        //Color.fromRGBO(8, 77, 99, 1),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25), topRight: Radius.circular(25))),
-        builder: (BuildContext context) {
-          return SizedBox(
-            //size of keyboard + padding + button + TextField
-            height: MediaQuery.of(context).viewInsets.bottom +
-                35 +
-                60 +
-                13 +
-                maxLines * 20,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: TextFormField(
-                        autofocus: true,
-                        maxLines: maxLines,
-                        textInputAction: maxLines == 1
-                            ? TextInputAction.done
-                            : TextInputAction.newline,
-                        onSaved: (value) {
-                          controller.text = value;
-                        },
-                        initialValue: controller.value.text,
-                        decoration: TEXT_FIELD_DECORATION.copyWith(
-                            fillColor: COLOR_BACKGROUND,
-                            errorStyle: TextStyle(height: 1),
-                            contentPadding: const EdgeInsets.all(12),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(color: COLOR_ACCENT))),
-                        validator: _validate,
-                        onFieldSubmitted: (_) => _submit(),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        OutlineButton(
-                            borderSide:
-                                BorderSide(color: COLOR_ACCENT, width: 2),
-                            highlightedBorderColor: Colors.red,
-                            child: Transform.rotate(
-                                angle: (22/7) / 4, //45 degree
-                                child: Icon(Icons.add, color: Colors.red)),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            }),
-                        OutlineButton(
-                            highlightColor: COLOR_BACKGROUND,
-                            borderSide:
-                                BorderSide(color: COLOR_ACCENT, width: 2),
-                            highlightedBorderColor: Colors.green,
-                            child: Icon(Icons.done, color: Colors.green),
-                            onPressed: _submit)
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
   }
 }
