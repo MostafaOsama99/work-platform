@@ -24,8 +24,9 @@ class ProjectCard extends StatelessWidget {
       margin: const EdgeInsets.all(10),
 
       child: Padding(
-        padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-        child: InkWell(
+        padding: EdgeInsets.only(top: 3, left: 10, right: 10),
+        child: GestureDetector(
+
           onTap: ()=> Navigator.push(
               context,
               MaterialPageRoute(
@@ -52,14 +53,7 @@ class ProjectCard extends StatelessWidget {
                   Spacer(
                     flex: 6,
                   ),
-                  CircleAvatar(
-                    radius: 14,
-                    backgroundColor: Colors.yellow,
-                    child: Text(
-                      "Pr",
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ),
+                  _buildUserAvatar(mangerName),
                   Spacer(
                     flex: 2,
                   )
@@ -72,43 +66,42 @@ class ProjectCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Spacer(
-                        flex: 2,
+                        flex: 8,
                       ),
                       SizedBox(
                          width: MediaQuery.of(context).size.width*0.4,
-                        child: Chip(
-                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                          label: Text(
+                        child:
+                          Text(
                             projectName,softWrap: false,overflow: TextOverflow.fade,
                             style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
-                        ),
-                      ),
 
+                      ),
+                      Spacer(flex: 7,),
                       Text(DateFormat('EEEE, d MMM, yyyy')
                           .format(endDate)
                           .toString(),style: TextStyle(color: Colors.white),),
                       Spacer(
-                        flex: 2,
+                        flex: 5,
                       ),
                       Text(mangerName,style: TextStyle(color: Colors.white),),
                       Spacer(
-                        flex: 4,
+                        flex: 8,
                       )
                     ],
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 2),
+                padding: const EdgeInsets.only(top: 3),
                 child: Column(
                   children: [
                     teamNames.length > 2
                         ? Column(
                       children: [
                         SizedBox(
-                          width: 70,
-                          height: 63,
+                          width: 90,
+                          height: 65,
                           child: ListView.builder(
                               scrollDirection:
                               Axis.vertical,
@@ -124,24 +117,34 @@ class ProjectCard extends StatelessWidget {
                         ),
                         Padding(
                           padding:
-                          const EdgeInsets.only(bottom: 5),
+                          const EdgeInsets.only(top:7),
                           child: InkWell(
-                            onTap: () {},
-                            child: Container(
-                              height: 26,
-                              width: 73,
-                              margin: EdgeInsets.only(top: 0, left: 0, right: 0),
-                              decoration: new BoxDecoration(
-                                color: COLOR_SCAFFOLD,
-                                border: Border.all(color: Colors.black, width: 0.0),
-                                borderRadius: new BorderRadius.all(Radius.elliptical(90, 50)),
-                              ),
-                              child: Center(child: Text("+${teamNames.length - 2}")),
-                            ),
+                            onTap: () {}, child: SizedBox(
+                                   height: 26,
+                              width: 90,
+                              child: Chip(padding: EdgeInsets.all(0),
+                                backgroundColor: COLOR_SCAFFOLD,
+                                label: Center(child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: Text("       +${teamNames.length - 2}              "),
+                                )),
+                              ),)
                           ),
                         ),
                       ],
                     )
+
+      //   Container(
+      //   height: 25,
+      //   width: 90,
+      //   margin: EdgeInsets.only(top: 0, left: 0, right: 0),
+      //   decoration: new BoxDecoration(
+      //     color: COLOR_SCAFFOLD,
+      //     border: Border.all(color: Colors.black, width: 0.0),
+      //     borderRadius: new BorderRadius.all(Radius.elliptical(90, 50)),
+      //   ),
+      //   child: Center(child: Text("+${teamNames.length - 2}")),
+      // ),
                         : SizedBox(
                       height: 50,
                       width: 68,
@@ -194,11 +197,27 @@ Widget _userIcon(String name) {
 
 
 Widget _userTileName(String name) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 2),
+  return SizedBox(
+    height: 33,
     child: Chip(
       backgroundColor: COLOR_SCAFFOLD,
       label: Text(name),
+    ),
+  );
+}
+Padding _buildUserAvatar(String name) {
+  var lastLitter = name.indexOf(' ') + 1;
+  return Padding(
+    padding: const EdgeInsets.only(right: 4),
+    child: CircleAvatar(
+      radius: 15,
+      backgroundColor: Colors.red[400],
+      child: Text(
+        name[0] + name[lastLitter],
+        style: TextStyle(
+          fontSize: 12,color: Colors.white
+        ),
+      ),
     ),
   );
 }

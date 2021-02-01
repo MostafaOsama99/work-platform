@@ -21,7 +21,12 @@ class SignUpState extends State<SignUp> {
   double _mailFieldHeight;
 
   double _passwordFieldHeight;
-
+  String nameValidation="";
+  String emailValidation="";
+  String passwordValidation="";
+  String confirmPasswordValidation="";
+  String phoneValidation="";
+  String dateValidation="";
   final _lastNameFocusNode = FocusNode();
   final _mailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
@@ -126,61 +131,57 @@ class SignUpState extends State<SignUp> {
           //crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: PADDING_VERTICAL),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: textFormWidth,
-                    height: _textFormHeight,
-                    child: TextFormField(
-                      textInputAction: TextInputAction.next,
-                      style: TextStyle(fontSize: 18),
-                      keyboardType: TextInputType.name,
-                      onFieldSubmitted: (_) {
-                        FocusScope.of(context).requestFocus(_lastNameFocusNode);
-                      },
-                      validator: (value) {
-                        if (value.length < 3) return "";
-                        return null;
-                      },
-                      decoration: TEXT_FIELD_DECORATION.copyWith(
-                          prefixIcon: Icon(
-                            Icons.person_outline_rounded,
-                            color: COLOR_BACKGROUND,
-                          ),
-                          hintText: 'First name',
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 8)),
+            SizedBox(
+              height: _textFormHeight,
+              child: TextFormField(
+                textInputAction: TextInputAction.next,
+                style: TextStyle(fontSize: 18),
+                keyboardType: TextInputType.name,
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(_lastNameFocusNode);
+                },
+                validator: (value) {
+                  if (value.trim().length < 3){
+                    setState(() {
+                      nameValidation= 'too short name';
+                    });
+
+
+                  }
+                  else {
+                    setState(() {
+                      nameValidation="";
+                    });
+
+                  }
+                  return null;
+                },
+                decoration: TEXT_FIELD_DECORATION.copyWith(
+                    prefixIcon: Icon(
+                      Icons.person_outline_rounded,
+                      color: COLOR_BACKGROUND,
                     ),
-                  ),
-                  SizedBox(
-                    width: textFormWidth,
-                    height: _textFormHeight,
-                    child: TextFormField(
-                      textInputAction: TextInputAction.next,
-                      // style: TextStyle(fontSize: 18),
-                      keyboardType: TextInputType.name,
-                      focusNode: _lastNameFocusNode,
-                      validator: (value) {
-                        if (value.length < 3) return "";
-                        return null;
-                      },
-                      decoration: TEXT_FIELD_DECORATION.copyWith(
-                          hintText: 'Last name',
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 8)),
-                    ),
-                  ),
-                ],
+                    hintText: 'First name',helperStyle: TextStyle(color: Colors.red,backgroundColor: Colors.red),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 8)),
               ),
+
+
             ),
+            (nameValidation==null) ? null : Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 10,top: 15),
+                  child: Text(nameValidation,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
+                ),
+                Spacer(flex: 1,)
+              ],
+            ),
+            //
+            //
             //  SizedBox(width: 20),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: PADDING_VERTICAL),
+              padding: const EdgeInsets.only(top: 5),
               child: SizedBox(
                 height: _mailFieldHeight,
                 child: TextFormField(
@@ -205,27 +206,23 @@ class SignUpState extends State<SignUp> {
                       });
                     FocusScope.of(context).requestFocus(_passwordFocusNode);
                   },
-                  validator: (value) {
-                    // return _mailValidation(value);
-                    if (value.isEmpty) {
-                      setState(() {
-                        _invalidMail= true;
-                        print(_invalidMail);
-                        //_mailFieldHeight = _textFormErrorHeight;
-                      });
-                      return "Please enter your email address";
-                    } else if (!isEmail(value)) {
-                      setState(() {
-                        _mailFieldHeight = _textFormErrorHeight;
-                      });
-                      return "Please enter a valid email address";
-                    }
-                    // if (_mailFieldHeight != _textFormHeight)
-                    //   setState(() {
-                    //     _mailFieldHeight = _textFormHeight;
-                    //   });
-                    return null;
-                  },
+                    validator: (value) {
+                      if (value.trim().length < 3){
+                        setState(() {
+                          emailValidation= 'please enter your e-mail';
+                        });
+
+
+                      }
+                      else if (!isEmail(value)) {
+                        setState(() {
+                          emailValidation="please enter valid email";
+                        });
+
+                      }
+
+                      return null;
+                    },
                   decoration: TEXT_FIELD_DECORATION.copyWith(
                       prefixIcon: Icon(Icons.mail, color: COLOR_BACKGROUND),
                       hintText: 'Email',
@@ -234,8 +231,16 @@ class SignUpState extends State<SignUp> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: PADDING_VERTICAL),
+            (emailValidation==null) ? null : Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 10,top: 15),
+                  child: Text(emailValidation,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
+                ),
+                Spacer(flex: 1,)
+              ],
+            ),
+            Padding(padding: EdgeInsets.only(top: 5),
               child: SizedBox(
                 height: _passwordFieldHeight,
                 child: TextFormField(
@@ -247,19 +252,7 @@ class SignUpState extends State<SignUp> {
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_password2FocusNode);
                   },
-                  validator: (value) {
-                    if (value.length < 8) {
-                      setState(() {
-                        _passwordFieldHeight = _textFormErrorHeight;
-                      });
-                      return 'Password too short';
-                    }
-                    // if (_passwordFieldHeight != _textFormHeight)
-                    // setState(() {
-                    //   _passwordFieldHeight = _textFormHeight;
-                    // });
-                    return null;
-                  },
+
                   decoration: TEXT_FIELD_DECORATION.copyWith(
                     prefixIcon: Icon(
                       Icons.vpn_key,
@@ -276,14 +269,35 @@ class SignUpState extends State<SignUp> {
                         });
                       },
                     ),
+
                     hintText: 'password',
                     errorStyle: TextStyle(height: ERROR_TEXT_STYLE),
                   ),
+                  validator: (value){
+                    if (value.trim().length < 3){
+                      setState(() {
+                        passwordValidation= 'too short password';
+                      });
+
+
+                    }
+                    return null;
+
+                  },
                 ),
               ),
             ),
+            (passwordValidation==null) ? null : Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 10,top: 15),
+                  child: Text(passwordValidation,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
+                ),
+                Spacer(flex: 1,)
+              ],
+            ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: PADDING_VERTICAL),
+              padding: const EdgeInsets.only(top: 5),
               child: SizedBox(
                 height: _textFormHeight,
                 child: TextFormField(
@@ -292,13 +306,13 @@ class SignUpState extends State<SignUp> {
                   obscureText: hidePassword,
                   textInputAction: TextInputAction.next,
                   focusNode: _password2FocusNode,
+                  onChanged: (confirm){
+
+                  },
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_mobileFocusNode);
                   },
-                  validator: (value) {
-                    if (value.length < 8) return '';
-                    return null;
-                  },
+
                   decoration: TEXT_FIELD_DECORATION.copyWith(
                     prefixIcon: Icon(
                       Icons.vpn_key,
@@ -307,12 +321,31 @@ class SignUpState extends State<SignUp> {
                     suffixIcon: Icon(_passwordMatch),
                     hintText: 'Confirm password',
                   ),
+                  validator: (value){
+                    if (value.trim().length <1){
+                      setState(() {
+                        passwordValidation= 'password not match';
+                      });
+
+
+                    }
+                    return null;
+
+                  },
                 ),
               ),
             ),
-
+            (passwordValidation==null) ? null : Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 10,top: 15),
+                  child: Text(passwordValidation,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
+                ),
+                Spacer(flex: 1,)
+              ],
+            ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: PADDING_VERTICAL),
+              padding: const EdgeInsets.only(top: 5),
               child: SizedBox(
                 height: _textFormHeight,
                 child: TextFormField(
@@ -324,10 +357,7 @@ class SignUpState extends State<SignUp> {
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_ageFocusNode);
                   },
-                  validator: (value) {
-                    if (value.isEmpty) return "";
-                    return null;
-                  },
+
                   decoration: TEXT_FIELD_DECORATION.copyWith(
                     prefixIcon: Icon(
                       Icons.phone,
@@ -335,12 +365,31 @@ class SignUpState extends State<SignUp> {
                     ),
                     hintText: 'Mobile',
                   ),
+                  validator: (value){
+                    if (value.trim().length != 11){
+                      setState(() {
+                        phoneValidation= 'please enter correct phone number';
+                      });
+
+
+                    }
+                    return null;
+
+                  },
                 ),
               ),
             ),
-
+            (phoneValidation==null) ? null : Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 10,top: 15),
+                  child: Text(phoneValidation,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
+                ),
+                Spacer(flex: 1,)
+              ],
+            ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: PADDING_VERTICAL),
+              padding: const EdgeInsets.only(top: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

@@ -1,5 +1,8 @@
+
 import 'dart:math';
 
+import 'package:date_time_picker/date_time_picker.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
 
@@ -55,7 +58,7 @@ class TaskScreen extends StatelessWidget {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+                  (BuildContext context, int index) {
                 return Container(
                   height: 100,
                   color: Colors.grey,
@@ -134,12 +137,12 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
 
   void _positionListener() {
     final FlexibleSpaceBarSettings settings =
-        context.inheritFromWidgetOfExactType(FlexibleSpaceBarSettings);
+    context.inheritFromWidgetOfExactType(FlexibleSpaceBarSettings);
 
     final deltaExtent = settings.maxExtent - settings.minExtent;
     final t =
-        (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent)
-            .clamp(0.0, 1.0) as double;
+    (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent)
+        .clamp(0.0, 1.0) as double;
     final fadeStart = max(0.0, 1.0 - kToolbarHeight / deltaExtent);
     print('t: $t');
     print('fade: $fadeStart');
@@ -209,43 +212,105 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 16, left: 16),
-              child: SizedBox(
-                height: 40,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(Icons.calendar_today_rounded, size: 18),
-                    Spacer(),
-                    RichText(
+            SizedBox(
+              height: 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 7),
+                    child: Icon(Icons.calendar_today_rounded, size: 18),
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text("from:  ",style: TextStyle(color: Colors.grey,fontSize: 15)),
+                  ),
+                  Expanded(
+                      flex: 15,
+                      child:SizedBox(
+                        //height: 10,
+                        child: DateTimeField(
+
+                          style: TextStyle(fontSize: 13, color: Colors.white),
+                          decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
+                              hintStyle: TextStyle(color: Colors.white)),
+                          format: DateFormat('EEEE, d MMM, yyyy'),
+                          initialValue: DateTime.now(),
+
+                          onChanged: (value) {
+
+                          },
+                          resetIcon: null,
+                          onShowPicker: (context, currentValue) {
+                            return showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1900),
+                              initialDate:  DateTime.now(),
+                              lastDate: DateTime(2100),
+
+                            );
+                          },
+                        ),
+                      )),
+
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8,left: 10),
+                    child: RichText(
                         text:
-                            TextSpan(style: TextStyle(fontSize: 15), children: [
-                      TextSpan(
-                          text: 'from: ', style: TextStyle(color: Colors.grey)),
-                      //TextSpan(text: '${widget.task.datePlannedStart.day} ${formatDate(widget.task.datePlannedStart)}')
-                    ])),
-                    Expanded(
-                        flex: 15,
-                        child: BuildDateTime(
-                            selectedDate: widget.task.datePlannedStart)),
-                    Spacer(flex: 2),
-                    RichText(
-                        text:
-                            TextSpan(style: TextStyle(fontSize: 15), children: [
-                      TextSpan(
-                          text: 'duo: ', style: TextStyle(color: Colors.grey)),
-                      //TextSpan(text: formatDate(widget.task.datePlannedStart))
-                    ])),
-                    Expanded(
-                        flex: 15,
-                        child: BuildDateTime(
-                            selectedDate: widget.task.datePlannedEnd)),
-                    Spacer(flex: 2),
-                  ],
-                ),
+                        TextSpan(style: TextStyle(fontSize: 15), children: [
+                          TextSpan(
+                              text: 'duo:   ', style: TextStyle(color: Colors.grey)),
+                          //TextSpan(text: formatDate(widget.task.datePlannedStart))
+                        ])),
+                  ),
+                  Expanded(
+                      flex: 15,
+                      child: SizedBox(
+                        //height: 10,
+                        child: DateTimeField(
+
+                          style: TextStyle(fontSize: 13, color: Colors.white),
+                          decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
+                              hintStyle: TextStyle(color: Colors.white)),
+                          format: DateFormat('EEEE, d MMM, yyyy'),
+                          initialValue: DateTime.now(),
+
+                          onChanged: (value) {
+
+                          },
+                          resetIcon: null,
+                          onShowPicker: (context, currentValue) {
+                            return showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1900),
+                              initialDate:  DateTime.now(),
+                              lastDate: DateTime(2100),
+
+                            );
+                          },
+                        ),
+                      )),
+                  Spacer(flex: 2),
+                ],
               ),
             ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -253,24 +318,87 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                 Spacer(),
                 RichText(
                     text: TextSpan(style: TextStyle(fontSize: 15), children: [
-                  TextSpan(
-                      text: 'from: ', style: TextStyle(color: Colors.grey)),
-                  //TextSpan(text: '${widget.task.datePlannedStart.day} ${formatDate(widget.task.datePlannedStart)}')
-                ])),
+                      TextSpan(
+                          text: 'from:  ', style: TextStyle(color: Colors.grey)),
+                      //TextSpan(text: '${widget.task.datePlannedStart.day} ${formatDate(widget.task.datePlannedStart)}')
+                    ])),
                 Expanded(
                     flex: 15,
-                    child: BuildDateTime(
-                        selectedDate: widget.task.datePlannedStart)),
-                Spacer(flex: 2),
-                RichText(
-                    text: TextSpan(style: TextStyle(fontSize: 15), children: [
-                  TextSpan(text: 'duo: ', style: TextStyle(color: Colors.grey)),
-                  //TextSpan(text: formatDate(widget.task.datePlannedStart))
-                ])),
+                    child: SizedBox(
+                      //height: 10,
+                      child: DateTimeField(
+
+                        style: TextStyle(fontSize: 13, color: Colors.white),
+                        decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
+                            hintStyle: TextStyle(color: Colors.white)),
+                        format: DateFormat('EEEE, d MMM, yyyy'),
+                        initialValue: DateTime.now(),
+
+                        onChanged: (value) {
+
+                        },
+                        resetIcon: null,
+                        onShowPicker: (context, currentValue) {
+                          return showDatePicker(
+                            context: context,
+                            firstDate: DateTime(1900),
+                            initialDate:  DateTime.now(),
+                            lastDate: DateTime(2100),
+
+                          );
+                        },
+                      ),
+                    )),
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: RichText(
+                      text: TextSpan(style: TextStyle(fontSize: 15), children: [
+                        TextSpan(text: 'duo:  ', style: TextStyle(color: Colors.grey)),
+                        //TextSpan(text: formatDate(widget.task.datePlannedStart))
+                      ])),
+                ),
                 Expanded(
                     flex: 15,
-                    child: BuildDateTime(
-                        selectedDate: widget.task.datePlannedEnd)),
+                    child: SizedBox(
+                      //height: 10,
+                      child: DateTimeField(
+
+                        style: TextStyle(fontSize: 13, color: Colors.white),
+                        decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
+                            hintStyle: TextStyle(color: Colors.white)),
+                        format: DateFormat('EEEE, d MMM, yyyy'),
+                        initialValue: DateTime.now(),
+
+                        onChanged: (value) {
+
+                        },
+                        resetIcon: null,
+                        onShowPicker: (context, currentValue) {
+                          return showDatePicker(
+                            context: context,
+                            firstDate: DateTime(1900),
+                            initialDate:  DateTime.now(),
+                            lastDate: DateTime(2100),
+
+                          );
+                        },
+                      ),
+                    )),
                 Spacer(flex: 2),
               ],
             ),
