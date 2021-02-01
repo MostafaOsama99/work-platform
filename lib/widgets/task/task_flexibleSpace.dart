@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/model/task.dart';
 
 import '../../constants.dart';
+import '../../widgets/task/task_card.dart';
 
 class BuildFlexibleSpace extends StatefulWidget {
   final Widget child;
@@ -64,8 +65,8 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
 
   void _positionListener() {
     final FlexibleSpaceBarSettings settings =
-    context.inheritFromWidgetOfExactType(FlexibleSpaceBarSettings);
-    
+        context.inheritFromWidgetOfExactType(FlexibleSpaceBarSettings);
+
     // final t =
     // (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent)
     //     .clamp(0.0, 1.0) as double;
@@ -82,12 +83,12 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
     final deltaExtent = settings.maxExtent - settings.minExtent;
     var openedSpace = (settings.currentExtent - settings.minExtent);
     setState(() {
-      titleIconPadding = (settings.maxExtent - settings.currentExtent)*45 / deltaExtent;
+      titleIconPadding =
+          (settings.maxExtent - settings.currentExtent) * 45 / deltaExtent;
       opacity = (settings.currentExtent - settings.minExtent) / deltaExtent;
       topPadding = openedSpace * 10 / deltaExtent; //open %
     });
   }
-
 
   var titleIconPadding = 0.0;
   var opacity = 0.0;
@@ -106,7 +107,8 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
       background: Opacity(
         opacity: opacity,
         child: Container(
-          padding: EdgeInsets.only(top: notificationHeight, right: 16, left: 16),
+          padding:
+              EdgeInsets.only(top: notificationHeight, right: 16, left: 16),
           //height: 150 - notificationHeight,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -130,7 +132,8 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                           child: Image.asset('assets/icons/project.png',
                               color: Colors.white)),
                       SizedBox(width: 8),
-                      Text(widget.task.projectName ?? 'not assigned to project!',
+                      Text(
+                          widget.task.projectName ?? 'not assigned to project!',
                           style: TextStyle(
                               fontSize: 15,
                               color: widget.task.projectName == null
@@ -151,22 +154,24 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                     Icon(Icons.calendar_today_rounded, size: KIconSize),
                     Spacer(),
                     RichText(
-                        text: TextSpan(style: TextStyle(fontSize: 15), children: [
-                          TextSpan(
-                              text: 'from: ', style: TextStyle(color: Colors.grey)),
-                          //TextSpan(text: '${widget.task.datePlannedStart.day} ${formatDate(widget.task.datePlannedStart)}')
-                        ])),
+                        text:
+                            TextSpan(style: TextStyle(fontSize: 15), children: [
+                      TextSpan(
+                          text: 'from: ', style: TextStyle(color: Colors.grey)),
+                      //TextSpan(text: '${widget.task.datePlannedStart.day} ${formatDate(widget.task.datePlannedStart)}')
+                    ])),
                     Expanded(
                         flex: 15,
                         child: BuildDateTime(
                             selectedDate: widget.task.datePlannedStart)),
                     Spacer(flex: 2),
                     RichText(
-                        text: TextSpan(style: TextStyle(fontSize: 15), children: [
-                          TextSpan(
-                              text: 'duo: ', style: TextStyle(color: Colors.grey)),
-                          //TextSpan(text: formatDate(widget.task.datePlannedStart))
-                        ])),
+                        text:
+                            TextSpan(style: TextStyle(fontSize: 15), children: [
+                      TextSpan(
+                          text: 'duo: ', style: TextStyle(color: Colors.grey)),
+                      //TextSpan(text: formatDate(widget.task.datePlannedStart))
+                    ])),
                     Expanded(
                         flex: 15,
                         child: BuildDateTime(
@@ -177,7 +182,7 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
               ),
 
               ///dependent task line
-              if(widget.task.dependentTask != null)
+              if (widget.task.dependentTask != null)
                 SizedBox(
                   height: 25,
                   child: Row(
@@ -202,10 +207,16 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                                 .scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
                           ),
                           padding: const EdgeInsets.all(4.5),
-
-                          child: Image.asset('assets/icons/task.png', color: Colors.purple)),
+                          child: Image.asset('assets/icons/task.png',
+                              color: Colors.purple)),
                       SizedBox(width: 8),
-                      Expanded(flex: 25,child: FittedBox(child: Text(widget.task.dependentTask.name, style: TextStyle(fontSize: 15),))),
+                      Expanded(
+                          flex: 25,
+                          child: FittedBox(
+                              child: Text(
+                            widget.task.dependentTask.name,
+                            style: TextStyle(fontSize: 15),
+                          ))),
                     ],
                   ),
                 ),
@@ -240,6 +251,11 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
               style: TextStyle(
                   fontSize: 16 - topPadding / 2, fontWeight: FontWeight.bold),
             ),
+            Spacer(),
+            Opacity(
+              opacity: opacity <= 0.5 ? opacity/2 : opacity,
+              child: buildUserAvatar(widget.task.taskCreator),
+            )
           ],
         ),
       ),

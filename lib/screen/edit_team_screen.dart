@@ -82,7 +82,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
             indent: 30,
             endIndent: 30,
           ),
-          DescriptionWidget(description, MediaQuery.of(context).size.width),
+          DescriptionWidget(description),
           Divider(
             height: 16,
             indent: 30,

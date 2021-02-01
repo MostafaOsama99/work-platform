@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
-
 // maximum height for TextFormField error text height
 //   usually between 0-1
 const ERROR_TEXT_STYLE = 0.4;
@@ -14,13 +13,11 @@ const COLOR_SCAFFOLD = Color.fromRGBO(17, 20, 25, 1);
 const PADDING_VERTICAL = 12.0;
 
 const HEIGHT_APPBAR = 50.0;
-const TS_TITLE =
-TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
+const TS_TITLE = TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
 
 const KIconSize = 18.0;
 
 const KIconColor = Colors.white;
-
 
 // default TextFormField decoration
 // ignore: non_constant_identifier_names
@@ -59,6 +56,7 @@ final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
   fillColor: COLOR_BACKGROUND,
   //Colors.blueGrey.shade800,
   filled: true,
+  hintText: 'add description!',
   contentPadding: const EdgeInsets.all(16),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
@@ -70,6 +68,30 @@ final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
   ),
 );
 
+// ignore: non_constant_identifier_names
+final InputDecoration TEXT_FIELD_DECORATION_CHECKPOINT = InputDecoration(
+  fillColor: COLOR_BACKGROUND,
+  //Colors.blueGrey.shade800,
+  filled: true,
+  hintText: 'add description!',
+  contentPadding: const EdgeInsets.all(10),
+  focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(5),
+        topRight: Radius.circular(5),
+        bottomLeft: Radius.circular(15),
+        bottomRight: Radius.circular(15)),
+    borderSide: BorderSide(color: Colors.transparent),
+  ),
+  enabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(5),
+        topRight: Radius.circular(5),
+        bottomLeft: Radius.circular(15),
+        bottomRight: Radius.circular(15)),
+    borderSide: BorderSide(color: Colors.transparent),
+  ),
+);
 
 bool isEmail(String em) {
   String p =
@@ -79,31 +101,16 @@ bool isEmail(String em) {
 }
 
 String formatDate(DateTime date) {
-  const month = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-  ];
+  const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   String formatDate;
   formatDate = '${date.day} ${month[date.month - 1]}';
 
-  if (DateTime.now().year != date.year)
-    formatDate = formatDate + ', ${date.year.toString().substring(2)}';
+  if (DateTime.now().year != date.year) formatDate = formatDate + ', ${date.year.toString().substring(2)}';
 
   return formatDate;
 }
 
 class BuildDateTime extends StatefulWidget {
-
   final DateTime selectedDate;
   final double padding;
 
@@ -114,15 +121,15 @@ class BuildDateTime extends StatefulWidget {
 }
 
 class _BuildDateTimeState extends State<BuildDateTime> {
-
   DateTime date;
-  _BuildDateTimeState (this.date);
+
+  _BuildDateTimeState(this.date);
 
   String dateFormat;
+
   @override
   Widget build(BuildContext context) {
-
-    dateFormat = widget.selectedDate.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy' ;
+    dateFormat = widget.selectedDate.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy';
 
     return SizedBox(
       //height: 10,
@@ -139,22 +146,20 @@ class _BuildDateTimeState extends State<BuildDateTime> {
             hintStyle: TextStyle(color: Colors.white)),
         format: DateFormat(dateFormat),
         initialValue: widget.selectedDate,
-
         onChanged: (value) {
           setState(() {
-            date = value ;
+            date = value;
             print('value: $value');
-            dateFormat = date.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy' ;
+            dateFormat = date.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy';
           });
         },
         resetIcon: null,
         onShowPicker: (context, currentValue) {
           return showDatePicker(
-              context: context,
-              firstDate: DateTime(1900),
-              initialDate: date ?? DateTime.now(),
-              lastDate: DateTime(2100),
-
+            context: context,
+            firstDate: DateTime(1900),
+            initialDate: date ?? DateTime.now(),
+            lastDate: DateTime(2100),
           );
         },
       ),
