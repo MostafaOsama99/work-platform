@@ -134,9 +134,10 @@ class _BuildDateTimeState extends State<BuildDateTime> {
     return SizedBox(
       //height: 10,
       child: DateTimeField(
+
         style: TextStyle(fontSize: 15, color: Colors.white),
         decoration: InputDecoration(
-            contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 10),
+            contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
             border: InputBorder.none,
             focusedBorder: InputBorder.none,
             enabledBorder: InputBorder.none,
@@ -144,7 +145,7 @@ class _BuildDateTimeState extends State<BuildDateTime> {
             disabledBorder: InputBorder.none,
             //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
             hintStyle: TextStyle(color: Colors.white)),
-        format: DateFormat(dateFormat),
+        format: DateFormat('EEEE, d MMM, yyyy'),
         initialValue: widget.selectedDate,
         onChanged: (value) {
           setState(() {

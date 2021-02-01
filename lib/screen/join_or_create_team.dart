@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../constants.dart';
 import '../widgets/custom_expansion_title.dart';
 import 'package:project/widgets/task/add_teams_button.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
@@ -17,7 +18,7 @@ final TEXT_FIELD_DECORATION = InputDecoration(
 
   ///use it in case => theme brightness: Brightness.dark,
   //hintStyle: TextStyle(color: Colors.grey),
-  errorStyle: TextStyle(height: 0),
+  errorStyle: TextStyle(height: 0,color: Colors.black),
   contentPadding: const EdgeInsets.only(left: 20, bottom: 0, top: 0),
   focusedBorder: OutlineInputBorder(
     borderSide: BorderSide(
@@ -121,10 +122,11 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                         child: SizedBox(
                           height: 40,
                           child: TextFormField(
+                            style: TextStyle(color: Colors.black),
                             textInputAction: TextInputAction.done,
                             onFieldSubmitted: (_) {},
                             autofocus: false,
-                            decoration: TEXT_FIELD_DECORATION.copyWith(
+                            decoration: TEXT_FIELD_DECORATION_2.copyWith(
                               hintText: 'Team code',
                             ),
                           ),
@@ -158,7 +160,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                   child: TextFormField(
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) {},
-                    decoration: TEXT_FIELD_DECORATION.copyWith(
+                    decoration: TEXT_FIELD_DECORATION_2.copyWith(
                       hintText: 'name',
                       errorStyle: TextStyle(height: 1),
                     ),
@@ -171,7 +173,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                   child: TextFormField(
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) {},
-                    decoration: TEXT_FIELD_DECORATION.copyWith(
+                    decoration: TEXT_FIELD_DECORATION_2.copyWith(
                       hintText: 'Description',
 
                     ),
@@ -186,7 +188,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                       Container(
                         height: 40,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: COLOR_SCAFFOLD,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: ClipRRect(
@@ -212,7 +214,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                       Container(
                         height: 40,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: COLOR_SCAFFOLD,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: ClipRRect(
@@ -279,7 +281,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                     },
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) {},
-                    decoration: TEXT_FIELD_DECORATION.copyWith(
+                    decoration: TEXT_FIELD_DECORATION_2.copyWith(
                       hintText: 'name',
                     ),
                   ),
@@ -329,7 +331,7 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) {},
                     autofocus: false,
-                    decoration: TEXT_FIELD_DECORATION.copyWith(
+                    decoration: TEXT_FIELD_DECORATION_2.copyWith(
                       hintText: hintText,
                       // errorStyle: TextStyle(height: 1),
                     ),
