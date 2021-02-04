@@ -279,7 +279,7 @@ class _CheckPointState extends State<CheckPoint> {
   @override
   void initState() {
     super.initState();
-    _value = widget.checkPoint.value;
+    _value = widget.checkPoint.isFinished;
   }
 
   @override

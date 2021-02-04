@@ -1,5 +1,6 @@
 import 'dart:wasm';
 
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -134,7 +135,6 @@ class _BuildDateTimeState extends State<BuildDateTime> {
     return SizedBox(
       //height: 10,
       child: DateTimeField(
-
         style: TextStyle(fontSize: 15, color: Colors.white),
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
@@ -158,8 +158,8 @@ class _BuildDateTimeState extends State<BuildDateTime> {
         onShowPicker: (context, currentValue) {
           return showDatePicker(
             context: context,
-            firstDate: DateTime(1900),
             initialDate: date ?? DateTime.now(),
+            firstDate: DateTime(1900),
             lastDate: DateTime(2100),
           );
         },
@@ -199,6 +199,78 @@ class _BuildDateTimeState extends State<BuildDateTime> {
 //             initialDate: selectedDate ?? DateTime.now(),
 //             lastDate: DateTime.now().add(Duration(days:  3650)));
 //       },
-//     ),
-//   );
-// }
+
+
+
+class DateField extends StatefulWidget {
+  final bool isEdit;
+  final DateTime firstDate, lastDate, initialDate;
+
+  const DateField({Key key, this.isEdit = false, this.firstDate, this.lastDate, this.initialDate }) : super(key: key);
+
+  @override
+  _DateFieldState createState() => _DateFieldState();
+}
+
+class _DateFieldState extends State<DateField> {
+  DateTime _date ;
+  String _dateFormat;
+
+
+
+  Future<void> _showDatePicker() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: widget.initialDate,
+      firstDate: widget.firstDate ?? DateTime(2015, 1),
+      lastDate: widget.lastDate ?? DateTime.now().add(Duration(days: 36500)),
+    );
+    if (picked != null && picked != _date) {
+      setState(() {
+        if(_date.year != picked.year)
+          _dateFormat = picked.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yy';
+        _date = picked;
+
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    _date = widget.initialDate ?? DateTime.now();
+    _dateFormat = _date.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yy';
+    //_date = DateFormat(_dateFormat).format(_date);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return InkWell(
+      child: Text(
+          DateFormat(_dateFormat).format(_date)
+      //  _date.toString()
+      ),
+      onTap: widget.isEdit ? _showDatePicker : null,
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

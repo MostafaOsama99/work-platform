@@ -42,135 +42,173 @@ class _TaskScreenState extends State<TaskScreen> {
     final notificationHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            pinned: true,
-            // forceElevated: true,
-            collapsedHeight: 50,
-            toolbarHeight: 49.9999,
-            expandedHeight: widget.task.dependentTask != null ? 180 : 150,
-            actions: [
-              IconButton(
-                icon: _isEditing
-                    ? Icon(
-                        Icons.check_circle_outline,
-                        color: Colors.green,
-                      )
-                    : Icon(Icons.edit, color: Colors.white),
-                splashRadius: 20,
-                onPressed: () => setState(() => _isEditing = !_isEditing),
-              ),
-              IconButton(
-                  icon: Transform.rotate(
-                      angle: 3.14 / 4,
-                      child: Icon(
-                        Icons.attach_file,
-                        color: Colors.white,
-                      )),
-                  onPressed: null)
-            ],
+      body: SafeArea(
+        child: CustomScrollView(
 
-            flexibleSpace: BuildFlexibleSpace(task: widget.task),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              if (widget.task.parentCheckpoint != null)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.adjust,
-                            color: taskAccentColor,
-                          ),
-                          SizedBox(width: 8),
-                          Text(widget.task.parentCheckpoint.name,
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17))
-                        ],
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: COLOR_BACKGROUND,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(2.5),
-                                bottomLeft: Radius.circular(25),
-                                bottomRight: Radius.circular(5),
-                                topRight: Radius.circular(5)),
-                        boxShadow: [BoxShadow(color: taskAccentColor, offset: Offset(-1,1))]
+          slivers: <Widget>[
+            SliverAppBar(
+              pinned: false,
+               floating: true,
+              //forceElevated: false,
+              collapsedHeight: 50,
+              stretch: true,
+              toolbarHeight: 49.9999,
+              expandedHeight: widget.task.dependentTask != null ? 180 : 150,
+              actions: [
+                IconButton(
+                  icon: _isEditing
+                      ? Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.green,
+                        )
+                      : Icon(Icons.edit, color: Colors.white),
+                  splashRadius: 20,
+                  onPressed: () => setState(() => _isEditing = !_isEditing),
+                ),
+                IconButton(
+                    icon: Transform.rotate(
+                        angle: 3.14 / 4,
+                        child: Icon(
+                          Icons.attach_file,
+                          color: Colors.white,
+                        )),
+                    onPressed: null)
+              ],
+
+              flexibleSpace: BuildFlexibleSpace(task: widget.task, isEdit: _isEditing,),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+
+                if (widget.task.dependentTask != null)
+                  SizedBox(
+                    height: 25,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.pause_circle_outline_rounded,
+                          size: KIconSize,
+                          color: KIconColor,
                         ),
-                        margin: const EdgeInsets.only(left: 10, top: 5),
-                        padding: const EdgeInsets.only(left: 10,bottom: 10, right: 5, top: 5),
-                        child: Text(widget.task.parentCheckpoint.description, style: TextStyle(fontSize: 15, height: 1.3),),
+                        Spacer(),
+                        Text('after: ', style: TextStyle(fontSize: 15)),
+                        DateField(initialDate: widget.task.datePlannedEnd,isEdit: _isEditing),
+                        Spacer(),
+                        Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Theme.of(context).scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
+                            ),
+                            padding: const EdgeInsets.all(4.5),
+                            child: Image.asset('assets/icons/task.png', color: Colors.purple)),
+                        SizedBox(width: 8),
+                        FittedBox(
+                            child: Text(
+                              widget.task.dependentTask.name,
+                              style: TextStyle(fontSize: 15),
+                            )),
+                      ],
+                    ),
+                  ),
+
+                if (widget.task.parentCheckpoint != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12, right: 8,left: 8,bottom: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.adjust,
+                              color: taskAccentColor,
+                            ),
+                            SizedBox(width: 8),
+                            Text(widget.task.parentCheckpoint.name,
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17))
+                          ],
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: COLOR_BACKGROUND,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(2.5),
+                                  bottomLeft: Radius.circular(25),
+                                  bottomRight: Radius.circular(5),
+                                  topRight: Radius.circular(5)),
+                          boxShadow: [BoxShadow(color: taskAccentColor, offset: Offset(-1,1))]
+                          ),
+                          margin: const EdgeInsets.only(left: 10, top: 5),
+                          padding: const EdgeInsets.only(left: 10,bottom: 10, right: 5, top: 5),
+                          child: Text(widget.task.parentCheckpoint.description, style: TextStyle(fontSize: 15, height: 1.3),),
+                        ),
+                      ],
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: DescriptionWidget(
+                    widget.task.description,
+                    taskAccentColor: taskAccentColor,
+                  ),
+                ),
+                Divider(
+                  endIndent: 25,
+                  indent: 25,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Checkpoints',
+                        style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold, color: taskAccentColor,
+                          //   shadows: <Shadow>[
+                          //   Shadow(
+                          //     offset: Offset(1.0, 1.0),
+                          //     blurRadius: 2.0,
+                          //     color: Colors.white,
+                          //   ),
+                          // ],
+                        ),
                       ),
+                      Spacer(),
+                      Switch(
+                        value: _showCheckpointDesc,
+                        onChanged: (_) => setState(() => _showCheckpointDesc = !_showCheckpointDesc),
+                        activeColor: taskAccentColor,
+                      ),
+                      // IconButton(
+                      //   icon: Icon(_showCheckpointDesc? Icons.chat_bubble :Icons.radio_button_checked_rounded),
+                      //   onPressed: () => setState(()=> _showCheckpointDesc = !_showCheckpointDesc),
+                      //   splashRadius: 20,
+                      // )
                     ],
                   ),
                 ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: DescriptionWidget(
-                  widget.task.description,
-                  taskAccentColor: taskAccentColor,
-                ),
-              ),
-              Divider(
-                endIndent: 25,
-                indent: 25,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
-                child: Row(
-                  children: [
-                    Text(
-                      'Checkpoints',
-                      style: TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold, color: taskAccentColor,
-                        //   shadows: <Shadow>[
-                        //   Shadow(
-                        //     offset: Offset(1.0, 1.0),
-                        //     blurRadius: 2.0,
-                        //     color: Colors.white,
-                        //   ),
-                        // ],
-                      ),
-                    ),
-                    Spacer(),
-                    Switch(
-                      value: _showCheckpointDesc,
-                      onChanged: (_) => setState(() => _showCheckpointDesc = !_showCheckpointDesc),
-                      activeColor: taskAccentColor,
-                    ),
-                    // IconButton(
-                    //   icon: Icon(_showCheckpointDesc? Icons.chat_bubble :Icons.radio_button_checked_rounded),
-                    //   onPressed: () => setState(()=> _showCheckpointDesc = !_showCheckpointDesc),
-                    //   splashRadius: 20,
-                    // )
-                  ],
-                ),
-              ),
-            ]),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return CheckpointWidget(
-                  checkPoint: widget.task.checkPoints[index],
-                  taskAccentColor: taskAccentColor,
-                  isEditing: _isEditing,
-                  showDescription: _showCheckpointDesc,
-                );
-              },
-              childCount: widget.task.checkPoints.length,
+              ]),
             ),
-          ),
-          SliverList(
-              delegate: SliverChildListDelegate([
-            if (_isEditing) AddCheckpointWidget(taskAccentColor: taskAccentColor),
-          ]))
-        ],
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return CheckpointWidget(
+                    checkPoint: widget.task.checkPoints[index],
+                    taskAccentColor: taskAccentColor,
+                    isEditing: _isEditing,
+                    showDescription: _showCheckpointDesc,
+                  );
+                },
+                childCount: widget.task.checkPoints.length,
+              ),
+            ),
+            SliverList(
+                delegate: SliverChildListDelegate([
+              if (_isEditing) AddCheckpointWidget(taskAccentColor: taskAccentColor),
+            ]))
+          ],
+        ),
       ),
     );
   }

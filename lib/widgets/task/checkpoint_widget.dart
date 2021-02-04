@@ -37,7 +37,7 @@ class _CheckpointWidgetState extends State<CheckpointWidget> {
 
   @override
   void initState() {
-    _value = widget.checkPoint.value;
+    _value = widget.checkPoint.isFinished;
     nameController.text = widget.checkPoint.name;
     descriptionController.text = widget.checkPoint.description;
     super.initState();

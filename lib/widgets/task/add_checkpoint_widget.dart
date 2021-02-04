@@ -70,6 +70,7 @@ class _AddCheckpointWidgetState extends State<AddCheckpointWidget> {
             child: CheckpointDescription(
               controller: descriptionController,
               width: MediaQuery.of(context).size.width,
+              readOnly: false,
             )),
       ],
     );
