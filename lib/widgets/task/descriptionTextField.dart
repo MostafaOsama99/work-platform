@@ -7,8 +7,9 @@ import '../../constants.dart';
 class DescriptionTextField extends StatefulWidget {
   final double width;
   final TextEditingController controller;
+  final decoration;
 
-  const DescriptionTextField({this.controller, this.width}); //20 padding
+  const DescriptionTextField({this.controller, this.width, this.decoration}); //20 padding
 
   @override
   _DescriptionTextFieldState createState() => _DescriptionTextFieldState();
@@ -30,7 +31,7 @@ class _DescriptionTextFieldState extends State<DescriptionTextField> {
     span = TextSpan(text: widget.controller.value.text);
     tp = TextPainter(
         text: span,
-        maxLines: 3,
+        maxLines: KDescriptionMaxLines-1,
         textDirection: TextDirection.ltr); // maxLines 3 => 4 actual
     tp.layout(maxWidth: widget.width);
     setState(() {
@@ -46,7 +47,7 @@ class _DescriptionTextFieldState extends State<DescriptionTextField> {
 
     ///calculating text field height going to be according to textField value & device width - padding
     span = TextSpan(text: widget.controller.value.text);
-    tp = TextPainter(text: span, maxLines: 3, textDirection: TextDirection.ltr);
+    tp = TextPainter(text: span, maxLines: KDescriptionMaxLines-1, textDirection: TextDirection.ltr);
     tp.layout(maxWidth: widget.width);
     _exceedLines = tp.didExceedMaxLines;
     if (!_exceedLines) _expandDes = true;
@@ -58,7 +59,7 @@ class _DescriptionTextFieldState extends State<DescriptionTextField> {
   @override
   void dispose() {
     widget.controller.removeListener(textFieldLines);
-    widget.controller.dispose();
+    //widget.controller.dispose();
     super.dispose();
   }
 
@@ -68,11 +69,12 @@ class _DescriptionTextFieldState extends State<DescriptionTextField> {
         readOnly: true,
         autofocus: false,
         controller: widget.controller,
-        maxLines: _expandDes ? null : 4,
+        maxLines: _expandDes ? null : KDescriptionMaxLines,
         onTap: _exceedLines
             ? () => setState(() => _expandDes = !_expandDes)
             : null,
         //disable the onTap function if the description is short
-        decoration: TEXT_FIELD_DECORATION_2);
+        decoration: widget.decoration ?? TEXT_FIELD_DECORATION_2
+    );
   }
 }

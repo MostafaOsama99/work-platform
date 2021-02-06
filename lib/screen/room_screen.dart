@@ -65,7 +65,7 @@ class _RoomScreenState extends State<RoomScreen> {
               icon: Image.asset(
                 switchProjects
                     ? 'assets/icons/projects.png'
-                    : 'assets/icons/team-3.png',
+                    : 'assets/icons/team-2.png',
                 color: Colors.white,
               ),
               onPressed: () => setState(
@@ -138,7 +138,7 @@ Widget projectWidget(names,context) {
                  endDate: project[i].endDate,
                   projectName: project[i].projectName,
                   mangerName: project[i].mangerName,
-                  teamNames: project[i].teams[i].teamName,
+                 // teamNames: project[i].teams[i].teamName,
                     startDate: project[i].startDate,
                     description: project[i].description,
                    teams: project[i].teams,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/widgets/task/editTextField_method.dart';
 
-import '../../constants.dart';
 import 'descriptionTextField.dart';
 
 //TODO: add enable editing attribute to disable/enable edit button
@@ -16,11 +15,11 @@ class DescriptionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
   final _descriptionController = TextEditingController(text: description.trim());
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, top: 4),
-          child: Row(
+    return Padding(
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 4),
+      child: Column(
+        children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Description',
@@ -37,9 +36,9 @@ class DescriptionWidget extends StatelessWidget {
                   }),
             ],
           ),
-        ),
-        DescriptionTextField(controller: _descriptionController,width: MediaQuery.of(context).size.width-20),
-      ],
+          DescriptionTextField(controller: _descriptionController,width: MediaQuery.of(context).size.width-20),
+        ],
+      ),
     );
   }
 }

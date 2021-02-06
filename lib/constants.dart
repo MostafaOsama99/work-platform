@@ -9,16 +9,18 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 //   usually between 0-1
 const ERROR_TEXT_STYLE = 0.4;
 const COLOR_BACKGROUND = Color.fromRGBO(32, 35, 45, 1);
-const COLOR_ACCENT = Color.fromRGBO(13, 56, 120, 1);
+const COLOR_ACCENT = Color.fromRGBO(13, 56, 130, 1);
 const COLOR_SCAFFOLD = Color.fromRGBO(20, 20, 25, 1);
 const PADDING_VERTICAL = 12.0;
 
-const HEIGHT_APPBAR = 50.0;
+const HEIGHT_APPBAR = 45.0;
 const TS_TITLE = TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
 
 const KIconSize = 18.0;
 
 const KIconColor = Colors.white;
+
+const KDescriptionMaxLines = 3;
 
 // default TextFormField decoration
 // ignore: non_constant_identifier_names
@@ -58,7 +60,7 @@ final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
   //Colors.blueGrey.shade800,
   filled: true,
   hintText: 'add description!',
-  contentPadding: const EdgeInsets.all(16),
+  contentPadding: const EdgeInsets.all(12),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
     borderSide: BorderSide(color: Colors.transparent),
@@ -164,94 +166,6 @@ class _BuildDateTimeState extends State<BuildDateTime> {
           );
         },
       ),
-    );
-  }
-}
-
-//
-// Widget buildDateTime({DateTime selectedDate, double padding = 0.0}) {
-//
-//   String dateFormat = selectedDate.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy' ;
-//   return SizedBox(
-//     //height: 80,
-//     child: DateTimeField(
-//       style: TextStyle(fontSize: 15, color: Colors.white),
-//       decoration: InputDecoration(
-//           contentPadding: const EdgeInsets.only(top: 0, left: 0),
-//           border: InputBorder.none,
-//           focusedBorder: InputBorder.none,
-//           enabledBorder: InputBorder.none,
-//           errorBorder: InputBorder.none,
-//           disabledBorder: InputBorder.none,
-//           //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
-//           hintStyle: TextStyle(color: Colors.white)),
-//       format: DateFormat(dateFormat),
-//       initialValue: selectedDate,
-//       onChanged: (value) {
-//         selectedDate = value ;
-//         dateFormat = selectedDate.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy' ;
-//       },
-//       resetIcon: null,
-//       onShowPicker: (context, currentValue) {
-//         return showDatePicker(
-//             context: context,
-//             firstDate: DateTime(2000),
-//             initialDate: selectedDate ?? DateTime.now(),
-//             lastDate: DateTime.now().add(Duration(days:  3650)));
-//       },
-
-
-
-class DateField extends StatefulWidget {
-  final bool isEdit;
-  final DateTime firstDate, lastDate, initialDate;
-
-  const DateField({Key key, this.isEdit = false, this.firstDate, this.lastDate, this.initialDate }) : super(key: key);
-
-  @override
-  _DateFieldState createState() => _DateFieldState();
-}
-
-class _DateFieldState extends State<DateField> {
-  DateTime _date ;
-  String _dateFormat;
-
-
-
-  Future<void> _showDatePicker() async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: widget.initialDate,
-      firstDate: widget.firstDate ?? DateTime(2015, 1),
-      lastDate: widget.lastDate ?? DateTime.now().add(Duration(days: 36500)),
-    );
-    if (picked != null && picked != _date) {
-      setState(() {
-        if(_date.year != picked.year)
-          _dateFormat = picked.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yy';
-        _date = picked;
-
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    _date = widget.initialDate ?? DateTime.now();
-    _dateFormat = _date.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yy';
-    //_date = DateFormat(_dateFormat).format(_date);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return InkWell(
-      child: Text(
-          DateFormat(_dateFormat).format(_date)
-      //  _date.toString()
-      ),
-      onTap: widget.isEdit ? _showDatePicker : null,
     );
   }
 }

@@ -107,15 +107,17 @@ class _CheckpointWidgetState extends State<CheckpointWidget> {
               children: [
                 if (widget.isEditing)
                   IconButton(
-                    icon: Icon(
-                      Icons.delete_outline,
-                      color: Colors.red,
-                    ),
-                    onPressed: () {
-                      //TODO: handle remove this specific checkpoint, if it's not the last one
-                    },
+                    icon: Icon(Icons.delete_outline),
+                    onPressed: widget.checkPoint.percentage == -1
+                        ? () {
+                            //TODO: handle remove this specific checkpoint, if it's not the last one
+                          }
+                        : null,
                     splashRadius: 20,
                     iconSize: 30,
+                    disabledColor: Colors.grey[800],
+                    tooltip: 'Delete Checkpoint',
+                    color: Colors.red,
                   ),
                 Expanded(
                   child: Padding(
@@ -135,4 +137,3 @@ class _CheckpointWidgetState extends State<CheckpointWidget> {
     );
   }
 }
-

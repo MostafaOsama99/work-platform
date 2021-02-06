@@ -69,6 +69,7 @@ flutter:
     - assets/icons/team-fill-1.png
     - assets/icons/team-fill-2.png
     - assets/icons/team-3.png
+    - assets/icons/team-2.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

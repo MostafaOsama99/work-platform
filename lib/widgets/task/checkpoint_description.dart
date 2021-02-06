@@ -32,7 +32,7 @@ class _CheckpointDescriptionState extends State<CheckpointDescription> {
     span = TextSpan(text: widget.controller.value.text);
     tp = TextPainter(
         text: span,
-        maxLines: 3,
+        maxLines: KDescriptionMaxLines-1,
         textDirection: TextDirection.ltr); // maxLines 3 => 4 actual
     tp.layout(maxWidth: widget.width);
     setState(() {
@@ -48,7 +48,7 @@ class _CheckpointDescriptionState extends State<CheckpointDescription> {
 
     ///calculating text field height going to be according to textField value & device width - padding
     span = TextSpan(text: widget.controller.value.text);
-    tp = TextPainter(text: span, maxLines: 3, textDirection: TextDirection.ltr);
+    tp = TextPainter(text: span, maxLines: KDescriptionMaxLines-1, textDirection: TextDirection.ltr);
     tp.layout(maxWidth: widget.width);
     _exceedLines = tp.didExceedMaxLines;
     if (!_exceedLines) _expandDes = true;
@@ -72,7 +72,7 @@ class _CheckpointDescriptionState extends State<CheckpointDescription> {
         readOnly: widget.readOnly,
         autofocus: false,
         controller: widget.controller,
-        maxLines: _expandDes ? null : 4,
+        maxLines: _expandDes ? null : KDescriptionMaxLines,
         onTap: _exceedLines && widget.readOnly
             ? () => setState(() => _expandDes = !_expandDes)
             : null,

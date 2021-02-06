@@ -26,7 +26,6 @@ class _TeamScreenState extends State<TeamScreen> {
   var _isVisible;
 
   hideButton() {
-    print('hide button called');
     if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
       if (_isVisible == true) {
         // only set when the previous state is false, Less widget rebuilds

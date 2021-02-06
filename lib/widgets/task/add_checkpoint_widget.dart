@@ -19,7 +19,7 @@ class _AddCheckpointWidgetState extends State<AddCheckpointWidget> {
   @override
   void dispose() {
     nameController.dispose();
-    descriptionController.dispose();
+   // descriptionController.dispose();
     super.dispose();
   }
 
