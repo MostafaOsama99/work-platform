@@ -169,7 +169,7 @@ class TaskCard extends StatelessWidget {
             ///checkpoints
             if (task.checkPoints != null)
               ...task.checkPoints.map((cp) => CheckPoint(
-                    key: Key(cp.id),
+                    key: Key(cp.id.toString()),
                     checkPoint: cp,
                     taskAccentColor: taskAccentColor,
                   )),

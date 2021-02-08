@@ -7,9 +7,9 @@ import 'descriptionTextField.dart';
 class DescriptionWidget extends StatelessWidget {
   final String description;
   final Color taskAccentColor;
+  final bool isEditing;
 
-  DescriptionWidget(this.description,{ this.taskAccentColor = Colors.white});
-
+  const DescriptionWidget(this.description,{ this.taskAccentColor = Colors.white, this.isEditing = false});
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +22,26 @@ class DescriptionWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Description',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: taskAccentColor)),
-              IconButton(
-                  splashRadius: 20,
-                  splashColor: Color.fromRGBO(8, 77, 99, 1),
-                  icon: Icon(
-                    Icons.edit,
-                    color: Colors.grey,
-                  ),
-                  onPressed: () {
-                    editTextField(context, _descriptionController, maxLines: 7);
-                  }),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text('Description',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: taskAccentColor)),
+              ),
+              if(isEditing)
+              SizedBox(
+                height: 22,
+                child: IconButton(
+                    splashRadius: 20,
+                    splashColor: Color.fromRGBO(8, 77, 99, 1),
+                    padding: const EdgeInsets.all(0),
+                    icon: Icon(
+                      Icons.edit,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      editTextField(context, _descriptionController, maxLines: 7);
+                    }),
+              ),
             ],
           ),
           DescriptionTextField(controller: _descriptionController,width: MediaQuery.of(context).size.width-20),

@@ -61,7 +61,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
               readOnly: true,
               controller: _nameController,
               decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                suffixIcon: IconButton(
+                suffixIcon:  IconButton(
                     splashRadius: 20,
                     splashColor: Color.fromRGBO(8, 77, 99, 1),
                     icon: Icon(
@@ -79,7 +79,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
             indent: 30,
             endIndent: 30,
           ),
-          DescriptionWidget(description),
+          DescriptionWidget(description, isEditing: true),
           Divider(
             height: 16,
             indent: 30,

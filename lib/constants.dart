@@ -25,9 +25,11 @@ const KDescriptionMaxLines = 3;
 // default TextFormField decoration
 // ignore: non_constant_identifier_names
 final TEXT_FIELD_DECORATION = InputDecoration(
+  isDense: true,
   filled: true,
   errorStyle: TextStyle(height: 0),
   fillColor: Colors.white,
+  hintStyle: TextStyle(color: Colors.grey[700]),
 
   ///use it in case => theme brightness: Brightness.dark,
   //hintStyle: TextStyle(color: Colors.grey),
@@ -57,17 +59,28 @@ final TEXT_FIELD_DECORATION = InputDecoration(
 // ignore: non_constant_identifier_names
 final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
   fillColor: COLOR_BACKGROUND,
+  isDense: true,
   //Colors.blueGrey.shade800,
   filled: true,
   hintText: 'add description!',
-  contentPadding: const EdgeInsets.all(12),
+  contentPadding: const EdgeInsets.all(0),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
-    borderSide: BorderSide(color: Colors.transparent),
+    borderSide: BorderSide(width: 0, style: BorderStyle.none),
   ),
   enabledBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
-    borderSide: BorderSide(color: Colors.transparent),
+    borderSide: BorderSide(width: 0, style: BorderStyle.none),
+  ),
+  errorBorder:  OutlineInputBorder(
+    borderRadius: BorderRadius.circular(20),
+    borderSide: BorderSide(color: Colors.red),
+  ),
+  focusedErrorBorder:  OutlineInputBorder(
+    borderRadius: BorderRadius.circular(20),
+    borderSide: BorderSide(color: Colors.red),
+    gapPadding: 0
+
   ),
 );
 
@@ -84,7 +97,7 @@ final InputDecoration TEXT_FIELD_DECORATION_CHECKPOINT = InputDecoration(
         topRight: Radius.circular(5),
         bottomLeft: Radius.circular(15),
         bottomRight: Radius.circular(15)),
-    borderSide: BorderSide(color: Colors.transparent),
+    borderSide: BorderSide(width: 0, style: BorderStyle.none),
   ),
   enabledBorder: OutlineInputBorder(
     borderRadius: BorderRadius.only(
@@ -92,7 +105,7 @@ final InputDecoration TEXT_FIELD_DECORATION_CHECKPOINT = InputDecoration(
         topRight: Radius.circular(5),
         bottomLeft: Radius.circular(15),
         bottomRight: Radius.circular(15)),
-    borderSide: BorderSide(color: Colors.transparent),
+    borderSide: BorderSide(width: 0, style: BorderStyle.none),
   ),
 );
 

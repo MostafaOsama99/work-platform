@@ -168,6 +168,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: DescriptionWidget(
                   widget.task.description,
+                  isEditing: _isEditing,
                   taskAccentColor: taskAccentColor,
                 ),
               ),
@@ -184,7 +185,7 @@ class _TaskScreenState extends State<TaskScreen> {
                     Text(
                       'Checkpoints',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                         color: taskAccentColor,
                       ),
@@ -233,7 +234,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 children: [
                   Text(
                     'Assigned to:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: taskAccentColor),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: taskAccentColor),
                   ),
                   Spacer(),
                   widget.task.assignedTeam != null
@@ -301,7 +302,7 @@ class _TaskScreenState extends State<TaskScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
                 'Created by:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: taskAccentColor),
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: taskAccentColor),
               ),
             ),
             Padding(

@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:project/model/task.dart';
 
 import 'checkpoint_description.dart';
 import 'checkpoint_widget.dart';
 
 class AddCheckpointWidget extends StatefulWidget {
   final Color taskAccentColor;
+  final Function(String title, String description) onSubmit;
 
-  const AddCheckpointWidget({this.taskAccentColor});
+
+  const AddCheckpointWidget({this.taskAccentColor, this.onSubmit});
 
   @override
   _AddCheckpointWidgetState createState() => _AddCheckpointWidgetState();
 }
 
 class _AddCheckpointWidgetState extends State<AddCheckpointWidget> {
-  final nameController = TextEditingController();
+  final titleController = TextEditingController();
   final descriptionController = TextEditingController();
 
   @override
   void dispose() {
-    nameController.dispose();
-   // descriptionController.dispose();
+    titleController.dispose();
+    //descriptionController.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +43,8 @@ class _AddCheckpointWidgetState extends State<AddCheckpointWidget> {
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: TextField(
                   style: CheckpointWidget.TS_WORKING,
-                  onChanged: (_)=> setState((){}),
-                  controller: nameController,
+                  onChanged: (_) => setState(() {}),
+                  controller: titleController,
                   autofocus: false,
                   decoration: InputDecoration(
                     hintText: 'add checkpoint',
@@ -51,13 +55,17 @@ class _AddCheckpointWidgetState extends State<AddCheckpointWidget> {
                 ),
               ),
               Spacer(),
-              if (nameController.value.text.trim() != '')
+              if (titleController.value.text.trim() != '')
                 IconButton(
                   icon: Icon(Icons.done),
                   onPressed: () {
-                    //TODO: add this checkpoint to task checkpoints
+                    widget.onSubmit(titleController.value.text, descriptionController.value.text);
+                    setState(() {
+                      titleController.text = '';
+                      descriptionController.text = '';
+                    });
                   },
-                  splashRadius: 25,
+                  splashRadius: 18,
                   color: Colors.green,
                 ),
               SizedBox(width: 15),

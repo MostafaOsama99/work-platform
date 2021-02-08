@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:project/widgets/datepicker.dart';
-import 'package:project/widgets/task/add_checkpoint_widget.dart';
-import 'package:project/widgets/task/description_widget.dart';
+import 'package:project/widgets/task/create_task.dart';
 
 import '../model/task.dart';
-import '../widgets/task/task_card.dart';
+import '../widgets/task/task_card.dart' show TaskCard;
 
 import '../constants.dart';
-import '../demoData.dart';
 import 'edit_team_screen.dart';
 
 class TeamScreen extends StatefulWidget {
@@ -39,54 +36,6 @@ class _TeamScreenState extends State<TeamScreen> {
         }
       }
     }
-  }
-
-  createTask(BuildContext context) {
-    return showModalBottomSheet(
-        context: context,
-        isDismissible: true,
-        isScrollControlled: true,
-        backgroundColor: COLOR_SCAFFOLD, //Color.fromRGBO(8, 77, 99, 1),
-        shape: RoundedRectangleBorder(
-          side:BorderSide(color: COLOR_ACCENT),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25), topRight: Radius.circular(25))),
-        builder: (BuildContext context)
-    {
-    return SizedBox(
-      height: 350,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 40,
-              width: MediaQuery.of(context).size.width * 0.7,
-              child: TextField(
-                autofocus: true,
-                textInputAction: TextInputAction.next,
-                decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                  hintText: 'Task title',
-                  contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12)
-                ),
-              ),
-            ),
-            SizedBox(height: 8),
-            TextField(
-              textInputAction: TextInputAction.next,
-              maxLines: 3,
-              decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                  hintText: 'Description',
-                  contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12)
-              ),
-            ),
-            AddCheckpointWidget()
-          ],
-        ),
-      ),
-    );
-
-    });
   }
 
   @override
@@ -138,14 +87,13 @@ class _TeamScreenState extends State<TeamScreen> {
           // scrollDirection: Axis.horizontal,
           itemCount: widget.tasks.length,
           itemBuilder: (context, i) => TaskCard(widget.tasks[i])),
-
       floatingActionButton: Visibility(
         visible: _isVisible,
         child: FloatingActionButton(
           onPressed: () {
             //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => PickerDemo()));
             createTask(context);
-            },
+          },
           tooltip: 'Add Task',
           child: Icon(Icons.add),
         ),

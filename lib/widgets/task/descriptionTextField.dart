@@ -8,8 +8,9 @@ class DescriptionTextField extends StatefulWidget {
   final double width;
   final TextEditingController controller;
   final decoration;
+  final bool readOnly;
 
-  const DescriptionTextField({this.controller, this.width, this.decoration}); //20 padding
+  const DescriptionTextField({this.controller, this.width, this.decoration, this.readOnly = true}); //20 padding
 
   @override
   _DescriptionTextFieldState createState() => _DescriptionTextFieldState();
@@ -66,7 +67,7 @@ class _DescriptionTextFieldState extends State<DescriptionTextField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-        readOnly: true,
+        readOnly: widget.readOnly,
         autofocus: false,
         controller: widget.controller,
         maxLines: _expandDes ? null : KDescriptionMaxLines,

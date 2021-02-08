@@ -7,8 +7,8 @@ import 'package:flutter/foundation.dart';
 /// task data model
 class Task {
   //TODO:check if id is string or double => <int>
-  final String name, id, description, projectName;
-  final DateTime datePlannedStart, datePlannedEnd, dateActualStart, dateActualEnd;
+  String name, id, description, projectName;
+  DateTime datePlannedStart, datePlannedEnd, dateActualStart, dateActualEnd;
   final List<CheckPoint> checkPoints;
   final List<User> members;
 
@@ -25,7 +25,7 @@ class Task {
 
   final User taskCreator;
 
-  const Task(
+  Task(
       {@required this.id,
       @required this.name,
       this.description,
@@ -64,7 +64,8 @@ class Task {
 }
 
 class CheckPoint {
-  final String name, id, description;
+  final int id;
+  final String name, description;
   final bool isFinished;
 
   /// [percentage] = -1: means that this checkpoint doesn't have any subtask, so use checkbox, otherwise show progress
@@ -73,7 +74,7 @@ class CheckPoint {
   const CheckPoint({
     @required this.id,
     @required this.name,
-    @required this.isFinished,
+    this.isFinished = false,
     this.percentage = -1,
     this.description,
   });

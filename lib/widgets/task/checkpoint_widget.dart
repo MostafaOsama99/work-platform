@@ -12,7 +12,7 @@ class CheckpointWidget extends StatefulWidget {
   final bool showDescription;
 
   const CheckpointWidget(
-      {Key key, this.checkPoint, this.taskAccentColor, this.isEditing = false, this.showDescription = true})
+      {Key key,@required this.checkPoint, this.taskAccentColor, this.isEditing = false, this.showDescription = true})
       : super(key: key);
 
   static const TS_DONE = TextStyle(
