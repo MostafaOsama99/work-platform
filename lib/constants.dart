@@ -63,7 +63,7 @@ final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
   //Colors.blueGrey.shade800,
   filled: true,
   hintText: 'add description!',
-  contentPadding: const EdgeInsets.all(0),
+  contentPadding: const EdgeInsets.all(12),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
     borderSide: BorderSide(width: 0, style: BorderStyle.none),
@@ -79,8 +79,7 @@ final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
   focusedErrorBorder:  OutlineInputBorder(
     borderRadius: BorderRadius.circular(20),
     borderSide: BorderSide(color: Colors.red),
-    gapPadding: 0
-
+  //  gapPadding: 0
   ),
 );
 
