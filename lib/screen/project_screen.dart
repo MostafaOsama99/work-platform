@@ -5,79 +5,35 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:project/demoData.dart';
 import 'package:project/screen/team_screen.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:project/widgets/task/description_widget.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
 
-class ProjectScreen extends StatefulWidget{
-  final startDate,endDate;
-  final String description,mangerName,projectName;
+class ProjectScreen extends StatefulWidget {
+  final startDate, endDate;
+  final String description, mangerName, projectName;
   final attachments;
   final task;
   final teams;
-  ProjectScreen({this.startDate,this.endDate,this.description,this.attachments,this.task,this.mangerName,this.projectName,this.teams});
+
+  ProjectScreen(
+      {this.startDate,
+      this.endDate,
+      this.description,
+      this.attachments,
+      this.task,
+      this.mangerName,
+      this.projectName,
+      this.teams});
+
   @override
   _ProjectScreenState createState() => _ProjectScreenState();
 }
 
 class _ProjectScreenState extends State<ProjectScreen> {
-  bool _expandDes = false;
+  bool _isEditing = false;
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
-  _selectStartDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      builder:  (BuildContext context, Widget child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            primaryColor: Color.fromRGBO(37, 36, 42, 1),
-            accentColor:Color.fromRGBO(37, 36, 42, 1),
-            colorScheme: ColorScheme.dark(),
-            buttonTheme: ButtonThemeData(
-                textTheme: ButtonTextTheme.primary
-            ),
-            dialogBackgroundColor:Color.fromRGBO(37, 36, 42, 1),
-          ),
-          child: child,
-        );
-      },
-      context: context,
-      initialDate: startDate,
-      firstDate: DateTime(2000),
 
-      lastDate: DateTime(2025),
-    );
-    if (picked != null && picked != startDate)
-      setState(() {
-        startDate= picked;
-        print(startDate);
-      });
-  }
-  _selectEndDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      builder:  (BuildContext context, Widget child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            primaryColor: Color.fromRGBO(37, 36, 42, 1),
-            accentColor:Color.fromRGBO(37, 36, 42, 1),
-            colorScheme: ColorScheme.dark(),
-            buttonTheme: ButtonThemeData(
-                textTheme: ButtonTextTheme.primary
-            ),
-            dialogBackgroundColor:Color.fromRGBO(37, 36, 42, 1),
-          ),
-          child: child,
-        );
-      },
-      context: context,
-      initialDate: endDate,
-      firstDate: DateTime(2000),
-
-      lastDate: DateTime(2025),
-    );
-    if (picked != null && picked != endDate)
-      setState(() {
-        endDate= picked;
-        print(endDate);
-      });
-  }
   final _descriptionController = TextEditingController();
 
   @override
@@ -87,8 +43,6 @@ class _ProjectScreenState extends State<ProjectScreen> {
     // TODO: implement initState
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -101,172 +55,154 @@ class _ProjectScreenState extends State<ProjectScreen> {
           style: TextStyle(fontSize: 18),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: Row(
-              children: [
-                Text(
-                  "${widget.mangerName}",
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(
-                  width: 7,
-                ),
-                _userTileName("${widget.mangerName}")
-              ],
-            ),
-          )
+          // Padding(
+          //   padding: const EdgeInsets.only(right: 8),
+          //   child: Row(
+          //     children: [
+          //       Text(
+          //         "${widget.mangerName}",
+          //         style: TextStyle(fontSize: 18),
+          //       ),
+          //       SizedBox(
+          //         width: 7,
+          //       ),
+          //       _userTileName("${widget.mangerName}")
+          //     ],
+          //   ),
+          // )
+
+          IconButton(
+            icon: _isEditing
+                ? Icon(
+              Icons.check_circle_outline,
+              color: Colors.green,
+            )
+                : Icon(Icons.edit, color: Colors.white),
+            splashRadius: 20,
+            onPressed: () => setState(() => _isEditing = !_isEditing),
+          ),
         ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 18),
         child: ListView(
           children: [
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(right: 5, bottom: 5),
-                  child: Icon(
-                    Icons.calendar_today_outlined,
-                    size: 22,
-                    color: Theme.of(context).accentColor,
-                  ),
-                ),
-                Text(
-                  "Date",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
-                Spacer(
-                  flex: 1,
-                ),
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: Text("from:   ",
-                              style:
-                              TextStyle(color: Colors.grey, fontSize: 15)),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 22),
-                          child: SizedBox(
-                          width: 170,
-                            //height: 10,
-
-                            child: DateTimeField(
-
-                              style: TextStyle(fontSize: 15, color: Colors.white),
-                              decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                  //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
-                                  hintStyle: TextStyle(color: Colors.white)),
-                              format: DateFormat('EEEE, d MMM, yyyy'),
-                              initialValue: DateTime.now(),
-
-                              onChanged: (value) {
-
-                              },
-                              resetIcon: null,
-                              onShowPicker: (context, currentValue) {
-                                return showDatePicker(
-                                  context: context,
-                                  firstDate: DateTime(1900),
-                                  initialDate:  DateTime.now(),
-                                  lastDate: DateTime(2100),
-
-                                );
-                              },
-                            ),
-                          )
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("due:   ",
-                            style: TextStyle(color: Colors.grey, fontSize: 15)),
-                        SizedBox(
-                            width: 170,
-                            child:DateTimeField(
-
-                              style: TextStyle(fontSize: 15, color: Colors.white),
-                              decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                  //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
-                                  hintStyle: TextStyle(color: Colors.white)),
-                              format: DateFormat('EEEE, d MMM, yyyy'),
-                              initialValue: DateTime.now(),
-
-                              onChanged: (value) {
-
-                              },
-                              resetIcon: null,
-                              onShowPicker: (context, currentValue) {
-                                return showDatePicker(
-                                  context: context,
-                                  firstDate: DateTime(1900),
-                                  initialDate:  DateTime.now(),
-                                  lastDate: DateTime(2100),
-
-                                );
-                              },
-                            )),
-                      ],
-                    )
-                  ],
-                )
-              ],
-            ),
             Padding(
-              padding: const EdgeInsets.only(top: 20, bottom: 10),
+              padding: const EdgeInsets.only(left: 4),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Description',
-                      style: TextStyle(color: Colors.white, fontSize: 16)),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Text("from:   ",
+                        style: TextStyle(color: Colors.grey, fontSize: 15)),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 22),
+                      child: SizedBox(
+                        width: 175,
+                        //height: 10,
+
+                        child: DateTimeField(
+                          style: TextStyle(fontSize: 15, color: Colors.white),
+                          decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.only(
+                                  top: 0, left: 0, bottom: 0),
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
+                              hintStyle: TextStyle(color: Colors.white)),
+                          format: DateFormat('EEEE, d MMM, yyyy'),
+                          initialValue: DateTime.now(),
+                          onChanged: (value) {},
+                          resetIcon: null,
+                          onShowPicker: (context, currentValue) {
+                            return showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1900),
+                              initialDate: DateTime.now(),
+                              lastDate: DateTime(2100),
+                            );
+                          },
+                        ),
+                      ))
                 ],
               ),
             ),
-            TextField(
-              readOnly: true,
-              autofocus: false,
-              controller: _descriptionController,
-              maxLines: _expandDes ? null : 4,
-              onTap: () => setState(() => _expandDes = !_expandDes),
-              style: TextStyle(color: Colors.white),
-              decoration: TEXT_FIELD_DECORATION_2,
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Row(
+                children: [
+                  Text("due:   ",
+                      style: TextStyle(color: Colors.grey, fontSize: 15)),
+                  SizedBox(
+                      width: 175,
+                      height: 34,
+                      child: DateTimeField(
+                        style: TextStyle(fontSize: 15, color: Colors.white),
+                        decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.only(
+                                top: 0, left: 0, bottom: 15),
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
+                            hintStyle: TextStyle(color: Colors.white)),
+                        format: DateFormat('EEEE, d MMM, yyyy'),
+                        initialValue: DateTime.now(),
+                        onChanged: (value) {},
+                        resetIcon: null,
+                        readOnly: true,
+                        onShowPicker: (context, currentValue) {
+                          return showDatePicker(
+                            context: context,
+                            firstDate: DateTime(1900),
+                            initialDate: DateTime.now(),
+                            lastDate: DateTime(2100),
+                          );
+                        },
+                      )),
+                ],
+              ),
             ),
-            FlatButton(
-                onPressed: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "attachment",
-                      style: TextStyle(fontSize: 15, color: Colors.white),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Icon(
-                      Icons.attachment_outlined,
-                      color: Colors.white,
-                      size: 15,
-                    )
-                  ],
-                )),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: DescriptionWidget(widget.description,isEditing: _isEditing,),
+            ),
+            // FlatButton(
+            //     onPressed: () {},
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.start,
+            //       children: [
+            //         Text(
+            //           "attachment",
+            //           style: TextStyle(fontSize: 15, color: Colors.white),
+            //         ),
+            //         SizedBox(
+            //           width: 5,
+            //         ),
+            //         Icon(
+            //           Icons.attachment_outlined,
+            //           color: Colors.white,
+            //           size: 15,
+            //         )
+            //       ],
+            //     )),
+            Padding(
+              padding: const EdgeInsets.only(left: 10, top: 25),
+              child: Text(
+                "Teams",
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
             SizedBox(
               height: 500,
               child: ListView.builder(
@@ -380,7 +316,7 @@ Widget _userTileName(String name) {
   );
 }
 
-Widget dateTime({selectedDate, double padding})  {
+Widget dateTime({selectedDate, double padding}) {
   return DateTimePicker(
     type: DateTimePickerType.dateTimeSeparate,
     dateMask: "EEEE, d MMM, yyyy",

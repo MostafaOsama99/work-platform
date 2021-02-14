@@ -15,30 +15,29 @@ class ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Card(
-      color: COLOR_BACKGROUND,
-      clipBehavior: Clip.antiAlias,
-      // instead of ClipRRect
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      margin: const EdgeInsets.all(10),
+    return InkWell(
+      onTap: ()=> Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ProjectScreen(
+                startDate: startDate,
+                endDate: endDate,
+                description: description,
+                attachments:"",
+                mangerName: mangerName,
+                projectName: projectName,
+                teams:teams,
+              ))),
+      child: Card(
+        color: COLOR_BACKGROUND,
+        clipBehavior: Clip.antiAlias,
+        // instead of ClipRRect
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        margin: const EdgeInsets.all(10),
 
-      child: Padding(
-        padding: EdgeInsets.only(top: 3, left: 10, right: 10),
-        child: GestureDetector(
-
-          onTap: ()=> Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ProjectScreen(
-                    startDate: startDate,
-                    endDate: endDate,
-                    description: description,
-                    attachments:"",
-                    mangerName: mangerName,
-                     projectName: projectName,
-                    teams:teams,
-                  ))),
+        child: Padding(
+          padding: EdgeInsets.only(top: 3, left: 10, right: 10),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -134,17 +133,17 @@ class ProjectCard extends StatelessWidget {
                       ],
                     )
 
-      //   Container(
-      //   height: 25,
-      //   width: 90,
-      //   margin: EdgeInsets.only(top: 0, left: 0, right: 0),
-      //   decoration: new BoxDecoration(
-      //     color: COLOR_SCAFFOLD,
-      //     border: Border.all(color: Colors.black, width: 0.0),
-      //     borderRadius: new BorderRadius.all(Radius.elliptical(90, 50)),
-      //   ),
-      //   child: Center(child: Text("+${teamNames.length - 2}")),
-      // ),
+        //   Container(
+        //   height: 25,
+        //   width: 90,
+        //   margin: EdgeInsets.only(top: 0, left: 0, right: 0),
+        //   decoration: new BoxDecoration(
+        //     color: COLOR_SCAFFOLD,
+        //     border: Border.all(color: Colors.black, width: 0.0),
+        //     borderRadius: new BorderRadius.all(Radius.elliptical(90, 50)),
+        //   ),
+        //   child: Center(child: Text("+${teamNames.length - 2}")),
+        // ),
                         : SizedBox(
                       height: 50,
                       width: 68,

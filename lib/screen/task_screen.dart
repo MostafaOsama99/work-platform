@@ -2,7 +2,7 @@ import 'package:circular_check_box/circular_check_box.dart';
 import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
 import 'package:project/widgets/custom_expansion_title.dart';
-import 'package:project/widgets/custom_paint/parent_checkpoint.dart';
+
 import 'package:project/widgets/task/checkpoint_description.dart';
 import 'package:project/widgets/task/descriptionTextField.dart';
 import 'package:project/widgets/task/description_widget.dart';
@@ -83,7 +83,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   child: CustomPaint(
                     size: Size(MediaQuery.of(context).size.width, 200),
                     //You can Replace this with your desired WIDTH and HEIGHT
-                    painter: RPSCustomPainter(),
+
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
