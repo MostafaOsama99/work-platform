@@ -279,12 +279,13 @@ class _CustomCheckpointWidgetState extends State<CustomCheckpointWidget> {
               ),
               Expanded(
                 child: Padding(
-                    padding: EdgeInsets.only(left: 5, right: 8),
-                    child: TextField(
-                        autofocus: false,
-                        controller: descriptionController,
-                        decoration: TEXT_FIELD_DECORATION_CHECKPOINT)),
-              ),
+                      padding: EdgeInsets.only(left: 5, right: 8),
+                      child: TextField(
+                          autofocus: false,
+                          maxLines: null,
+                          controller: descriptionController,
+                          decoration: TEXT_FIELD_DECORATION_CHECKPOINT)),
+                ),
             ],
           ),
         ),

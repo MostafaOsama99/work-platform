@@ -41,7 +41,8 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(HEIGHT_APPBAR),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+          borderRadius:
+              BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
           child: AppBar(
             leading: IconButton(
                 padding: EdgeInsets.all(0),

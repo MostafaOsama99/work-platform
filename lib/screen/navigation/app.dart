@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/constants.dart';
 import 'package:project/demoData.dart';
 import 'package:project/screen/room_screen.dart';
 
@@ -9,9 +10,13 @@ import '../../screen/main_screen/chats_screen.dart';
 import '../../screen/main_screen/statistics_screen.dart';
 import 'tab_item.dart';
 
+import 'package:convex_bottom_bar/convex_bottom_bar.dart' as bottom;
+
 /*
 * working fine but each tab loses the state
 * */
+const double KIconSize = 20.0;
+const double KActiveIconSize = 32.0;
 
 class App extends StatefulWidget {
   @override
@@ -41,8 +46,7 @@ class AppState extends State<App> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        final isFirstRouteInCurrentTab =
-            !await _navigatorKeys[_currentTab].currentState.maybePop();
+        final isFirstRouteInCurrentTab = !await _navigatorKeys[_currentTab].currentState.maybePop();
         //TODO: change home route here
         if (isFirstRouteInCurrentTab) {
           // if not on the 'main' tab
@@ -66,7 +70,7 @@ class AppState extends State<App> {
             offstage: _currentTab != TabItem.home,
             child: Navigator(
               key: _navigatorKeys[TabItem.home],
-              initialRoute:  Routes.team, //Routes.home,
+              initialRoute: Routes.home, //Routes.home,
               onGenerateRoute: (routeSettings) {
                 WidgetBuilder builder;
 
@@ -74,18 +78,19 @@ class AppState extends State<App> {
 
                 switch (routeSettings.name) {
                   case Routes.home:
-                    builder = (_) => HomePage();
+                    builder = (_) => RoomScreen();
                     break;
                   case Routes.auth:
                     builder = (_) => AuthScreen();
                     break;
                   case Routes.team:
-                    builder = (_) => TeamScreen(teamName: "sssss",tasks: demoTasks,);
+                    builder = (_) => TeamScreen(
+                          teamName: "sssss",
+                          tasks: demoTasks,
+                        );
                     break;
-
                 }
-                return MaterialPageRoute(
-                    builder: builder, settings: routeSettings);
+                return MaterialPageRoute(builder: builder, settings: routeSettings);
               },
             ),
           ),
@@ -93,8 +98,7 @@ class AppState extends State<App> {
             offstage: _currentTab != TabItem.statistics,
             child: Navigator(
               key: _navigatorKeys[TabItem.statistics],
-              onGenerateRoute: (routeSettings) =>
-                  MaterialPageRoute(builder: (context) => RoomScreen()),
+              onGenerateRoute: (routeSettings) => MaterialPageRoute(builder: (context) => StatisticsScreen()),
             ),
           ),
           Offstage(
@@ -102,41 +106,65 @@ class AppState extends State<App> {
             child: Navigator(
               key: _navigatorKeys[TabItem.chats],
               //initialRoute: '/home',
-              onGenerateRoute: (routeSettings) =>
-                  MaterialPageRoute(builder: (context) => AuthScreen()),
+              onGenerateRoute: (routeSettings) => MaterialPageRoute(builder: (context) => AuthScreen()),
             ),
           ),
         ]),
-
-        bottomNavigationBar: SizedBox(
-          height: 56,
-
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20 ), topRight: Radius.circular(20)),
-            child: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.stacked_bar_chart),
-                  label: 'statistics',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.chat),
-                  label: 'Chats',
-                ),
+        bottomNavigationBar: Stack(
+          alignment: Alignment.bottomLeft,
+          children: [
+            bottom.ConvexAppBar(
+              style: bottom.TabStyle.reactCircle,
+              height: 44,
+              top: -12,
+              curveSize: 47,
+              //cornerRadius: 15,
+              backgroundColor: Theme.of(context).appBarTheme.color,
+              activeColor: Colors.white,
+              color: Colors.grey,
+              initialActiveIndex: 0,
+              onTap: (int index) => _selectTab(TabItem.values[index]),
+              items: [
+                bottom.TabItem(
+                    icon: Icon(Icons.home_filled, color: Colors.white70, size: KIconSize),
+                    activeIcon: Icon(Icons.home_filled, color: COLOR_ACCENT, size: KActiveIconSize + 2),
+                    title: 'Home'),
+                bottom.TabItem(
+                    icon: Icon(Icons.assessment_outlined, color: Colors.white70, size: KIconSize),
+                    activeIcon: Icon(Icons.assessment, color: COLOR_ACCENT, size: KActiveIconSize),
+                    title: 'Statistics'),
+                bottom.TabItem(
+                    icon: Icon(Icons.chat_outlined, color: Colors.white70, size: KIconSize),
+                    activeIcon: Icon(Icons.chat, color: COLOR_ACCENT, size: KActiveIconSize - 2),
+                    title: 'Chat'),
               ],
-              currentIndex: _currentTab.index,
-              selectedItemColor: Colors.amber[800],
-              onTap: (index) => _selectTab(
-                TabItem.values[index],
-              ),
             ),
-          ),
+            //*** walk around
+            //since clipRRect not working for that && cornerRadius in ConvexAppBar available in fixed styles only
+            Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 24),
+                  color: COLOR_SCAFFOLD,
+                  height: 20,
+                  width: 20,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(KAppBarRound)),
+                      child: Container(color: COLOR_ACCENT)),
+                ),
+                Spacer(),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 24),
+                  color: COLOR_SCAFFOLD,
+                  height: 20,
+                  width: 20,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.only(topRight: Radius.circular(KAppBarRound)),
+                      child: Container(color: COLOR_ACCENT)),
+                )
+              ],
+            ),
+          ],
         ),
       ),
     );

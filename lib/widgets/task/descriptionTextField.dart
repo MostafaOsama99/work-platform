@@ -67,6 +67,7 @@ class _DescriptionTextFieldState extends State<DescriptionTextField> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+     // scrollPhysics: const NeverScrollableScrollPhysics(),
         readOnly: widget.readOnly,
         autofocus: false,
         controller: widget.controller,

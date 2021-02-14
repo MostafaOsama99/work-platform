@@ -102,9 +102,9 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
           children: [
             custom.ExpansionTile(
               key: _joinTeamKey,
-              onTap: () =>onTileTap(_joinTeamKey),
-
-              onIconPressed: ()=>onTileTap(_joinTeamKey),
+              onTap: () => onTileTap(_joinTeamKey),
+              backgroundColor: COLOR_BACKGROUND,
+              onIconPressed: () => onTileTap(_joinTeamKey),
               headerBackgroundColor: Theme.of(context).appBarTheme.color,
               iconColor: Colors.white,
               title: Text(
@@ -122,12 +122,11 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
                         child: SizedBox(
                           height: 40,
                           child: TextFormField(
-                            style: TextStyle(color: Colors.black),
                             textInputAction: TextInputAction.done,
                             onFieldSubmitted: (_) {},
                             autofocus: false,
                             decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                              hintText: 'Team code',
+                              hintText: '#TeamCode',
                             ),
                           ),
                         ),
@@ -146,9 +145,10 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
             Divider(endIndent: 25, indent: 25),
             //
             custom.ExpansionTile(
-              onIconPressed: ()=>onTileTap(_createTeamKey),
+              onIconPressed: () => onTileTap(_createTeamKey),
               key: _createTeamKey,
-              onTap: () =>onTileTap(_createTeamKey),
+              backgroundColor: COLOR_BACKGROUND,
+              onTap: () => onTileTap(_createTeamKey),
               headerBackgroundColor: Theme.of(context).appBarTheme.color,
               iconColor: Colors.white,
               title: Text('Create Team', style: TS_TITLE),
@@ -248,9 +248,10 @@ class _JoinTeamScreenState extends State<JoinTeamScreen> {
             Divider(endIndent: 25, indent: 25),
             //
             custom.ExpansionTile(
-              onIconPressed: ()=>onTileTap(_createRoomKey),
+              onIconPressed: () => onTileTap(_createRoomKey),
               key: _createRoomKey,
-              onTap: () =>onTileTap(_createRoomKey),
+              backgroundColor: COLOR_BACKGROUND,
+              onTap: () => onTileTap(_createRoomKey),
               headerBackgroundColor: Theme.of(context).appBarTheme.color,
               iconColor: Colors.white,
               title: Text(

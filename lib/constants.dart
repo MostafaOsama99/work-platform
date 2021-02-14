@@ -12,6 +12,7 @@ const COLOR_BACKGROUND = Color.fromRGBO(32, 35, 45, 1);
 const COLOR_ACCENT = Color.fromRGBO(13, 56, 130, 1);
 const COLOR_SCAFFOLD = Color.fromRGBO(20, 20, 25, 1);
 const PADDING_VERTICAL = 12.0;
+const double KAppBarRound = 15.0;
 
 const HEIGHT_APPBAR = 45.0;
 const TS_TITLE = TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
@@ -164,7 +165,6 @@ class _BuildDateTimeState extends State<BuildDateTime> {
         onChanged: (value) {
           setState(() {
             date = value;
-            print('value: $value');
             dateFormat = date.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy';
           });
         },

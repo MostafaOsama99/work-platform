@@ -1,3 +1,22 @@
+import 'package:flutter/material.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+
+class HelloConvexAppBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ConvexAppBar(
+      style: TabStyle.react,
+      items: [
+        TabItem(icon: Icons.list),
+        TabItem(icon: Icons.calendar_today),
+        TabItem(icon: Icons.assessment),
+      ],
+      initialActiveIndex: 1 /*optional*/,
+      onTap: (int i) => print('click index=$i'),
+    );
+  }
+}
+
 // import 'package:flutter/material.dart';
 // import 'tab_item.dart';
 //

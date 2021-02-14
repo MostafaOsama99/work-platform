@@ -95,7 +95,6 @@ class SignUpState extends State<SignUp> {
 
   @override
   void didChangeDependencies() {
-    print(_invalidMail);
     if (_invalidMail) _mailFieldHeight = _textFormErrorHeight;
     super.didChangeDependencies();
   }

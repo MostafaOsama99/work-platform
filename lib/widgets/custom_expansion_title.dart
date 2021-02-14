@@ -22,19 +22,20 @@ class ExpansionTile extends StatefulWidget {
   /// Creates a single-line [ListTile] with a trailing button that expands or collapses
   /// the tile to reveal or hide the [children]. The [initiallyExpanded] property must
   /// be non-null.
-  const ExpansionTile({
-    Key key,
-    this.headerBackgroundColor,
-    this.leading,
-    @required this.title,
-    this.backgroundColor,
-    this.iconColor,
-    this.onExpansionChanged,
-    this.children = const <Widget>[],
-    this.trailing,
-    this.initiallyExpanded = false,
-    this.onTap,this.onIconPressed
-  })  : assert(initiallyExpanded != null),
+  const ExpansionTile(
+      {Key key,
+      this.headerBackgroundColor,
+      this.leading,
+      @required this.title,
+      this.backgroundColor,
+      this.iconColor,
+      this.onExpansionChanged,
+      this.children = const <Widget>[],
+      this.trailing,
+      this.initiallyExpanded = false,
+      this.onTap,
+      this.onIconPressed})
+      : assert(initiallyExpanded != null),
         super(key: key);
 
   /// A widget to display before the title.
@@ -76,20 +77,17 @@ class ExpansionTile extends StatefulWidget {
 
   final Function onTap;
   final Function onIconPressed;
+
   @override
   ExpansionTileState createState() => ExpansionTileState();
 }
 
 /// Note: this state class now is public,
 /// to be able to generate a key for this class
-class ExpansionTileState extends State<ExpansionTile>
-    with SingleTickerProviderStateMixin {
-  static final Animatable<double> _easeOutTween =
-  CurveTween(curve: Curves.easeOut);
-  static final Animatable<double> _easeInTween =
-  CurveTween(curve: Curves.easeIn);
-  static final Animatable<double> _halfTween =
-  Tween<double>(begin: 0.0, end: 0.5);
+class ExpansionTileState extends State<ExpansionTile> with SingleTickerProviderStateMixin {
+  static final Animatable<double> _easeOutTween = CurveTween(curve: Curves.easeOut);
+  static final Animatable<double> _easeInTween = CurveTween(curve: Curves.easeIn);
+  static final Animatable<double> _halfTween = Tween<double>(begin: 0.0, end: 0.5);
 
   final ColorTween _borderColorTween = ColorTween();
   final ColorTween _headerColorTween = ColorTween();
@@ -115,11 +113,9 @@ class ExpansionTileState extends State<ExpansionTile>
     _borderColor = _controller.drive(_borderColorTween.chain(_easeOutTween));
     _headerColor = _controller.drive(_headerColorTween.chain(_easeInTween));
     _iconColor = _controller.drive(_iconColorTween.chain(_easeInTween));
-    _backgroundColor =
-        _controller.drive(_backgroundColorTween.chain(_easeOutTween));
+    _backgroundColor = _controller.drive(_backgroundColorTween.chain(_easeOutTween));
 
-    _isExpanded =
-        PageStorage.of(context)?.readState(context) ?? widget.initiallyExpanded;
+    _isExpanded = PageStorage.of(context)?.readState(context) ?? widget.initiallyExpanded;
     if (_isExpanded) _controller.value = 1.0;
   }
 
@@ -144,8 +140,7 @@ class ExpansionTileState extends State<ExpansionTile>
       }
       PageStorage.of(context)?.writeState(context, _isExpanded);
     });
-    if (widget.onExpansionChanged != null)
-      widget.onExpansionChanged(_isExpanded);
+    if (widget.onExpansionChanged != null) widget.onExpansionChanged(_isExpanded);
   }
 
   Widget _buildChildren(BuildContext context, Widget child) {
@@ -160,7 +155,7 @@ class ExpansionTileState extends State<ExpansionTile>
           child: Card(
             color: _isExpanded
                 ? (widget.headerBackgroundColor ?? Colors.transparent)
-                : Colors.blueGrey.shade800,
+                : widget.backgroundColor ?? Colors.grey.shade800,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15),
             ),
@@ -169,14 +164,11 @@ class ExpansionTileState extends State<ExpansionTile>
                 borderRadius: BorderRadius.circular(15),
               ),
               onTap: () {
-                widget.onTap == null? handleTap(): widget.onTap();
+                widget.onTap == null ? handleTap() : widget.onTap();
               },
               leading: widget.leading,
               title: DefaultTextStyle(
-                style: Theme.of(context)
-                    .textTheme
-                    .subhead
-                    .copyWith(color: titleColor),
+                style: Theme.of(context).textTheme.subhead.copyWith(color: titleColor),
                 child: widget.title,
               ),
               trailing: widget.trailing ??
@@ -187,11 +179,10 @@ class ExpansionTileState extends State<ExpansionTile>
                       icon: Icon(
                         Icons.expand_more,
                         color: widget.iconColor ?? Colors.grey,
-                      ), onPressed: () {
-
-                      widget.onIconPressed == null? handleTap(): widget.onIconPressed();
-
-                    },
+                      ),
+                      onPressed: () {
+                        widget.onIconPressed == null ? handleTap() : widget.onIconPressed();
+                      },
                     ),
                   ),
             ),
@@ -205,7 +196,6 @@ class ExpansionTileState extends State<ExpansionTile>
         ),
       ],
     );
-
   }
 
   @override
