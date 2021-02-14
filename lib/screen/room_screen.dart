@@ -10,14 +10,14 @@ import 'package:project/widgets/home/dropDownMenu.dart';
 
 class RoomScreen extends StatefulWidget {
   final List<List> teams;
-  RoomScreen({this.teams=const []});
+
+  RoomScreen({this.teams = const []});
+
   @override
   _RoomScreenState createState() => _RoomScreenState();
 }
 
 class _RoomScreenState extends State<RoomScreen> {
-
-
   var names = [
     'Ahmed Mohamed',
     'Mostafa Osama',
@@ -32,21 +32,20 @@ class _RoomScreenState extends State<RoomScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Row(
-          children: [
-            Spacer(
-              flex: 2,
-            ),
-            InkWell(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(45),
+        child: ClipRRect(
+          borderRadius:
+              BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
+          child: AppBar(
+            centerTitle: true,
+            title: InkWell(
                 onTap: () {
-                  changeTeam(context, MediaQuery.of(context).size.height,
-                      widget.teams);
+                  changeTeam(context, MediaQuery.of(context).size.height, widget.teams);
                 },
                 child: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       "Room",
@@ -54,66 +53,59 @@ class _RoomScreenState extends State<RoomScreen> {
                     ),
                     Icon(
                       Icons.arrow_drop_down,
-                      color: Colors.grey[700],
+                      color: Colors.grey[600],
                     )
                   ],
                 )),
-            Spacer(
-              flex: 1,
-            ),
-            IconButton(
-              icon: Image.asset(
-                switchProjects
-                    ? 'assets/icons/projects.png'
-                    : 'assets/icons/team-3.png',
-                color: Colors.white,
-              ),
-              onPressed: () => setState(
-                () => switchProjects = !switchProjects,
-              ),
+            actions: [
+              IconButton(
+                splashRadius: 20,
+                iconSize: 19,
+                icon: Image.asset(
+                  switchProjects ? 'assets/icons/projects.png' : 'assets/icons/team-2.png',
+                  color: Colors.white,
+                ),
+                onPressed: () => setState(
+                  () => switchProjects = !switchProjects,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+      body: switchProjects ? projectWidget(names, context) : roomWidget(context),
+    );
+  }
+}
+
+Widget roomWidget(context) {
+  return Column(
+    children: [
+      Padding(
+        padding: EdgeInsets.only(top: 16, left: 16),
+        child: Row(
+          children: [
+            Text(
+              "Teams",
+              style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ],
         ),
       ),
-      body:
-          switchProjects ? projectWidget(names, context) : roomWidget(context),
-    );
-  }
-
-}
-
-Widget roomWidget(context) {
-  return ListView(
-    children: [
-      Padding(
-        padding: EdgeInsets.only(top: 25,left: 28),
-        child: Text(
-          "Teams",
-          style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),
-        ),
-      ),
-
-      SizedBox(
-        height: 1000,
+      Expanded(
         child: ListView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             itemCount: myTeams.length,
-            itemBuilder: (context,i){
-
-              return teamCard(context,myTeams[i].teamName,myTeams[i].tasks);
+            itemBuilder: (context, i) {
+              return teamCard(context, myTeams[i].teamName, myTeams[i].tasks);
             }),
       )
-
-      // Divider(color: Colors.teal,
-      // indent: 15,
-      //   endIndent: 15,
-      // )
-
-
     ],
   );
 }
 
-Widget projectWidget(names,context) {
+Widget projectWidget(names, context) {
   return ListView(
     children: [
       Padding(
@@ -126,28 +118,26 @@ Widget projectWidget(names,context) {
       Padding(
         padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
         child: LimitedBox(
-          maxHeight: MediaQuery.of(context).size.height,
+            maxHeight: MediaQuery.of(context).size.height,
             maxWidth: 200,
             child: ListView.builder(
                 itemCount: project.length,
-                itemBuilder: (context,i){
-              return SizedBox(
-                height: 130,
-                width: 200,
-                child: ProjectCard(
-                 endDate: project[i].endDate,
-                  projectName: project[i].projectName,
-                  mangerName: project[i].mangerName,
-                  teamNames: project[i].teams[i].teamName,
-                    startDate: project[i].startDate,
-                    description: project[i].description,
-                   teams: project[i].teams,
-                ),
-              );
-            })),
+                itemBuilder: (context, i) {
+                  return SizedBox(
+                    height: 130,
+                    width: 200,
+                    child: ProjectCard(
+                      endDate: project[i].endDate,
+                      projectName: project[i].projectName,
+                      mangerName: project[i].mangerName,
+                      // teamNames: project[i].teams[i].teamName,
+                      startDate: project[i].startDate,
+                      description: project[i].description,
+                      teams: project[i].teams,
+                    ),
+                  );
+                })),
       )
     ],
   );
-
 }
-

@@ -22,8 +22,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
     'Habiba Sayed'
   ];
 
-  var description=
-  '''this an example of a l
+  var description = '''this an example of a l
     ''';
 
   List<Widget> users;
@@ -42,9 +41,8 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(HEIGHT_APPBAR),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20)),
+          borderRadius:
+              BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
           child: AppBar(
             leading: IconButton(
                 padding: EdgeInsets.all(0),
@@ -64,7 +62,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
               readOnly: true,
               controller: _nameController,
               decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                suffixIcon: IconButton(
+                suffixIcon:  IconButton(
                     splashRadius: 20,
                     splashColor: Color.fromRGBO(8, 77, 99, 1),
                     icon: Icon(
@@ -82,16 +80,15 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
             indent: 30,
             endIndent: 30,
           ),
-          DescriptionWidget(description),
+          DescriptionWidget(description, isEditing: true),
           Divider(
             height: 16,
             indent: 30,
             endIndent: 30,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 8),
-            child: Text('Members',
-                style: TextStyle(fontSize: 16)),
+            padding: const EdgeInsets.only(left: 8, bottom: 6, top: 6),
+            child: Text('Members', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           ),
           ...users
         ],
@@ -111,7 +108,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
       child: Container(
         height: 55,
         margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: COLOR_BACKGROUND,
           borderRadius: BorderRadius.circular(10),
@@ -122,18 +119,42 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
           children: [
             CircleAvatar(
               radius: 22,
-              child: Text(name[0] + name[lastLitter],
-                  style: TextStyle(fontSize: 16)),
+              child: Text(name[0] + name[lastLitter], style: TextStyle(fontSize: 16)),
               backgroundColor: COLOR_ACCENT,
             ),
             SizedBox(width: 12),
-            Flexible(
-                flex: 5,
-                child: Text(name,
-                    style: TextStyle(fontSize: 15)))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(name, style: TextStyle(fontSize: 15)),
+                Text('@UserName', style: TextStyle(fontSize: 13, color: Colors.grey))
+              ],
+            ),
+            Spacer(),
+            Text('job title'),
+            SizedBox(width: 8),
           ],
         ),
       ),
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

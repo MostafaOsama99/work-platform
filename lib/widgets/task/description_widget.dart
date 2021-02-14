@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:project/widgets/task/editTextField_method.dart';
 
@@ -9,8 +8,8 @@ import 'descriptionTextField.dart';
 class DescriptionWidget extends StatelessWidget {
   final String description;
   final Color taskAccentColor;
-  bool isEditing=false;
-  DescriptionWidget(this.description,{ this.taskAccentColor = Colors.white,this.isEditing});
+
+  DescriptionWidget(this.description,{ this.taskAccentColor = Colors.white});
 
 
   @override
@@ -26,7 +25,7 @@ class DescriptionWidget extends StatelessWidget {
             children: [
               Text('Description',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: taskAccentColor)),
-            isEditing ?   IconButton(
+              IconButton(
                   splashRadius: 20,
                   splashColor: Color.fromRGBO(8, 77, 99, 1),
                   icon: Icon(
@@ -35,10 +34,7 @@ class DescriptionWidget extends StatelessWidget {
                   ),
                   onPressed: () {
                     editTextField(context, _descriptionController, maxLines: 7);
-                  }) : Padding(
-                    padding: const EdgeInsets.only(top: 15,bottom: 10),
-                    child: Text(""),
-                  ),
+                  }),
             ],
           ),
         ),

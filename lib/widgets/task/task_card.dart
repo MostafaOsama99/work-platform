@@ -14,9 +14,7 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery
-        .of(context)
-        .size;
+    final size = MediaQuery.of(context).size;
 
     /// [taskAccentColor] holding color used in task icon, checkboxes for checkpoints
     Color taskAccentColor;
@@ -34,25 +32,19 @@ class TaskCard extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       width: size.width - 32,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme
-            .of(context)
-            .appBarTheme
-            .color, width: 1),
+       // border: Border.all(color: Theme.of(context).appBarTheme.color, width: 1),
         color: COLOR_BACKGROUND,
         //    color: Colors.white10
       ),
       child: InkWell(
         splashColor: Colors.red,
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => TaskScreen(task)));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => TaskScreen(task)));
         },
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -69,9 +61,7 @@ class TaskCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Theme
-                          .of(context)
-                          .scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
+                      color: Theme.of(context).scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
                     ),
                     child: Image.asset(taskIcon, color: taskAccentColor),
                   ),
@@ -89,23 +79,24 @@ class TaskCard extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
 
-
-                        Row(children:
-                        task.parentCheckpoint != null
-                            ? [
-                          Icon(Icons.adjust, color: taskAccentColor, size: 18,),
-                          SizedBox(width: 4),
-                          Text(
-                            task.parentCheckpoint.name,
-                          ),
-                        ]
-                            :
-                        [
-                          buildUserAvatar(task.taskCreator),
-                          Text(task.taskCreator),
-                        ]
-
-                          ,),
+                        Row(
+                          children: task.parentCheckpoint != null
+                              ? [
+                                  Icon(
+                                    Icons.adjust,
+                                    color: taskAccentColor,
+                                    size: 18,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    task.parentCheckpoint.name,
+                                  ),
+                                ]
+                              : [
+                                  buildUserAvatar(task.taskCreator.name),
+                                  Text(task.taskCreator.name),
+                                ],
+                        ),
                         // if(task.projectName != null)
                         // RichText(
                         //   text: TextSpan(
@@ -165,14 +156,11 @@ class TaskCard extends StatelessWidget {
                 size: 13,
                 roundedEdges: const Radius.circular(30),
                 padding: 0,
-                selectedColor: Theme
-                    .of(context)
-                    .appBarTheme
-                    .color,
+                selectedColor: Theme.of(context).appBarTheme.color,
                 // const Color.fromRGBO(45, 142, 175, 1),
                 // Colors.green,
-                unselectedColor: Colors
-                    .black38, // COLOR_BACKGROUND // Color.fromRGBO(31, 66, 156, 1), //Colors.deepPurple.shade600,
+                unselectedColor:
+                    Colors.black38, // COLOR_BACKGROUND // Color.fromRGBO(31, 66, 156, 1), //Colors.deepPurple.shade600,
               ),
             ),
 
@@ -180,9 +168,8 @@ class TaskCard extends StatelessWidget {
 
             ///checkpoints
             if (task.checkPoints != null)
-              ...task.checkPoints.map((cp) =>
-                  CheckPoint(
-                    key: Key(cp.id),
+              ...task.checkPoints.map((cp) => CheckPoint(
+                    key: Key(cp.id.toString()),
                     checkPoint: cp,
                     taskAccentColor: taskAccentColor,
                   )),
@@ -191,41 +178,37 @@ class TaskCard extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 4, top: 4),
               child: Row(
                 children:
-                // task.parentCheckpoint != null
-                //     ? [
-                //         Icon(Icons.adjust, color: Colors.amber),
-                //         SizedBox(width: 4),
-                //         Text(
-                //           task.pa  rentCheckpoint.name,
-                //         ,
-                //         ),
-                //         Spacer(),
-                //         ...task.members.map((m) => _buildUserAvatar(m)),
-                //       ]
-                //     :
-                [
+                    // task.parentCheckpoint != null
+                    //     ? [
+                    //         Icon(Icons.adjust, color: Colors.amber),
+                    //         SizedBox(width: 4),
+                    //         Text(
+                    //           task.pa  rentCheckpoint.name,
+                    //         ,
+                    //         ),
+                    //         Spacer(),
+                    //         ...task.members.map((m) => _buildUserAvatar(m)),
+                    //       ]
+                    //     :
+                    [
                   // _buildUserAvatar(task.taskCreator),
                   // Text(task.taskCreator,
                   //     ),
-                  if(task.projectName != null)
+                  if (task.projectName != null)
                     RichText(
                       text: TextSpan(
                         children: <TextSpan>[
                           TextSpan(
                               text: '  project: ',
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 15)),
-                          TextSpan(
-                              text: task.projectName,
-                              style: TextStyle(fontSize: 15)),
+                              style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic, fontSize: 15)),
+                          TextSpan(text: task.projectName, style: TextStyle(fontSize: 15)),
                         ],
                       ),
                     ),
 
                   Spacer(),
-                  ...task.members.map((m) => buildUserAvatar(m)),
+                  if(task.members!= null)
+                  ...task.members.map((u) => buildUserAvatar(u.name)),
                 ],
               ),
             )
@@ -235,22 +218,22 @@ class TaskCard extends StatelessWidget {
     );
   }
 }
-  Padding buildUserAvatar(String userName) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 4),
-      child: CircleAvatar(
-        radius: 13,
-        backgroundColor: COLOR_SCAFFOLD,
-        child: Text(
-          "${userName[0]}${userName[(userName.indexOf(' ') + 1)]}",
-          style: TextStyle(
-            fontSize: 12,
-          ),
+
+Padding buildUserAvatar(String userName) {
+  return Padding(
+    padding: const EdgeInsets.only(right: 4),
+    child: CircleAvatar(
+      radius: 13,
+      backgroundColor: COLOR_SCAFFOLD,
+      child: Text(
+        "${userName[0]}${userName[(userName.indexOf(' ') + 1)]}",
+        style: TextStyle(
+          fontSize: 12,
         ),
       ),
-    );
-  }
-
+    ),
+  );
+}
 
 class CheckPoint extends StatefulWidget {
   final model.CheckPoint checkPoint;
@@ -279,7 +262,7 @@ class _CheckPointState extends State<CheckPoint> {
   @override
   void initState() {
     super.initState();
-    _value = widget.checkPoint.value;
+    _value = widget.checkPoint.isFinished;
   }
 
   @override
@@ -295,7 +278,7 @@ class _CheckPointState extends State<CheckPoint> {
               widget.checkPoint.name,
               style: _value ? CheckPoint.TS_DONE : CheckPoint.TS_WORKING,
             ),
-           // Spacer(),
+            // Spacer(),
             widget.checkPoint.percentage <= 0
                 ? CircularCheckBox(
                     value: _value,
@@ -306,13 +289,12 @@ class _CheckPointState extends State<CheckPoint> {
                     materialTapTargetSize: MaterialTapTargetSize.padded,
                     onChanged: (value) => setState(() => _value = value))
                 : Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Text(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Text(
                       '${widget.checkPoint.percentage}%',
-                      style: TextStyle(
-                          color: Colors.white70, fontStyle: FontStyle.italic),
+                      style: TextStyle(color: Colors.white70, fontStyle: FontStyle.italic),
                     ),
-                )
+                  )
           ],
         ),
       ),

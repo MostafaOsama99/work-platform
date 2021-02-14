@@ -17,16 +17,17 @@ class SignUpState extends State<SignUp> {
 
   static const _textFormHeight = 35.0;
   static const _textFormErrorHeight = 50.0;
+  static const TS_Style = TextStyle(fontSize: 16, color: Colors.black);
 
   double _mailFieldHeight;
 
   double _passwordFieldHeight;
-  String nameValidation="";
-  String emailValidation="";
-  String passwordValidation="";
-  String confirmPasswordValidation="";
-  String phoneValidation="";
-  String dateValidation="";
+  String nameValidation = "";
+  String emailValidation = "";
+  String passwordValidation = "";
+  String confirmPasswordValidation = "";
+  String phoneValidation = "";
+  String dateValidation = "";
   final _lastNameFocusNode = FocusNode();
   final _mailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
@@ -91,11 +92,10 @@ class SignUpState extends State<SignUp> {
   }
 
   bool _invalidMail = false;
+
   @override
   void didChangeDependencies() {
-    print(_invalidMail);
-    if(_invalidMail)
-      _mailFieldHeight = _textFormErrorHeight;
+    if (_invalidMail) _mailFieldHeight = _textFormErrorHeight;
     super.didChangeDependencies();
   }
 
@@ -135,24 +135,20 @@ class SignUpState extends State<SignUp> {
               height: _textFormHeight,
               child: TextFormField(
                 textInputAction: TextInputAction.next,
-                style: TextStyle(fontSize: 18),
+                style: TS_Style,
                 keyboardType: TextInputType.name,
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_lastNameFocusNode);
                 },
                 validator: (value) {
-                  if (value.trim().length < 3){
+                  if (value.trim().length < 3) {
                     setState(() {
-                      nameValidation= 'too short name';
+                      nameValidation = 'too short name';
                     });
-
-
-                  }
-                  else {
+                  } else {
                     setState(() {
-                      nameValidation="";
+                      nameValidation = "";
                     });
-
                   }
                   return null;
                 },
@@ -161,22 +157,26 @@ class SignUpState extends State<SignUp> {
                       Icons.person_outline_rounded,
                       color: COLOR_BACKGROUND,
                     ),
-                    hintText: 'First name',helperStyle: TextStyle(color: Colors.red,backgroundColor: Colors.red),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 8)),
+                    hintText: 'First name',
+                    helperStyle: TextStyle(color: Colors.red, backgroundColor: Colors.red),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8)),
               ),
-
-
             ),
-            (nameValidation==null) ? null : Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 10,top: 15),
-                  child: Text(nameValidation,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
-                ),
-                Spacer(flex: 1,)
-              ],
-            ),
+            (nameValidation == null)
+                ? null
+                : Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10, top: 15),
+                        child: Text(
+                          nameValidation,
+                          style: TextStyle(color: Colors.red, height: 0),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      Spacer()
+                    ],
+                  ),
             //
             //
             //  SizedBox(width: 20),
@@ -188,7 +188,7 @@ class SignUpState extends State<SignUp> {
                   //  controller: _mailController,
                   focusNode: _mailFocusNode,
                   textInputAction: TextInputAction.next,
-                  //  style: TextStyle(fontSize: 18),
+                  style: TS_Style,
                   keyboardType: TextInputType.emailAddress,
                   onEditingComplete: () {
                     FocusScope.of(context).unfocus();
@@ -196,33 +196,28 @@ class SignUpState extends State<SignUp> {
                   onFieldSubmitted: (value) {
                     if (isEmail(value)) {
                       setState(() {
-                        _emailCheckIcon =
-                            Icon(Icons.check_sharp, color: Colors.green);
+                        _emailCheckIcon = Icon(Icons.check_sharp, color: Colors.green);
                       });
                     } else
                       setState(() {
-                        _invalidMail= true;
+                        _invalidMail = true;
                         _emailCheckIcon = Icon(Icons.cancel, color: Colors.red);
                       });
                     FocusScope.of(context).requestFocus(_passwordFocusNode);
                   },
-                    validator: (value) {
-                      if (value.trim().length < 3){
-                        setState(() {
-                          emailValidation= 'please enter your e-mail';
-                        });
+                  validator: (value) {
+                    if (value.trim().length < 3) {
+                      setState(() {
+                        emailValidation = 'please enter your e-mail';
+                      });
+                    } else if (!isEmail(value)) {
+                      setState(() {
+                        emailValidation = "please enter valid email";
+                      });
+                    }
 
-
-                      }
-                      else if (!isEmail(value)) {
-                        setState(() {
-                          emailValidation="please enter valid email";
-                        });
-
-                      }
-
-                      return null;
-                    },
+                    return null;
+                  },
                   decoration: TEXT_FIELD_DECORATION.copyWith(
                       prefixIcon: Icon(Icons.mail, color: COLOR_BACKGROUND),
                       hintText: 'Email',
@@ -231,21 +226,30 @@ class SignUpState extends State<SignUp> {
                 ),
               ),
             ),
-            (emailValidation==null) ? null : Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 10,top: 15),
-                  child: Text(emailValidation,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
-                ),
-                Spacer(flex: 1,)
-              ],
-            ),
-            Padding(padding: EdgeInsets.only(top: 5),
+            (emailValidation == null)
+                ? null
+                : Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10, top: 15),
+                        child: Text(
+                          emailValidation,
+                          style: TextStyle(color: Colors.red, height: 0),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      Spacer(
+                        flex: 1,
+                      )
+                    ],
+                  ),
+            Padding(
+              padding: EdgeInsets.only(top: 5),
               child: SizedBox(
                 height: _passwordFieldHeight,
                 child: TextFormField(
                   // autofocus: false,
-                  style: TextStyle(fontSize: 18),
+                  style: TS_Style,
                   obscureText: hidePassword,
                   focusNode: _passwordFocusNode,
                   textInputAction: TextInputAction.next,
@@ -269,46 +273,48 @@ class SignUpState extends State<SignUp> {
                         });
                       },
                     ),
-
                     hintText: 'password',
                     errorStyle: TextStyle(height: ERROR_TEXT_STYLE),
                   ),
-                  validator: (value){
-                    if (value.trim().length < 3){
+                  validator: (value) {
+                    if (value.trim().length < 3) {
                       setState(() {
-                        passwordValidation= 'too short password';
+                        passwordValidation = 'too short password';
                       });
-
-
                     }
                     return null;
-
                   },
                 ),
               ),
             ),
-            (passwordValidation==null) ? null : Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 10,top: 15),
-                  child: Text(passwordValidation,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
-                ),
-                Spacer(flex: 1,)
-              ],
-            ),
+            (passwordValidation == null)
+                ? null
+                : Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10, top: 15),
+                        child: Text(
+                          passwordValidation,
+                          style: TextStyle(color: Colors.red, height: 0),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      Spacer(
+                        flex: 1,
+                      )
+                    ],
+                  ),
             Padding(
               padding: const EdgeInsets.only(top: 5),
               child: SizedBox(
                 height: _textFormHeight,
                 child: TextFormField(
                   // autofocus: false,
-                  style: TextStyle(fontSize: 18),
+                  style: TS_Style,
                   obscureText: hidePassword,
                   textInputAction: TextInputAction.next,
                   focusNode: _password2FocusNode,
-                  onChanged: (confirm){
-
-                  },
+                  onChanged: (confirm) {},
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_mobileFocusNode);
                   },
@@ -321,29 +327,34 @@ class SignUpState extends State<SignUp> {
                     suffixIcon: Icon(_passwordMatch),
                     hintText: 'Confirm password',
                   ),
-                  validator: (value){
-                    if (value.trim().length <1){
+                  validator: (value) {
+                    if (value.trim().length < 1) {
                       setState(() {
-                        passwordValidation= 'password not match';
+                        passwordValidation = 'password not match';
                       });
-
-
                     }
                     return null;
-
                   },
                 ),
               ),
             ),
-            (passwordValidation==null) ? null : Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 10,top: 15),
-                  child: Text(passwordValidation,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
-                ),
-                Spacer(flex: 1,)
-              ],
-            ),
+            (passwordValidation == null)
+                ? null
+                : Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10, top: 15),
+                        child: Text(
+                          passwordValidation,
+                          style: TextStyle(color: Colors.red, height: 0),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      Spacer(
+                        flex: 1,
+                      )
+                    ],
+                  ),
             Padding(
               padding: const EdgeInsets.only(top: 5),
               child: SizedBox(
@@ -351,13 +362,12 @@ class SignUpState extends State<SignUp> {
                 child: TextFormField(
                   scrollPadding: EdgeInsets.zero,
                   textInputAction: TextInputAction.next,
-                  style: TextStyle(fontSize: 18),
+                  style: TS_Style,
                   keyboardType: TextInputType.number,
                   focusNode: _mobileFocusNode,
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_ageFocusNode);
                   },
-
                   decoration: TEXT_FIELD_DECORATION.copyWith(
                     prefixIcon: Icon(
                       Icons.phone,
@@ -365,29 +375,34 @@ class SignUpState extends State<SignUp> {
                     ),
                     hintText: 'Mobile',
                   ),
-                  validator: (value){
-                    if (value.trim().length != 11){
+                  validator: (value) {
+                    if (value.trim().length != 11) {
                       setState(() {
-                        phoneValidation= 'please enter correct phone number';
+                        phoneValidation = 'please enter correct phone number';
                       });
-
-
                     }
                     return null;
-
                   },
                 ),
               ),
             ),
-            (phoneValidation==null) ? null : Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 10,top: 15),
-                  child: Text(phoneValidation,style: TextStyle(color: Colors.red,height: 0),textAlign:TextAlign.start,),
-                ),
-                Spacer(flex: 1,)
-              ],
-            ),
+            (phoneValidation == null)
+                ? null
+                : Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10, top: 15),
+                        child: Text(
+                          phoneValidation,
+                          style: TextStyle(color: Colors.red, height: 0),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      Spacer(
+                        flex: 1,
+                      )
+                    ],
+                  ),
             Padding(
               padding: const EdgeInsets.only(top: 8),
               child: Row(
@@ -400,9 +415,7 @@ class SignUpState extends State<SignUp> {
                       focusNode: _ageFocusNode,
                       style: TextStyle(fontSize: 18),
                       decoration: TEXT_FIELD_DECORATION.copyWith(
-                          hintText: 'Birth date',
-                          prefixIcon:
-                          Icon(Icons.date_range, color: COLOR_BACKGROUND)),
+                          hintText: 'Birth date', prefixIcon: Icon(Icons.date_range, color: COLOR_BACKGROUND)),
                       format: DateFormat("dd-MM-yyyy"),
                       onChanged: (_) {
                         FocusScope.of(context).requestFocus(_genderFocusNode);
@@ -412,9 +425,7 @@ class SignUpState extends State<SignUp> {
                         return showDatePicker(
                             context: context,
                             firstDate: DateTime(1900),
-                            initialDate: currentValue ??
-                                DateTime.now()
-                                    .subtract(Duration(days: 16 * 365)),
+                            initialDate: currentValue ?? DateTime.now().subtract(Duration(days: 16 * 365)),
                             lastDate: DateTime.now());
                       },
                     ),
@@ -425,7 +436,7 @@ class SignUpState extends State<SignUp> {
                     child: TextFormField(
                       focusNode: _genderFocusNode,
                       textInputAction: TextInputAction.done,
-                      style: TextStyle(fontSize: 18),
+                      style: TS_Style,
                       decoration: TEXT_FIELD_DECORATION.copyWith(
                         hintText: 'Gender',
                       ),
