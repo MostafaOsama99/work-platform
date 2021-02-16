@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import 'taskType.dart';
 
 //! this model may have a provider
 
@@ -40,27 +43,22 @@ class Task {
       this.dependentTask,
       this.assignedTeam,
       this.checkPoints,
-      this.members});
+      this.members}) {
+    getType;
+  }
 
-// var teamData = {
-//   'teams': <dynamic>[
-//     {
-//       'id': 'teamId',
-//       'TeamName': 'teamName',
-//       //'userRole': 'userRole',
-//       'tasks': {
-//         {'taskId', 'TaskName', 'DatePlannedEnd<iso>', 'percentage<int>'},
-//       }
-//     },
-//   ]
-// };
+  ///holds which task type is
+  taskType type;
 
-// var projectData = {
-//   'projectId':{
-//     'name','plannedEndDate','projectCreator','teams'
-//   }
-// };
-
+  /// [getType] defines task type
+  get getType {
+    if (dependentTask != null)
+      type = taskType.dependentTask;
+    else if (parentCheckpoint != null)
+      type = taskType.subTask;
+    else
+      type = taskType.task;
+  }
 }
 
 class CheckPoint {
@@ -118,12 +116,5 @@ class Team {
   final User leader;
   final List<User> members;
 
-  const Team(
-      {@required this.id,
-      @required this.name,
-      this.description,
-      this.leader,
-      this.members,
-      this.code,
-      this.dateCreated});
+  const Team({this.id, @required this.name, this.description, this.leader, this.members, this.code, this.dateCreated});
 }

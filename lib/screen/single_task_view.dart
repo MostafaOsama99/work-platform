@@ -82,7 +82,7 @@ class _SingleTaskState extends State<SingleTask> {
     // TODO: implement build
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(HEIGHT_APPBAR),
+        preferredSize: Size.fromHeight(KAppBarHeight),
         child: AppBar(
           title: Text(
             "Team name",
@@ -348,7 +348,7 @@ class _SingleTaskState extends State<SingleTask> {
             curve: Curves.easeOut,
           ).drive(Tween<Offset>(
             begin: Offset(0, -1),
-            end: Offset(0, (HEIGHT_APPBAR * 1.4) / height),
+            end: Offset(0, (KAppBarHeight * 1.4) / height),
           )),
           child: child,
         );

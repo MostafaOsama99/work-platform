@@ -71,11 +71,10 @@ class _CheckpointDescriptionState extends State<CheckpointDescription> {
     return TextField(
         readOnly: widget.readOnly,
         autofocus: false,
+        enableInteractiveSelection: !widget.readOnly,
         controller: widget.controller,
         maxLines: _expandDes ? null : KDescriptionMaxLines,
-        onTap: _exceedLines && widget.readOnly
-            ? () => setState(() => _expandDes = !_expandDes)
-            : null,
+        onTap: _exceedLines && widget.readOnly ? () => setState(() => _expandDes = !_expandDes) : null,
         //disable the onTap function if the description is short
         decoration: TEXT_FIELD_DECORATION_CHECKPOINT);
   }

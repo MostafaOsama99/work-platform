@@ -31,13 +31,12 @@ class _HomePageState extends State<HomePage> {
     final height = MediaQuery.of(context).size.height;
 
     //TODO: subtract bottomNavigationBar height
-    final bodyHeight =
-        height - MediaQuery.of(context).padding.top - HEIGHT_APPBAR;
+    final bodyHeight = height - MediaQuery.of(context).padding.top - KAppBarHeight;
 
     return Scaffold(
       // backgroundColor: COLOR_BACKGROUND,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(HEIGHT_APPBAR),
+        preferredSize: Size.fromHeight(KAppBarHeight),
         child: ClipRRect(
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(20)),
           child: AppBar(

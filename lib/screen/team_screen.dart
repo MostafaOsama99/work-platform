@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:project/widgets/task/create_task.dart';
+import 'package:project/create_task_screen.dart';
 
 import '../model/task.dart';
 import '../widgets/task/task_card.dart' show TaskCard;
@@ -57,7 +57,7 @@ class _TeamScreenState extends State<TeamScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(HEIGHT_APPBAR),
+        preferredSize: Size.fromHeight(KAppBarHeight),
         child: ClipRRect(
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
           child: AppBar(
@@ -91,8 +91,7 @@ class _TeamScreenState extends State<TeamScreen> {
         visible: _isVisible,
         child: FloatingActionButton(
           onPressed: () {
-            //Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => PickerDemo()));
-            createTask(context);
+            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => CreateTask()));
           },
           tooltip: 'Add Task',
           child: Icon(Icons.add),

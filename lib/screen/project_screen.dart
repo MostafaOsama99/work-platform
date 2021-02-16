@@ -290,7 +290,7 @@ Widget teamCard(context, String teamName, tasks) {
       title: Text(teamName, style: TS_TITLE),
       children: [
         ListView.separated(
-          padding: const EdgeInsets.only(left: 12, right: 12, top: 4),
+          padding: const EdgeInsets.only(left: 12, right: 12, top: 8),
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           //disable scroll
@@ -307,7 +307,14 @@ Widget teamCard(context, String teamName, tasks) {
 
 Widget subTaskWidget(String teamName, date, double percentage, context) {
   return Row(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
+      Image.asset(
+        'assets/icons/task.png',
+        height: 21,
+        color: Colors.amber,
+      ),
+      SizedBox(width: 6),
       Padding(
         padding: const EdgeInsets.only(top: 1),
         child: SizedBox(

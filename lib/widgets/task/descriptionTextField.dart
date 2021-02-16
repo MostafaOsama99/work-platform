@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project/widgets/task/editTextField_method.dart';
 
 import '../../constants.dart';
 
@@ -69,6 +68,7 @@ class _DescriptionTextFieldState extends State<DescriptionTextField> {
     return TextField(
      // scrollPhysics: const NeverScrollableScrollPhysics(),
         readOnly: widget.readOnly,
+        //enableInteractiveSelection: !widget.readOnly,
         autofocus: false,
         controller: widget.controller,
         maxLines: _expandDes ? null : KDescriptionMaxLines,

@@ -67,6 +67,7 @@ class _CheckpointWidgetState extends State<CheckpointWidget> {
                 child: TextField(
                   style: _value ? CheckpointWidget.TS_DONE : CheckpointWidget.TS_WORKING,
                   readOnly: !widget.isEditing,
+                  enableInteractiveSelection: widget.isEditing,
                   controller: nameController,
                   autofocus: false,
                   decoration: InputDecoration(
