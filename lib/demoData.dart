@@ -5,9 +5,24 @@ const longDescription =
     'this an example of a long description to test the three line in description text form field this an example of a long description to test the three line in description text form field this an example of a long description to test the three line in description text form field this an example of a long description to test the three line in description text form field';
 
 const List<User> users = [
-  User(name: 'Mostafa Osama Hamed', id: 0,jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
-  User(name: 'Youssef Essam Name', id: 1,jobTitle: 'Java Developer', userName: '@Youssef_12'),
-  User(name: 'Mohammed Hesham Name', id: 2,jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
+  User(name: 'Mostafa Osama Hamed', id: 0, jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
+  User(name: 'Youssef Essam Name', id: 1, jobTitle: 'Java Developer', userName: '@Youssef_12'),
+  User(name: 'Mohammed Hesham Name', id: 2, jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
+];
+
+const List<User> usersLong = [
+  User(id: 0, name: 'Mostafa Osama Hamed', jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
+  User(id: 1, name: 'Youssef Essam Name', jobTitle: 'Java Developer', userName: '@Youssef_12'),
+  User(id: 2, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
+  User(id: 3, name: 'Mostafa Osama Hamed', jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
+  User(id: 4, name: 'Youssef Essam Name', jobTitle: 'Java Developer', userName: '@Youssef_12'),
+  User(id: 5, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
+  User(id: 6, name: 'Mostafa Osama Hamed', jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
+  User(id: 7, name: 'Youssef Essam Name', jobTitle: 'Java Developer', userName: '@Youssef_12'),
+  User(id: 8, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
+  User(id: 9, name: 'Mostafa Osama Hamed', jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
+  User(id: 10, name: 'Youssef Essam Name', jobTitle: 'Java Developer', userName: '@Youssef_12'),
+  User(id: 11, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
 ];
 
 const Team team = Team(name: 'Software Engineers', id: 0);
