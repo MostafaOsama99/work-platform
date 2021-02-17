@@ -72,20 +72,23 @@ class _CreateTaskState extends State<CreateTask> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 350,
-      child: Form(
-        key: _formKey,
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+    return ClipRRect(
+      borderRadius: BorderRadius.only(topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+      child: SizedBox(
+        height: 350,
+        child: Form(
+          key: _formKey,
           child: Stack(
-                alignment: Alignment.topCenter,
+            alignment: Alignment.topCenter,
             children: [
               Container(
                 padding: const EdgeInsets.only(top: 8, bottom: 12),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [COLOR_SCAFFOLD, Colors.transparent], stops: [0.7, 1],begin: Alignment.topCenter, end: Alignment.bottomCenter )
-                ),
+                    gradient: LinearGradient(
+                        colors: [COLOR_SCAFFOLD, Colors.transparent],
+                        stops: [0.7, 1],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -111,54 +114,55 @@ class _CreateTaskState extends State<CreateTask> {
                   ],
                 ),
               ),
-              Expanded(
-                child: Padding(
-                      padding: EdgeInsets.only(top: 40),
-                  child: ListView(
-                    clipBehavior: Clip.antiAlias,
+              Padding(
+                padding: EdgeInsets.only(top: 40),
+                child: ListView(clipBehavior: Clip.antiAlias, children: [
+                  SizedBox(height: 18),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(height: 18),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 10),
-                          Icon(Icons.calendar_today_rounded, size: KIconSize),
-                          Spacer(),
-                          Text('from: ', style: TextStyle(color: Colors.grey, fontSize: 15)),
-                          DateField(
+                        SizedBox(width: 10),
+                        Icon(Icons.calendar_today_rounded, size: KIconSize),
+                        Spacer(),
+                        Text('from: ', style: TextStyle(color: Colors.grey, fontSize: 15)),
+                        DateField(
+                          firstDate: newTask.datePlannedStart,
+                          initialDate: newTask.datePlannedStart,
+                          isEditing: true,
+                          onChanged: (newDate) => newTask.datePlannedStart = newDate,
+                        ),
+                        Spacer(flex: 3),
+                        Text('duo: ', style: TextStyle(fontSize: 15, color: Colors.grey)),
+                        DateField(
                             firstDate: newTask.datePlannedStart,
-                            initialDate: newTask.datePlannedStart,
+                            initialDate: newTask.datePlannedEnd,
                             isEditing: true,
-                            onChanged: (newDate) => newTask.datePlannedStart = newDate,
-                          ),
-                          Spacer(flex: 3),
-                          Text('duo: ', style: TextStyle(fontSize: 15, color: Colors.grey)),
-                          DateField(
-                              firstDate: newTask.datePlannedStart,
-                              initialDate: newTask.datePlannedEnd,
-                              isEditing: true,
-                              onChanged: (newDate) => newTask.datePlannedEnd = newDate),
-                          Spacer(),
-                        ],
-                      ),
+                            onChanged: (newDate) => newTask.datePlannedEnd = newDate),
+                        Spacer(),
+                      ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      child: DescriptionTextField(controller: descriptionController,width: MediaQuery.of(context).size.width,readOnly: false, decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    child: DescriptionTextField(
+                      controller: descriptionController,
+                      width: MediaQuery.of(context).size.width,
+                      readOnly: false,
+                      decoration: TEXT_FIELD_DECORATION_2.copyWith(
                           hintText: 'Description',
-                          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12)),),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12)),
                     ),
-                    ListView(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(0),
-                      physics: ScrollPhysics(),
-                      children: [...checkpoints],
-                    ),
-                    AddCheckpointWidget(onSubmit: _addCheckpoint),
-                  ]),
-                ),
+                  ),
+                  ListView(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(0),
+                    physics: ScrollPhysics(),
+                    children: [...checkpoints],
+                  ),
+                  AddCheckpointWidget(onSubmit: _addCheckpoint),
+                ]),
               )
             ].reversed.toList(),
           ),

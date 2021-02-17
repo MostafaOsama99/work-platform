@@ -47,26 +47,21 @@ class _RoomScreenState extends State<RoomScreen> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      "Room",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    Icon(
-                      Icons.arrow_drop_down,
-                      color: Colors.grey[600],
-                    )
+                    Text("Room", style: TextStyle(color: Colors.white)),
+                    Icon(Icons.arrow_drop_down, color: Colors.grey[600])
                   ],
                 )),
             actions: [
-              IconButton(
-                splashRadius: 20,
-                iconSize: 19,
-                icon: Image.asset(
-                  switchProjects ? 'assets/icons/projects.png' : 'assets/icons/team-2.png',
-                  color: Colors.white,
-                ),
-                onPressed: () => setState(
-                  () => switchProjects = !switchProjects,
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: IconButton(
+                  splashRadius: 20,
+                  iconSize: 19,
+                  icon: Image.asset(
+                    switchProjects ? 'assets/icons/projects.png' : 'assets/icons/team-2.png',
+                    color: Colors.white,
+                  ),
+                  onPressed: () => setState(() => switchProjects = !switchProjects),
                 ),
               )
             ],

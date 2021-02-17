@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:project/widgets/task/add_teams_button.dart';
 import 'package:project/widgets/task/description_widget.dart';
 import 'package:project/widgets/task/editTextField_method.dart';
+import '../widgets/custom_expansion_title.dart' as custom;
 
 import '../constants.dart';
 
@@ -39,7 +41,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(HEIGHT_APPBAR),
+        preferredSize: Size.fromHeight(KAppBarHeight),
         child: ClipRRect(
           borderRadius:
               BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
@@ -58,39 +60,114 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
-          TextField(
-              readOnly: true,
-              controller: _nameController,
-              decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                suffixIcon:  IconButton(
-                    splashRadius: 20,
-                    splashColor: Color.fromRGBO(8, 77, 99, 1),
-                    icon: Icon(
-                      Icons.edit,
-                      color: Colors.grey,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        editTextField(context, _nameController);
-                      });
-                    }),
-              )),
-          Divider(
-            height: 16,
-            indent: 30,
-            endIndent: 30,
+          SizedBox(
+            height: 40,
+            child: TextField(
+                readOnly: true,
+                controller: _nameController,
+                decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  suffixIcon: IconButton(
+                      splashRadius: 20,
+                      splashColor: Color.fromRGBO(8, 77, 99, 1),
+                      icon: Icon(
+                        Icons.edit,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          editTextField(context, _nameController);
+                        });
+                      }),
+                )),
           ),
+          Divider(height: 16, indent: 30, endIndent: 30),
           DescriptionWidget(description, isEditing: true),
-          Divider(
-            height: 16,
-            indent: 30,
-            endIndent: 30,
-          ),
+          Divider(height: 16, indent: 30, endIndent: 30),
           Padding(
             padding: const EdgeInsets.only(left: 8, bottom: 6, top: 6),
             child: Text('Members', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           ),
-          ...users
+          ...users,
+          Divider(height: 16, indent: 30, endIndent: 30),
+
+          /*
+          * Invite Members
+          */
+          Padding(
+            padding: const EdgeInsets.only(left: 8, top: 8.0, bottom: 4),
+            child: Row(
+              children: [
+                Transform.rotate(
+                    angle: 3.14 / 1.45,
+                    child: Icon(
+                      Icons.link_outlined,
+                      size: 25,
+                      color: Colors.white70,
+                    )),
+                SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Invite Members to this team:', style: TextStyle(fontSize: 15)),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4, left: 16),
+                      child: Text('#TeamCode7854',
+                          style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic, color: Colors.white70)),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                IconButton(
+                  padding: EdgeInsets.zero,
+                  iconSize: 22,
+                  icon: Icon(Icons.share),
+                  onPressed: () {},
+                  splashRadius: 18,
+                )
+              ],
+            ),
+          ),
+
+          /*
+          * add team
+          */
+
+          custom.ExpansionTile(
+            headerBackgroundColor: COLOR_ACCENT,
+            backgroundColor: COLOR_BACKGROUND.withOpacity(0.8),
+            iconColor: Colors.white,
+            title: Text('Create Team below this', style: TS_TITLE),
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                child: SizedBox(
+                  height: 40,
+                  child: TextFormField(
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (_) {},
+                    decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      hintText: 'Name',
+                      errorStyle: TextStyle(height: 1),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                child: TextFormField(
+                  maxLines: null,
+                  textInputAction: TextInputAction.newline,
+                  onFieldSubmitted: (_) {},
+                  decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                    hintText: 'Description',
+                  ),
+                ),
+              ),
+              SizedBox(height: 48, child: FittedBox(child: addTeamsButton(hintText: "Create Team", onPressed: () {}))),
+            ],
+          ),
         ],
       ),
     );
@@ -140,21 +217,3 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
 import 'package:project/widgets/dateField_widget.dart';
 import 'package:project/widgets/task/descriptionTextField.dart';
+import 'package:project/widgets/task/expandable_text.dart';
 import 'package:project/widgets/team_tile.dart';
 import 'package:project/widgets/user_tile.dart';
 
@@ -13,6 +14,7 @@ import '../widgets/task/description_widget.dart';
 import '../widgets/task/task_flexibleSpace.dart';
 
 import '../model/task.dart';
+import '../model/taskType.dart';
 
 class TaskScreen extends StatefulWidget {
   final Task task;
@@ -29,21 +31,6 @@ class _TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /// [taskAccentColor] holding color used in task icon, checkboxes for checkpoints
-    Color taskAccentColor;
-    String taskIcon;
-
-    if (widget.task.dependentTask != null) {
-      taskAccentColor = Colors.purple;
-      taskIcon = 'assets/icons/subtask-dependent.png';
-    } else if (widget.task.parentCheckpoint != null) {
-      taskAccentColor = Colors.amber;
-      taskIcon = 'assets/icons/subtask.png';
-    } else {
-      taskAccentColor = Colors.greenAccent.shade400;
-      taskIcon = 'assets/icons/task.png';
-    }
-
     final notificationHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
@@ -135,7 +122,7 @@ class _TaskScreenState extends State<TaskScreen> {
                         children: [
                           Icon(
                             Icons.adjust,
-                            color: taskAccentColor,
+                            color: taskTypes[widget.task.type].accentColor,
                           ),
                           SizedBox(width: 8),
                           Text(widget.task.parentCheckpoint.name,
@@ -143,24 +130,27 @@ class _TaskScreenState extends State<TaskScreen> {
                         ],
                       ),
                       Container(
-                          decoration: BoxDecoration(
-                              color: COLOR_BACKGROUND,
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(2.5),
-                                  bottomLeft: Radius.circular(25),
-                                  bottomRight: Radius.circular(5),
-                                  topRight: Radius.circular(5)),
-                              boxShadow: [BoxShadow(color: taskAccentColor, offset: Offset(-1, 1))]),
-                          margin: const EdgeInsets.only(left: 10, top: 5),
-                          padding: const EdgeInsets.only(left: 10, bottom: 10, right: 5, top: 5),
-                          child: DescriptionTextField(
-                            controller: TextEditingController(text: widget.task.parentCheckpoint.description),
-                            width: MediaQuery.of(context).size.width - 16,
-                            decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                                contentPadding: const EdgeInsets.all(0), border: InputBorder.none),
-                          )
-                          //Text(widget.task.parentCheckpoint.description, style: TextStyle(fontSize: 15, height: 1.3)),
-                          ),
+                        decoration: BoxDecoration(
+                            color: COLOR_BACKGROUND,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(2.5),
+                                bottomLeft: Radius.circular(25),
+                                bottomRight: Radius.circular(5),
+                                topRight: Radius.circular(5)),
+                            boxShadow: [
+                              BoxShadow(color: taskTypes[widget.task.type].accentColor, offset: Offset(-1, 1))
+                            ]),
+                        margin: const EdgeInsets.only(left: 10, top: 5),
+                        padding: const EdgeInsets.only(left: 10, bottom: 10, right: 5, top: 5),
+                        child: ExpandableText(widget.task.parentCheckpoint.description),
+                        // DescriptionTextField(
+                        //   controller: TextEditingController(text: widget.task.parentCheckpoint.description),
+                        //   width: MediaQuery.of(context).size.width - 16,
+                        //   decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                        //       contentPadding: const EdgeInsets.all(0), border: InputBorder.none),
+                        // )
+                        //Text(widget.task.parentCheckpoint.description, style: TextStyle(fontSize: 15, height: 1.3)),
+                      ),
                     ],
                   ),
                 ),
@@ -169,7 +159,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 child: DescriptionWidget(
                   widget.task.description,
                   isEditing: _isEditing,
-                  taskAccentColor: taskAccentColor,
+                  taskAccentColor: taskTypes[widget.task.type].accentColor,
                 ),
               ),
               Divider(endIndent: 25, indent: 25),
@@ -187,14 +177,14 @@ class _TaskScreenState extends State<TaskScreen> {
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
-                        color: taskAccentColor,
+                        color: taskTypes[widget.task.type].accentColor,
                       ),
                     ),
                     Spacer(),
                     Switch(
                       value: _showCheckpointDesc,
                       onChanged: (_) => setState(() => _showCheckpointDesc = !_showCheckpointDesc),
-                      activeColor: taskAccentColor,
+                      activeColor: taskTypes[widget.task.type].accentColor,
                     ),
                     // IconButton(
                     //   icon: Icon(_showCheckpointDesc? Icons.chat_bubble :Icons.radio_button_checked_rounded),
@@ -211,7 +201,7 @@ class _TaskScreenState extends State<TaskScreen> {
               (BuildContext context, int index) {
                 return CheckpointWidget(
                   checkPoint: widget.task.checkPoints[index],
-                  taskAccentColor: taskAccentColor,
+                  taskAccentColor: taskTypes[widget.task.type].accentColor,
                   isEditing: _isEditing,
                   showDescription: _showCheckpointDesc,
                 );
@@ -221,7 +211,7 @@ class _TaskScreenState extends State<TaskScreen> {
           ),
           SliverList(
               delegate: SliverChildListDelegate([
-            if (_isEditing) AddCheckpointWidget(taskAccentColor: taskAccentColor),
+            if (_isEditing) AddCheckpointWidget(taskAccentColor: taskTypes[widget.task.type].accentColor),
 /*
   ///
     ///assigned to:
@@ -234,7 +224,8 @@ class _TaskScreenState extends State<TaskScreen> {
                 children: [
                   Text(
                     'Assigned to:',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: taskAccentColor),
+                    style: TextStyle(
+                        fontSize: 17, fontWeight: FontWeight.bold, color: taskTypes[widget.task.type].accentColor),
                   ),
                   Spacer(),
                   widget.task.assignedTeam != null
@@ -302,7 +293,8 @@ class _TaskScreenState extends State<TaskScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
                 'Created by:',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: taskAccentColor),
+                style: TextStyle(
+                    fontSize: 17, fontWeight: FontWeight.bold, color: taskTypes[widget.task.type].accentColor),
               ),
             ),
             Padding(

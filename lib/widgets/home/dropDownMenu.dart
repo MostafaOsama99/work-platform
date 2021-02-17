@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
 import 'package:project/screen/join_or_create_team.dart';
 
-changeTeam(context, height,teams) {
+changeTeam(context, height, teams) {
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
@@ -29,9 +29,7 @@ changeTeam(context, height,teams) {
                 child: LimitedBox(
                   maxHeight: height * 0.35,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(25),
-                        bottomLeft: Radius.circular(25)),
+                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
                     child: ListView(
                       padding: const EdgeInsets.only(top: 5, bottom: 5),
                       shrinkWrap: true,
@@ -39,25 +37,22 @@ changeTeam(context, height,teams) {
                       children: [
                         ...teams
                             .map((e) => _teamTile(
-                           // teamName: e[0],
-                            roomName: e[0],
-                            leaderName: e[1]))
+                                // teamName: e[0],
+                                roomName: e[0],
+                                leaderName: e[1]))
                             .toList(),
                         SizedBox(
                           height: 40,
                           child: FlatButton(
-                            onPressed: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        JoinTeamScreen())),
+                            onPressed: () => Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (BuildContext context) => CreateRoomScreen())),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Join or create team',style: TextStyle(color: Colors.white),
-
+                                  'create room - Join team',
+                                  style: TextStyle(color: Colors.white),
                                 ),
                                 //
                                 Icon(Icons.add_circle, color: Colors.blue),
@@ -82,15 +77,15 @@ changeTeam(context, height,teams) {
           curve: Curves.easeOut,
         ).drive(Tween<Offset>(
           begin: Offset(0, -1),
-          end: Offset(0, (HEIGHT_APPBAR * 1.4) / height),
+          end: Offset(0, (KAppBarHeight * 1.4) / height),
         )),
         child: child,
       );
     },
   );
 }
-Widget _teamTile(
-    {@required roomName, @required leaderName}) {
+
+Widget _teamTile({@required roomName, @required leaderName}) {
   return ClipRRect(
     //  borderRadius: BorderRadius.circular(15),
     child: Padding(
@@ -121,7 +116,9 @@ Widget _teamTile(
                     ],
                   ),
                   Spacer(),
-                  Text(leaderName,)
+                  Text(
+                    leaderName,
+                  )
                 ],
               ),
             ),
@@ -136,4 +133,3 @@ Widget _teamTile(
     ),
   );
 }
-
