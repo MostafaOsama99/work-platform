@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:project/demoData.dart';
 import 'package:project/dialogs/assign_dialog.dart';
 import 'package:project/model/taskType.dart';
 import 'package:project/widgets/dateField_widget.dart';
 import 'package:project/widgets/task/add_checkpoint_widget.dart';
 import 'package:project/widgets/task/descriptionTextField.dart';
 import 'package:project/widgets/team_tile.dart';
+import 'package:project/widgets/user_tile.dart';
 
 import 'constants.dart';
 import 'model/task.dart';
@@ -77,6 +79,8 @@ class _CreateTaskState extends State<CreateTask> {
 
   final descriptionController = TextEditingController();
 
+  List<User> _selectedUsers = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,7 +130,7 @@ class _CreateTaskState extends State<CreateTask> {
               borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20)),
               child: ListView(
                   clipBehavior: Clip.antiAlias,
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                   children: [
                     // SizedBox(height: 18),
                     Padding(
@@ -135,7 +139,6 @@ class _CreateTaskState extends State<CreateTask> {
                         height: 50,
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: TextFormField(
-                            autofocus: true,
                             maxLength: 35,
                             onFieldSubmitted: (value) {
                               newTask.name = value.trim();
@@ -154,7 +157,7 @@ class _CreateTaskState extends State<CreateTask> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(width: 10),
+                        SizedBox(width: 6),
                         Icon(Icons.calendar_today_rounded, size: KIconSize),
                         Spacer(),
                         Text('from: ', style: TextStyle(color: Colors.grey, fontSize: 15)),
@@ -244,11 +247,36 @@ class _CreateTaskState extends State<CreateTask> {
                                     tooltip: 'add member',
                                     color: Colors.white,
                                     splashRadius: 20,
-                                    onPressed: () {
-                                      showDialog(context: context, builder: (BuildContext context) => AssignDialog());
+                                    onPressed: () async {
+                                      var result = await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) => AssignMembersDialog(
+                                                allUsers: usersLong,
+                                                selectedUsers: _selectedUsers,
+                                              ));
+                                      if (result != null) setState(() => _selectedUsers = result);
                                     }))
                       ],
-                    )
+                    ),
+                    SizedBox(height: 10),
+
+                    _selectedUsers.length > 0
+                        ? ListView.builder(
+                            padding: const EdgeInsets.all(0),
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: _selectedUsers.length,
+                            itemBuilder: (BuildContext context, int index) => UserTile(_selectedUsers[index]),
+                          )
+                        : SizedBox(
+                            height: 40,
+                            child: Center(
+                              child: Text(
+                                'Add members or a team!',
+                                style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.white70),
+                              ),
+                            ),
+                          )
                   ]),
             ),
           )

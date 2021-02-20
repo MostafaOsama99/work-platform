@@ -1,119 +1,65 @@
-import 'package:circular_check_box/circular_check_box.dart';
 import 'package:flutter/material.dart';
+
+import 'package:circular_check_box/circular_check_box.dart';
+
+import '../widgets/user_tile.dart';
 import '../constants.dart';
 import '../model/task.dart';
 
-class _User extends User {
+/// [_User] is a class contains user and a bool [selected] holds the value for each dialog item if it's selected or not
+class _User {
   bool selected;
+  final User user;
 
-  _User({this.selected = false, userName, @required id, imageUrl, @required name, jobTitle})
-      : super(userName: userName, id: id, imageUrl: imageUrl, jobTitle: jobTitle, name: name);
+  _User(this.user, {this.selected = false});
 }
 
-//TODO: exclude current user from this list
-List<_User> _users = [
-  _User(name: 'Mostafa Osama Hamed', id: 0, jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
-  _User(name: 'Youssef Essam Name', id: 1, jobTitle: 'Java Developer', userName: '@Youssef_12'),
-  _User(name: 'Mohammed Hesham Name', id: 2, jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
-  _User(name: 'Mostafa Osama Hamed', id: 3, jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
-  _User(name: 'Youssef Essam Name', id: 4, jobTitle: 'Java Developer', userName: '@Youssef_12'),
-  _User(name: 'Mohammed Hesham Name', id: 5, jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
-  _User(name: 'Mostafa Osama Hamed', id: 6, jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
-  _User(name: 'Youssef Essam Name', id: 7, jobTitle: 'Java Developer', userName: '@Youssef_12'),
-  _User(name: 'Mohammed Hesham Name', id: 8, jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
-];
+class AssignMembersDialog extends StatefulWidget {
+  final List<User> selectedUsers;
+  final List<User> allUsers;
 
-class _UserTile extends StatelessWidget {
-  final _User user;
-  final Function(int id) onSelected;
-  final Function(int id) onDeselect;
-
-  const _UserTile({Key key, this.user, this.onSelected, this.onDeselect}) : super(key: key);
+  const AssignMembersDialog({Key key, this.selectedUsers, this.allUsers}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    var name = user.name.split(' ');
-
-    return GestureDetector(
-      onTap: () {
-        if (!user.selected)
-          onSelected(user.id);
-        else
-          onDeselect(user.id);
-      },
-      child: Container(
-        height: 52,
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        padding: const EdgeInsets.only(left: 6, right: 14, top: 2, bottom: 2),
-        decoration: BoxDecoration(
-          color: user.selected ? COLOR_ACCENT.withOpacity(0.5) : COLOR_BACKGROUND,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 22,
-              child: user.selected
-                  ? Icon(Icons.check, color: COLOR_ACCENT)
-                  : Text(name[0][0] + name[1][0], style: TextStyle(fontSize: 16)),
-              backgroundColor: user.selected ? COLOR_SCAFFOLD : COLOR_ACCENT,
-            ),
-            SizedBox(width: 10),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 3),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(name[0] + ' ' + name[1], style: TextStyle(fontSize: 15)),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(' ${user.userName}', style: TextStyle(fontSize: 12.5, color: Colors.grey)),
-                        Spacer(),
-                        Text(user.jobTitle, style: TextStyle(fontSize: 13.5)),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-            //SizedBox(width: 8),
-          ],
-        ),
-      ),
-    );
-  }
+  _AssignMembersDialogState createState() => _AssignMembersDialogState();
 }
 
-class AssignDialog extends StatefulWidget {
-  @override
-  _AssignDialogState createState() => _AssignDialogState();
-}
-
-class _AssignDialogState extends State<AssignDialog> {
-  Size _size;
+class _AssignMembersDialogState extends State<AssignMembersDialog> {
   EdgeInsets _padding;
   bool _isInit = false;
   int _selectCount = 0;
 
   bool _selectAll = false;
+  List<User> _selectedUsers;
+
+  List<_User> _loadedUsers = [];
 
   @override
   void initState() {
-    _users.forEach((element) {
-      if (element.selected) _selectCount++;
-    });
+    _selectedUsers = widget.selectedUsers;
+    // if all selected
+    if (_selectedUsers.length == widget.allUsers.length) {
+      _selectCount = _selectedUsers.length;
+      _selectAll = true;
+      widget.allUsers.forEach((element) => _loadedUsers.add(_User(element, selected: true)));
+    }
+    // sort by selection
+    else {
+      widget.allUsers.forEach((element) {
+        // if this element is selected
+        if (_selectedUsers.contains(element))
+          _loadedUsers.insert(0, _User(element, selected: true)); // insert first
+        else
+          _loadedUsers.add(_User(element, selected: false)); // add last
+      });
+      _selectCount = _selectedUsers.length;
+    }
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
     if (!_isInit) {
-      _size = MediaQuery.of(context).size;
       _padding = MediaQuery.of(context).padding;
     }
     super.didChangeDependencies();
@@ -156,12 +102,12 @@ class _AssignDialogState extends State<AssignDialog> {
                           _selectAll = value;
                           if (value)
                             setState(() {
-                              _users.forEach((element) => element.selected = true);
-                              _selectCount = _users.length;
+                              _loadedUsers.forEach((element) => element.selected = true);
+                              _selectCount = _loadedUsers.length;
                             });
                           else
                             setState(() {
-                              _users.forEach((element) => element.selected = false);
+                              _loadedUsers.forEach((element) => element.selected = false);
                               _selectCount = 0;
                             });
                         }),
@@ -185,28 +131,113 @@ class _AssignDialogState extends State<AssignDialog> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   itemBuilder: (BuildContext context, int index) => _UserTile(
                     key: UniqueKey(),
-                    user: _users[index],
+                    user: _loadedUsers[index],
                     onSelected: (id) => setState(() {
                       _selectCount++;
-                      _users.firstWhere((element) => element.id == id).selected = true;
+                      _loadedUsers.firstWhere((element) => element.user.id == id).selected = true;
                     }),
                     onDeselect: (id) => setState(() {
                       _selectCount--;
-                      _users.firstWhere((element) => element.id == id).selected = false;
+                      if (_selectAll) _selectAll = false;
+                      _loadedUsers.firstWhere((element) => element.user.id == id).selected = false;
                     }),
                   ),
-                  itemCount: _users.length,
+                  itemCount: _loadedUsers.length,
                 ),
               ),
             ),
-            OutlineButton(
-                padding: const EdgeInsets.all(0),
-                borderSide: BorderSide(color: COLOR_ACCENT, width: 2),
-                highlightedBorderColor: Colors.green,
-                child: Icon(Icons.done, color: Colors.green),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                })
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                OutlineButton(
+                    padding: const EdgeInsets.all(0),
+                    //borderSide: BorderSide(color: COLOR_ACCENT, width: 2),
+                    highlightedBorderColor: Colors.red,
+                    child: Transform.rotate(angle: 3.14 / 4, child: Icon(Icons.add, color: Colors.red)),
+                    onPressed: () => Navigator.of(context).pop()),
+                OutlineButton(
+                    padding: const EdgeInsets.all(0),
+                    //borderSide: BorderSide(color: COLOR_ACCENT, width: 2),
+                    highlightedBorderColor: Colors.green,
+                    child: Icon(Icons.done, color: Colors.green),
+                    onPressed: () {
+                      _selectedUsers = [];
+                      _loadedUsers.forEach((element) {
+                        if (element.selected) _selectedUsers.add(element.user);
+                      });
+
+                      Navigator.of(context).pop(_selectedUsers);
+                    }),
+              ],
+            ),
+            SizedBox(height: 4)
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// custom UserTile that has selection mood, overall similar to [UserTile]
+class _UserTile extends StatelessWidget {
+  final _User user;
+  final Function(int id) onSelected;
+  final Function(int id) onDeselect;
+
+  const _UserTile({Key key, this.user, this.onSelected, this.onDeselect}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var name = user.user.name.split(' ');
+
+    return GestureDetector(
+      onTap: () {
+        if (!user.selected)
+          onSelected(user.user.id);
+        else
+          onDeselect(user.user.id);
+      },
+      child: Container(
+        height: 52,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.only(left: 6, right: 14, top: 2, bottom: 2),
+        decoration: BoxDecoration(
+          color: user.selected ? COLOR_ACCENT.withOpacity(0.5) : COLOR_BACKGROUND,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 22,
+              child: user.selected
+                  ? Icon(Icons.check, color: COLOR_ACCENT)
+                  : Text(name[0][0] + name[1][0], style: TextStyle(fontSize: 16)),
+              backgroundColor: user.selected ? COLOR_SCAFFOLD : COLOR_ACCENT,
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(name[0] + ' ' + name[1], style: TextStyle(fontSize: 15)),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(' ${user.user.userName}', style: TextStyle(fontSize: 12.5, color: Colors.grey)),
+                        Spacer(),
+                        Text(user.user.jobTitle, style: TextStyle(fontSize: 13.5)),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            //SizedBox(width: 8),
           ],
         ),
       ),
