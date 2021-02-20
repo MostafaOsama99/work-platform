@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         buttonTheme: ButtonTheme.of(context).copyWith(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         ),
-        splashColor: const Color.fromRGBO(39, 142, 165, 0.5),
+        splashColor: Colors.blueGrey[700],
         appBarTheme: AppBarTheme(
           brightness: Brightness.dark,
           color: Color.fromRGBO(13, 56, 130, 1),

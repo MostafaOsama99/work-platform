@@ -26,6 +26,7 @@ class AssignMembersDialog extends StatefulWidget {
 
 class _AssignMembersDialogState extends State<AssignMembersDialog> {
   EdgeInsets _padding;
+  var _size;
   bool _isInit = false;
   int _selectCount = 0;
 
@@ -61,6 +62,7 @@ class _AssignMembersDialogState extends State<AssignMembersDialog> {
   void didChangeDependencies() {
     if (!_isInit) {
       _padding = MediaQuery.of(context).padding;
+      _size = MediaQuery.of(context).size;
     }
     super.didChangeDependencies();
   }
@@ -88,8 +90,7 @@ class _AssignMembersDialogState extends State<AssignMembersDialog> {
                   Spacer(),
                   Text(
                     '$_selectCount selected ',
-                    style: const TextStyle(fontSize: 15),
-                  ),
+                      style: const TextStyle(fontSize: 15)),
                   SizedBox(
                     height: 20,
                     child: CircularCheckBox(
@@ -115,34 +116,37 @@ class _AssignMembersDialogState extends State<AssignMembersDialog> {
                 ],
               ),
             ),
-            Expanded(
-              //  maxHeight: _size.height * 0.7,
-              child: ShaderMask(
-                shaderCallback: (Rect bounds) {
-                  return LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.blue, Colors.transparent, Colors.transparent, Colors.blue],
-                    stops: [0.0, 0.03, 0.97, 1.0],
-                  ).createShader(bounds);
-                },
-                blendMode: BlendMode.dstOut,
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  itemBuilder: (BuildContext context, int index) => _UserTile(
-                    key: UniqueKey(),
-                    user: _loadedUsers[index],
-                    onSelected: (id) => setState(() {
-                      _selectCount++;
-                      _loadedUsers.firstWhere((element) => element.user.id == id).selected = true;
-                    }),
-                    onDeselect: (id) => setState(() {
-                      _selectCount--;
-                      if (_selectAll) _selectAll = false;
-                      _loadedUsers.firstWhere((element) => element.user.id == id).selected = false;
-                    }),
+            SingleChildScrollView(
+              child: LimitedBox(
+                maxHeight: _size.height * 0.65,
+                child: ShaderMask(
+                  shaderCallback: (Rect bounds) {
+                    return LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.blue, Colors.transparent, Colors.transparent, Colors.blue],
+                      stops: [0.0, 0.03, 0.97, 1.0],
+                    ).createShader(bounds);
+                  },
+                  blendMode: BlendMode.dstOut,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    itemBuilder: (BuildContext context, int index) => _UserTile(
+                      key: UniqueKey(),
+                      user: _loadedUsers[index],
+                      onSelected: (id) => setState(() {
+                        _selectCount++;
+                        _loadedUsers.firstWhere((element) => element.user.id == id).selected = true;
+                      }),
+                      onDeselect: (id) => setState(() {
+                        _selectCount--;
+                        if (_selectAll) _selectAll = false;
+                        _loadedUsers.firstWhere((element) => element.user.id == id).selected = false;
+                      }),
+                    ),
+                    itemCount: _loadedUsers.length,
                   ),
-                  itemCount: _loadedUsers.length,
                 ),
               ),
             ),

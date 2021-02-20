@@ -46,12 +46,6 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
           borderRadius:
               BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
           child: AppBar(
-            leading: IconButton(
-                padding: EdgeInsets.all(0),
-                onPressed: () => Navigator.pop(context),
-                icon: Icon(
-                  Icons.arrow_back,
-                )),
             title: Text('Edit Team'),
             centerTitle: true,
           ),

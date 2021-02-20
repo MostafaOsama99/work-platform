@@ -13,12 +13,12 @@ class Task {
   String name, id, description, projectName;
   DateTime datePlannedStart, datePlannedEnd, dateActualStart, dateActualEnd;
   final List<CheckPoint> checkPoints;
-  final List<User> members;
+  List<User> members;
 
-  final double progress;
+  int progress;
 
   /// task Weather assigned to team or members
-  final Team assignedTeam;
+  Team assignedTeam;
 
   //TODO:check Task dataType here !
   final Task dependentTask;
@@ -26,7 +26,8 @@ class Task {
   /// if this task is a subtask, [parentCheckpoint] going to curry the parent task checkpoint
   final CheckPoint parentCheckpoint;
 
-  final User taskCreator;
+  //make this final
+  User taskCreator;
 
   Task(
       {@required this.id,
@@ -86,7 +87,7 @@ class User {
   final String imageUrl;
 
   //TODO:check if the userName is required
-  const User({this.userName, @required this.id, this.imageUrl, @required this.name, this.jobTitle});
+  const User({this.userName, @required this.id, this.imageUrl, @required this.name, @required this.jobTitle});
 }
 
 // class Project {

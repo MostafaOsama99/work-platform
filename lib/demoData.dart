@@ -25,6 +25,21 @@ const List<User> usersLong = [
   User(id: 11, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
 ];
 
+const List<Team> teams = [
+  Team(id: 0, name: 'Software Engineers'),
+  Team(id: 1, name: 'Designers'),
+  Team(id: 2, name: 'Marketing'),
+  Team(id: 3, name: 'Sales'),
+  Team(id: 0, name: 'Software Engineers'),
+  Team(id: 1, name: 'Designers'),
+  Team(id: 2, name: 'Marketing'),
+  Team(id: 3, name: 'Sales'),
+  Team(id: 0, name: 'Software Engineers'),
+  Team(id: 1, name: 'Designers'),
+  Team(id: 2, name: 'Marketing'),
+  Team(id: 3, name: 'Sales'),
+];
+
 const Team team = Team(name: 'Software Engineers', id: 0);
 List<Task> demoTasks = [
   Task(
@@ -33,7 +48,7 @@ List<Task> demoTasks = [
       datePlannedStart: DateTime(2020, 12, 1),
       datePlannedEnd: DateTime(2021, 1, 25),
       description: 'create app UI',
-      progress: 20.0,
+      progress: 80,
       projectName: 'work platform',
       checkPoints: const [
         CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
@@ -41,14 +56,14 @@ List<Task> demoTasks = [
       ],
       //members:users ,
       assignedTeam: team,
-      taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Osama')),
+      taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
   Task(
       id: '1',
       name: 'Create team screen',
       datePlannedStart: DateTime(2021, 1, 18),
       datePlannedEnd: DateTime(2021, 1, 24),
       description: longDescription,
-      progress: 10.0,
+      progress: 10,
       projectName: 'work platform',
       checkPoints: const [
         CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
@@ -69,14 +84,14 @@ List<Task> demoTasks = [
       datePlannedStart: DateTime(2021, 8, 21),
       datePlannedEnd: DateTime(2021, 9, 5),
       description: longDescription,
-      progress: 10.0,
+      progress: 95,
       checkPoints: const [
         CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
         CheckPoint(id: 1, name: 're-design task widget', isFinished: false)
       ],
       parentCheckpoint:
           CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10, description: longDescription),
-      members:users ,
+      members: users,
       dependentTask: Task(
         id: 'null',
         datePlannedEnd: DateTime(2021, 8, 21),
@@ -90,7 +105,7 @@ List<Task> demoTasks = [
       datePlannedStart: DateTime(2021, 1, 18),
       datePlannedEnd: DateTime(2021, 1, 24),
       description: longDescription,
-      progress: 10.0,
+      progress: 50,
       projectName: 'work platform',
       checkPoints: const [
         CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
@@ -111,7 +126,7 @@ List<Task> demoTasks = [
       datePlannedStart: DateTime(2021, 1, 18),
       datePlannedEnd: DateTime(2021, 1, 24),
       description: longDescription,
-      progress: 10.0,
+      progress: 10,
       projectName: 'work platform',
       checkPoints: const [
         CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
@@ -126,7 +141,7 @@ List<Task> demoTasks = [
       ),
       taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Ahmed'),
       members: users ),
-//  Task( id: '2', name: 'create front-end',datePlannedStart: DateTime(2020,12,1) , datePlannedEnd: DateTime(2021,1,15),description: 'create app UI', progress: 20.0, projectName: 'work platform', checkPoints: const [ CheckPoint( id: '0', name: 'room screen', value: false, description: 'description of room screen'), CheckPoint(id: 0 name: 'team screen', value: false, percentage: 10)] ),
+//  Task( id: '2', name: 'create front-end',datePlannedStart: DateTime(2020,12,1) , datePlannedEnd: DateTime(2021,1,15),description: 'create app UI', progress: 20.0, projectName: 'work platform', checkPoints: const [ CheckPoint( id: '0', name: 'room screen', value: false, description: 'description of room screen'), CheckPoint(id: 0 name: 'team screen', value: false, percentage: 10)],
 ];
 
 List<Teams> myTeams = [
@@ -138,14 +153,14 @@ List<Teams> myTeams = [
         datePlannedStart: DateTime(2020, 12, 1),
         datePlannedEnd: DateTime(2021, 1, 25),
         description: 'create app UI',
-        progress: 20.0,
+        progress: 20,
         projectName: 'work platform',
         checkPoints: const [
           CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
           CheckPoint(id: 1, name: 'team screen', isFinished: false, percentage: 10)
         ],
-        members:users ,
-        taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Osama')),
+        members: users,
+        taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
   ], teamName: "UI/UX Design", leaderName: "Ahmed", description: "this is ui team description "),
   Teams(tasks: [
     Task(
@@ -154,41 +169,41 @@ List<Teams> myTeams = [
         datePlannedStart: DateTime(2020, 12, 1),
         datePlannedEnd: DateTime(2021, 1, 25),
         description: 'create app UI',
-        progress: 20.0,
+        progress: 20,
         projectName: 'work platform',
         checkPoints: const [
           CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
           CheckPoint(id: 1, name: 'team screen', isFinished: false, percentage: 10)
         ],
-        members:users ,
-        taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Osama')),
+        members: users,
+        taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
     Task(
         id: '1',
         name: 'Create team screen',
         datePlannedStart: DateTime(2021, 1, 18),
         datePlannedEnd: DateTime(2021, 1, 24),
         description: '',
-        progress: 10.0,
+        progress: 10,
         projectName: 'work platform',
         checkPoints: const [
           CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
           CheckPoint(id: 1, name: 're-design task widget', isFinished: false)
         ],
         parentCheckpoint: CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10),
-        members: users ),
+        members: users),
     Task(
         id: '2',
         name: 'Dependent Task',
         datePlannedStart: DateTime(2021, 1, 24),
         datePlannedEnd: DateTime(2021, 2, 5),
         description: '',
-        progress: 10.0,
+        progress: 10,
         checkPoints: const [
           CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
           CheckPoint(id: 1, name: 're-design task widget', isFinished: false)
         ],
         parentCheckpoint: CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10),
-        members:users ,
+        members: users,
         dependentTask: Task(
           id: 'null',
           datePlannedEnd: DateTime(2021, 8, 21),
@@ -211,14 +226,14 @@ List<Project> project = [
               datePlannedStart: DateTime(2020, 12, 1),
               datePlannedEnd: DateTime(2021, 1, 25),
               description: 'create app UI',
-              progress: 20.0,
+              progress: 20,
               projectName: 'work platform',
               checkPoints: const [
                 CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
                 CheckPoint(id: 1, name: 'team screen', isFinished: false, percentage: 10)
               ],
-              members:users ,
-              taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Osama')),
+              members: users,
+              taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
         ], teamName: "UI/UX Design", leaderName: "Ahmed", description: "this is ui team description "),
         Teams(tasks: [
           Task(
@@ -227,43 +242,43 @@ List<Project> project = [
               datePlannedStart: DateTime(2020, 12, 1),
               datePlannedEnd: DateTime(2021, 1, 25),
               description: 'create app UI',
-              progress: 20.0,
+              progress: 20,
               projectName: 'work platform',
               checkPoints: const [
                 CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
                 CheckPoint(id: 01, name: 'team screen', isFinished: false, percentage: 10)
               ],
-              members:users ,
-              taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Osama')),
+              members: users,
+              taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
           Task(
               id: '1',
               name: 'Create team screen',
               datePlannedStart: DateTime(2021, 1, 18),
               datePlannedEnd: DateTime(2021, 1, 24),
               description: '',
-              progress: 10.0,
+              progress: 10,
               projectName: 'work platform',
               checkPoints: const [
                 CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
                 CheckPoint(id: 01, name: 're-design task widget', isFinished: false)
               ],
-              parentCheckpoint:
-                  CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10, description: longDescription),
-              members: users ),
+              parentCheckpoint: CheckPoint(
+                  id: 0, name: 'team screen', isFinished: false, percentage: 10, description: longDescription),
+              members: users),
           Task(
               id: '2',
               name: 'Dependent Task',
               datePlannedStart: DateTime(2021, 1, 24),
               datePlannedEnd: DateTime(2021, 2, 5),
               description: '',
-              progress: 10.0,
+              progress: 10,
               checkPoints: const [
                 CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
                 CheckPoint(id: 01, name: 're-design task widget', isFinished: false)
               ],
-              parentCheckpoint:
-                  CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10, description: longDescription),
-              members:users ,
+              parentCheckpoint: CheckPoint(
+                  id: 0, name: 'team screen', isFinished: false, percentage: 10, description: longDescription),
+              members: users,
               dependentTask: Task(
                 id: 'null',
                 datePlannedEnd: DateTime(2021, 8, 21),
@@ -285,14 +300,14 @@ List<Project> project = [
               datePlannedStart: DateTime(2020, 12, 1),
               datePlannedEnd: DateTime(2021, 1, 25),
               description: 'create app UI',
-              progress: 20.0,
+              progress: 20,
               projectName: 'work platform',
               checkPoints: const [
                 CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
                 CheckPoint(id: 01, name: 'team screen', isFinished: false, percentage: 10)
               ],
-              members:users ,
-              taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Osama')),
+              members: users,
+              taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
         ], teamName: "Developer Design", leaderName: "Magda", description: longDescription),
         Teams(
             tasks: [
@@ -302,28 +317,30 @@ List<Project> project = [
                   datePlannedStart: DateTime(2020, 12, 1),
                   datePlannedEnd: DateTime(2021, 1, 25),
                   description: 'create UI Home',
-                  progress: 20.0,
+                  progress: 20,
                   projectName: 'Home Home',
                   checkPoints: const [
-                    CheckPoint(id: 0, name: 'Home screen', isFinished: false, description: 'description of Home screen'),
+                    CheckPoint(
+                        id: 0, name: 'Home screen', isFinished: false, description: 'description of Home screen'),
                     CheckPoint(id: 01, name: 'team screen', isFinished: false, percentage: 15)
                   ],
-                  members:users ,
-                  taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Hesham')),
+                  members: users,
+                  taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Hesham')),
               Task(
                   id: '1',
                   name: 'screen',
                   datePlannedStart: DateTime(2021, 1, 14),
                   datePlannedEnd: DateTime(2021, 1, 24),
                   description: '',
-                  progress: 15.0,
+                  progress: 15,
                   projectName: 'flutter',
                   checkPoints: const [
-                    CheckPoint(id: 0, name: 'flutter model', isFinished: false, description: 'finish flutter data model'),
+                    CheckPoint(
+                        id: 0, name: 'flutter model', isFinished: false, description: 'finish flutter data model'),
                     CheckPoint(id: 01, name: 're-design task widget', isFinished: false)
                   ],
                   parentCheckpoint: CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10),
-                  members: users ),
+                  members: users),
             ],
             teamName: "marwan",
             leaderName: "momen",
