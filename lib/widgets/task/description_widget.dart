@@ -14,7 +14,7 @@ class DescriptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final _descriptionController = TextEditingController(text: description.trim());
+  final _descriptionController = TextEditingController(text: description);
 
     return Column(
       children: [

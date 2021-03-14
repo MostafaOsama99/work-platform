@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:project/create_task_screen.dart';
+import 'package:project/demoData.dart';
+import 'create_task_screen.dart';
 
 import '../model/task.dart';
 import '../widgets/task/task_card.dart' show TaskCard;
@@ -91,7 +92,10 @@ class _TeamScreenState extends State<TeamScreen> {
         visible: _isVisible,
         child: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => CreateTask()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => CreateTask(
+                      teamMembers: usersLong,
+                    )));
           },
           tooltip: 'Add Task',
           child: Icon(Icons.add),
