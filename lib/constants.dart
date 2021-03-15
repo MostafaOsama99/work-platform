@@ -23,6 +23,9 @@ const KIconColor = Colors.white;
 
 const KDescriptionMaxLines = 3;
 
+///timer progress target hours
+const KTargetWorkHours = 6;
+
 // default TextFormField decoration
 // ignore: non_constant_identifier_names
 final TEXT_FIELD_DECORATION = InputDecoration(

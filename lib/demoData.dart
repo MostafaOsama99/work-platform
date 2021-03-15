@@ -25,22 +25,23 @@ const List<User> usersLong = [
   User(id: 11, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
 ];
 
-const List<Team> teams = [
-  Team(id: 0, name: 'Software Engineers'),
-  Team(id: 1, name: 'Designers'),
-  Team(id: 2, name: 'Marketing'),
-  Team(id: 3, name: 'Sales'),
-  Team(id: 0, name: 'Software Engineers'),
-  Team(id: 1, name: 'Designers'),
-  Team(id: 2, name: 'Marketing'),
-  Team(id: 3, name: 'Sales'),
-  Team(id: 0, name: 'Software Engineers'),
-  Team(id: 1, name: 'Designers'),
-  Team(id: 2, name: 'Marketing'),
-  Team(id: 3, name: 'Sales'),
+final List<Team> teams = [
+  Team(id: 0, name: 'Software Engineers', tasks: demoTasks),
+  Team(id: 1, name: 'Designers', tasks: demoTasks.getRange(0, 2).toList()),
+  Team(id: 2, name: 'Marketing', tasks: demoTasks),
+  Team(id: 3, name: 'Sales', tasks: demoTasks),
+  Team(id: 4, name: 'Software Engineers'),
+  Team(id: 5, name: 'Designers', tasks: demoTasks.getRange(0, 3).toList()),
+  Team(id: 6, name: 'Marketing', tasks: demoTasks),
+  Team(id: 7, name: 'Sales', tasks: demoTasks),
+  Team(id: 8, name: 'Software Engineers'),
+  Team(id: 9, name: 'Designers'),
+  Team(id: 10, name: 'Marketing'),
+  Team(id: 11, name: 'Sales'),
 ];
 
-const Team team = Team(name: 'Software Engineers', id: 0);
+Team team = Team(name: 'Software Engineers', id: 0);
+
 List<Task> demoTasks = [
   Task(
       id: '0',
@@ -100,7 +101,7 @@ List<Task> demoTasks = [
       ),
       taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Osama')),
   Task(
-      id: '1',
+      id: '10',
       name: 'Create team screen',
       datePlannedStart: DateTime(2021, 1, 18),
       datePlannedEnd: DateTime(2021, 1, 24),
@@ -121,7 +122,7 @@ List<Task> demoTasks = [
       taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Ahmed'),
       members: users ),
   Task(
-      id: '1',
+      id: '11',
       name: 'Create team screen',
       datePlannedStart: DateTime(2021, 1, 18),
       datePlannedEnd: DateTime(2021, 1, 24),
