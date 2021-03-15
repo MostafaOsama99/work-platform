@@ -305,7 +305,7 @@ Widget teamCard(context, String teamName, tasks) {
   );
 }
 
-Widget subTaskWidget(String teamName, date, double percentage, context) {
+Widget subTaskWidget(String teamName, date, int percentage, context) {
   return Row(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [

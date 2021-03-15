@@ -137,6 +137,7 @@ class _AssignMembersDialogState extends State<AssignMembersDialog> {
                       user: _loadedUsers[index],
                       onSelected: (id) => setState(() {
                         _selectCount++;
+                        if (_selectCount == _selectedUsers.length) _selectAll = true;
                         _loadedUsers.firstWhere((element) => element.user.id == id).selected = true;
                       }),
                       onDeselect: (id) => setState(() {

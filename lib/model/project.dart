@@ -14,13 +14,14 @@ class Project {
 
 }
 
-class Teams{
-  final String teamName,leaderName,description;
+class Teams {
+  final String teamName, leaderName, description;
   final attachments;
   final int id;
   final listOfUser;
-  final List <Task> tasks ;
-  Teams ({this.teamName,this.leaderName,this.attachments,this.description,this.id,this.listOfUser,this.tasks});
+  final List<Task> tasks;
+
+  Teams({this.teamName, this.leaderName, this.attachments, this.description, this.id, this.listOfUser, this.tasks});
 }
 
 class Attachments {

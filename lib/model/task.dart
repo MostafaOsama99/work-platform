@@ -116,6 +116,15 @@ class Team {
   final DateTime dateCreated;
   final User leader;
   final List<User> members;
+  List<Task> tasks;
 
-  const Team({this.id, @required this.name, this.description, this.leader, this.members, this.code, this.dateCreated});
+  Team(
+      {this.id,
+      @required this.name,
+      this.description,
+      this.leader,
+      this.members,
+      this.code,
+      this.dateCreated,
+      this.tasks = const []});
 }
