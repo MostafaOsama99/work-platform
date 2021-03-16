@@ -7,7 +7,7 @@ class AssignTypeDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: COLOR_SCAFFOLD.withOpacity(0.85),
+      backgroundColor: COLOR_SCAFFOLD,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),

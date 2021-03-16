@@ -8,9 +8,9 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 // maximum height for TextFormField error text height
 //   usually between 0-1
 const ERROR_TEXT_STYLE = 0.4;
-const COLOR_BACKGROUND = Color.fromRGBO(32, 35, 45, 1);
+const COLOR_BACKGROUND = Color.fromRGBO(34, 28, 38, 1);
 const COLOR_ACCENT = Color.fromRGBO(13, 56, 130, 1);
-const COLOR_SCAFFOLD = Color.fromRGBO(20, 20, 25, 1);
+const COLOR_SCAFFOLD = Color.fromRGBO(15, 15, 17, 1);
 const PADDING_VERTICAL = 12.0;
 const double KAppBarRound = 15.0;
 

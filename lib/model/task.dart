@@ -74,7 +74,7 @@ class CheckPoint {
     @required this.id,
     @required this.name,
     this.isFinished = false,
-    this.percentage = -1,
+    this.percentage = 0,
     this.description,
   });
 }

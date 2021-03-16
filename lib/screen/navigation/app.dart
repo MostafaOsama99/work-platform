@@ -4,9 +4,7 @@ import 'package:project/demoData.dart';
 import 'package:project/screen/room_screen.dart';
 
 import '../auth/auth_screen.dart';
-import '../../screen/home_page_screen.dart';
 import '../../screen/team_screen.dart';
-import '../../screen/main_screen/chats_screen.dart';
 import '../../screen/main_screen/statistics_screen.dart';
 import 'tab_item.dart';
 
@@ -119,51 +117,51 @@ class AppState extends State<App> {
               top: -12,
               curveSize: 47,
               //cornerRadius: 15,
-              backgroundColor: Theme.of(context).appBarTheme.color,
-              activeColor: Colors.white,
+              backgroundColor: COLOR_SCAFFOLD,
+              activeColor: Color.fromRGBO(34, 28, 38, 1),
               color: Colors.grey,
               initialActiveIndex: 0,
               onTap: (int index) => _selectTab(TabItem.values[index]),
               items: [
                 bottom.TabItem(
-                    icon: Icon(Icons.home_filled, color: Colors.white70, size: KIconSize),
+                    icon: Icon(Icons.home_filled, color: Colors.white60, size: KIconSize),
                     activeIcon: Icon(Icons.home_filled, color: COLOR_ACCENT, size: KActiveIconSize + 2),
                     title: 'Home'),
                 bottom.TabItem(
-                    icon: Icon(Icons.assessment_outlined, color: Colors.white70, size: KIconSize),
+                    icon: Icon(Icons.assessment_outlined, color: Colors.white60, size: KIconSize),
                     activeIcon: Icon(Icons.assessment, color: COLOR_ACCENT, size: KActiveIconSize),
                     title: 'Statistics'),
                 bottom.TabItem(
-                    icon: Icon(Icons.chat_outlined, color: Colors.white70, size: KIconSize),
+                    icon: Icon(Icons.chat_outlined, color: Colors.white60, size: KIconSize),
                     activeIcon: Icon(Icons.chat, color: COLOR_ACCENT, size: KActiveIconSize - 2),
                     title: 'Chat'),
               ],
             ),
             //*** walk around
             //since clipRRect not working for that && cornerRadius in ConvexAppBar available in fixed styles only
-            Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(bottom: 24),
-                  color: COLOR_SCAFFOLD,
-                  height: 20,
-                  width: 20,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(KAppBarRound)),
-                      child: Container(color: COLOR_ACCENT)),
-                ),
-                Spacer(),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 24),
-                  color: COLOR_SCAFFOLD,
-                  height: 20,
-                  width: 20,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(KAppBarRound)),
-                      child: Container(color: COLOR_ACCENT)),
-                )
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     Container(
+            //       margin: const EdgeInsets.only(bottom: 24),
+            //       color: COLOR_SCAFFOLD,
+            //       height: 20,
+            //       width: 20,
+            //       child: ClipRRect(
+            //           borderRadius: BorderRadius.only(topLeft: Radius.circular(KAppBarRound)),
+            //           child: Container(color: COLOR_ACCENT)),
+            //     ),
+            //     Spacer(),
+            //     Container(
+            //       margin: const EdgeInsets.only(bottom: 24),
+            //       color: COLOR_SCAFFOLD,
+            //       height: 20,
+            //       width: 20,
+            //       child: ClipRRect(
+            //           borderRadius: BorderRadius.only(topRight: Radius.circular(KAppBarRound)),
+            //           child: Container(color: COLOR_ACCENT)),
+            //     )
+            //   ],
+            // ),
           ],
         ),
       ),

@@ -1,22 +1,26 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:project/model/task.dart';
-import 'package:project/model/taskType.dart';
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 
+import '../../model/task.dart';
+import '../../model/taskType.dart';
 import '../../constants.dart';
 import '../../demoData.dart';
+import '../../dialogs/end_task_dialog.dart';
+import '../../dialogs/custom_alert_dialog.dart';
+
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class StatisticsScreen extends StatefulWidget {
   @override
   _StatisticsScreenState createState() => _StatisticsScreenState();
 }
 
-class _StatisticsScreenState extends State<StatisticsScreen> {
+class _StatisticsScreenState extends State<StatisticsScreen> with TickerProviderStateMixin {
   Task _activeTask;
+  Task _endedTask;
   int _teamId;
 
+  ///to control the timer
   GlobalKey<CounterState> _timerKey = GlobalKey();
 
   @override
@@ -27,19 +31,37 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     super.initState();
   }
 
-  toggleTaskTime({bool isWorking, Task task, int teamId}) {
-    setState(() {
-      if (isWorking) {
+  ///[isWorking] is if you hit play task or stop task
+  toggleTaskTime({bool isWorking, Task task, int teamId}) async {
+    if (isWorking) {
+      if (_activeTask != null) {
+        bool response = await showDialog(
+            context: context,
+            builder: (_) => CustomAlertDialog(
+                  title: 'End current session!',
+                  text: 'Are you sure you want to end ${_activeTask.name} ?',
+                ));
+        if (response == null)
+          return;
+        else
+          await toggleTaskTime(isWorking: false);
+      }
+      setState(() {
         _teamId = teamId;
         _activeTask = task;
-        _timerKey.currentState.startTimer();
-      } else {
-        //TODO: show ending dialog
-        _activeTask = null;
+      });
+      _timerKey.currentState.startTimer();
+    }
+
+    ///stop current session
+    else {
+      setState(() {
+        _endedTask = _activeTask;
         _teamId = null;
-        _timerKey.currentState.stopTimer();
-      }
-    });
+        _activeTask = null;
+      });
+      _timerKey.currentState.stopTimer();
+    }
   }
 
   @override
@@ -51,13 +73,13 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             margin: EdgeInsets.only(left: 12, right: 12, bottom: 8, top: MediaQuery.of(context).padding.top + 8),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(60),
-                    bottomRight: Radius.circular(60),
-                    topLeft: Radius.circular(15),
-                    bottomLeft: Radius.circular(15)),
-                color: COLOR_BACKGROUND.withOpacity(0.5) //COLOR_ACCENT.withOpacity(0.8),
-                ),
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(60),
+                  bottomRight: Radius.circular(60),
+                  topLeft: Radius.circular(15),
+                  bottomLeft: Radius.circular(15)),
+              color: Color.fromRGBO(24, 29, 35, 1), //COLOR_ACCENT.withOpacity(0.8),
+            ),
             child: Row(
               //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -72,7 +94,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             color: COLOR_SCAFFOLD,
                           ),
                           child: Text('Daily Progress',
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
+                              softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
                       if (_activeTask != null)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -108,146 +130,117 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Counter(_timerKey, (workTime) => null),
+                  child: Counter(
+                      _timerKey,
+                      (workTime) async => await showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) => EndTaskDialog(
+                                duration: workTime,
+                                task: _endedTask,
+                              ))),
                 ),
                 // SizedBox(height: 8),
               ],
             ),
           ),
           Expanded(
-              child: DefaultTabController(
-            length: teams.length,
-            child: Column(
-              children: [
-                // if (_activeTask != null)
-                //   Card(
-                //     elevation: 2,
-                //     margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                //     color: COLOR_BACKGROUND,
-                //     child: ClipRRect(
-                //       borderRadius: BorderRadius.circular(15),
-                //       child: Padding(
-                //         padding: const EdgeInsets.all(8),
-                //         child: Row(
-                //           children: [
-                //             Container(
-                //               width: 35,
-                //               height: 35,
-                //               padding: const EdgeInsets.all(6),
-                //               decoration: BoxDecoration(
-                //                 borderRadius: BorderRadius.circular(8),
-                //                 color: Theme.of(context).scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
-                //               ),
-                //               child: Image.asset(taskTypes[_activeTask.type].icon,
-                //                   color: taskTypes[_activeTask.type].accentColor),
-                //             ),
-                //             SizedBox(width: 10),
-                //             Text(_activeTask.name, style: const TextStyle(fontSize: 16)),
-                //             Spacer(),
-                //             SizedBox(
-                //               height: 35,
-                //               width: 35,
-                //               child: RaisedButton(
-                //                   padding: const EdgeInsets.all(0),
-                //                   child: Icon(Icons.pause, color: Colors.white),
-                //                   splashColor: Colors.deepOrange,
-                //                   textColor: Colors.deepOrange,
-                //                   color: Colors.deepOrange[800],
-                //                   highlightElevation: 2,
-                //                   //autofocus: false,
-                //                   //clipBehavior: Clip.antiAlias,
-                //
-                //                   shape: RoundedRectangleBorder(
-                //                     borderRadius: BorderRadius.circular(8),
-                //                     side: BorderSide(color: Colors.deepOrange[800].withOpacity(0.5)),
-                //                   ),
-                //                   onPressed: () {
-                //                     toggleTime(isWorking: false);
-                //                   }),
-                //             )
-                //           ],
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Theme(
-                    data: Theme.of(context).copyWith(
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                    ),
-                    child: ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [COLOR_SCAFFOLD, Colors.transparent, Colors.transparent, Colors.blue],
-                          stops: [0.0, 0.03, 0.97, 1.0],
-                        ).createShader(bounds);
-                      },
-                      blendMode: BlendMode.dstOut,
-                      child: SizedBox(
-                        height: 38,
-                        child: TabBar(
-                          isScrollable: true,
-                          indicatorPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-                          labelPadding: const EdgeInsets.symmetric(horizontal: 8),
-                          indicator: BoxDecoration(borderRadius: BorderRadius.circular(50), color: COLOR_ACCENT),
-                          indicatorSize: TabBarIndicatorSize.label,
-                          tabs: [
-                            for (final team in teams)
-                              Tab(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      border: Border.all(color: COLOR_ACCENT, width: 1)),
-                                  child: Text(team.name),
+            child: DefaultTabController(
+              length: teams.length,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                      ),
+                      child: ShaderMask(
+                        shaderCallback: (Rect bounds) {
+                          return LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [COLOR_SCAFFOLD, Colors.transparent, Colors.transparent, Colors.blue],
+                            stops: [0.0, 0.03, 0.97, 1.0],
+                          ).createShader(bounds);
+                        },
+                        blendMode: BlendMode.dstOut,
+                        child: SizedBox(
+                          height: 38,
+                          child: TabBar(
+                            isScrollable: true,
+                            indicatorPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+                            labelPadding: const EdgeInsets.symmetric(horizontal: 8),
+                            indicator: BoxDecoration(borderRadius: BorderRadius.circular(50), color: COLOR_ACCENT),
+                            indicatorSize: TabBarIndicatorSize.label,
+                            tabs: [
+                              for (final team in teams)
+                                Tab(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        border: Border.all(color: COLOR_ACCENT, width: 1)),
+                                    child: Text(team.name),
+                                  ),
                                 ),
-                              ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      for (final Team _team in teams)
-                        ShaderMask(
-                          shaderCallback: (Rect bounds) {
-                            return LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [COLOR_SCAFFOLD, Colors.transparent, Colors.transparent, Colors.blue],
-                              stops: [0.0, 0.04, 0.96, 1.0],
-                            ).createShader(bounds);
-                          },
-                          blendMode: BlendMode.dstOut,
-                          child: ListView.builder(
-                              padding: const EdgeInsets.only(left: 4, right: 4, top: 2),
-                              key: UniqueKey(),
-                              itemCount: _team.tasks.length,
-                              itemBuilder: (_, index) => WorkTile(
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        for (final Team _team in teams)
+                          ShaderMask(
+                            shaderCallback: (Rect bounds) {
+                              return LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [COLOR_SCAFFOLD, Colors.transparent, Colors.transparent, Colors.blue],
+                                stops: [0.0, 0.04, 0.96, 1.0],
+                              ).createShader(bounds);
+                            },
+                            blendMode: BlendMode.dstOut,
+                            child: _team.tasks.isNotEmpty
+                                ? ListView.builder(
+                                    padding: const EdgeInsets.only(left: 4, right: 4, top: 2),
                                     key: UniqueKey(),
-                                    task: _team.tasks[index],
-                                    isWorking: _activeTask == null
-                                        ? false
-                                        : (_activeTask.id == _team.tasks[index].id && _teamId == _team.id),
-                                    onPressed: (bool value, Task task) {
-                                      toggleTaskTime(isWorking: value, task: task, teamId: _team.id);
-                                    },
-                                  )),
-                        )
-                    ],
+                                    itemCount: _team.tasks.length,
+                                    itemBuilder: (_, index) => WorkTile(
+                                          key: UniqueKey(),
+                                          task: _team.tasks[index],
+                                          isWorking: _activeTask == null
+                                              ? false
+                                              : (_activeTask.id == _team.tasks[index].id && _teamId == _team.id),
+                                          onPressed: (bool value, Task task) {
+                                            toggleTaskTime(isWorking: value, task: task, teamId: _team.id);
+                                          },
+                                        ))
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/icons/task_empty.png',
+                                        color: COLOR_BACKGROUND,
+                                      ),
+                                      Text(
+                                        'No tasks here !',
+                                        style: const TextStyle(color: Colors.white30, fontSize: 16),
+                                      )
+                                    ],
+                                  ),
+                          )
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          )),
+          ),
         ],
       ),
     );
@@ -412,7 +405,7 @@ class WorkTile extends StatelessWidget {
 }
 
 class Counter extends StatefulWidget {
-  final Function(DateTime workTime) onStop;
+  final Function(Duration workTime) onStop;
 
   Counter(Key key, this.onStop) : super(key: key);
 
@@ -456,13 +449,14 @@ class CounterState extends State<Counter> {
   ///make sure that time is closed and colon is shown
   stopTimer() {
     _updateDuration();
-    //save this session
+    //add this session time to total day time
     _oldDuration = _duration;
-    _startTime = null;
     _timer.cancel();
     setState(() {
       _showColon = true;
     });
+    widget.onStop(DateTime.now().difference(_startTime));
+    _startTime = null;
   }
 
   @override
