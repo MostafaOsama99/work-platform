@@ -5,22 +5,6 @@ import 'package:project/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:project/widgets/task/add_teams_button.dart';
-import 'package:project/model/task.dart';
-import 'package:project/widgets/task/task_card.dart';
-import 'package:flutter_filereader/flutter_filereader.dart';
-
-final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(
-  fillColor: Colors.blueGrey.shade800,
-  filled: true,
-  contentPadding: const EdgeInsets.all(16),
-  focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(20),
-    borderSide: BorderSide(color: const Color.fromRGBO(39, 142, 165, 1)),
-  ),
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(20),
-  ),
-);
 
 class Activity extends StatefulWidget {
   List<Widget> users;

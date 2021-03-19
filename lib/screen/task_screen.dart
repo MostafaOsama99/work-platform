@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/screen/main_screen/attachment%20screen.dart';
 
 import '../constants.dart';
 import '../demoData.dart';
@@ -63,7 +64,7 @@ class _TaskScreenState extends State<TaskScreen> {
                         color: Colors.white,
                       )),
                   splashRadius: 20,
-                  onPressed: () {})
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => MyApp2())))
             ],
             flexibleSpace: BuildFlexibleSpace(task: widget.task, isEdit: _isEditing),
           ),
