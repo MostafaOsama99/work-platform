@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
 import 'package:project/demoData.dart';
+import 'package:project/screen/main_screen/chats_screen.dart';
 import 'package:project/screen/room_screen.dart';
 
 import '../auth/auth_screen.dart';
@@ -79,13 +80,7 @@ class AppState extends State<App> {
                     builder = (_) => RoomScreen();
                     break;
                   case Routes.auth:
-                    builder = (_) => AuthScreen();
-                    break;
-                  case Routes.team:
-                    builder = (_) => TeamScreen(
-                          teamName: "sssss",
-                          tasks: demoTasks,
-                        );
+                    builder = (_) => ChatsScreen();
                     break;
                 }
                 return MaterialPageRoute(builder: builder, settings: routeSettings);
@@ -104,64 +99,34 @@ class AppState extends State<App> {
             child: Navigator(
               key: _navigatorKeys[TabItem.chats],
               //initialRoute: '/home',
-              onGenerateRoute: (routeSettings) => MaterialPageRoute(builder: (context) => AuthScreen()),
+              onGenerateRoute: (routeSettings) => MaterialPageRoute(builder: (context) => ChatsScreen()),
             ),
           ),
         ]),
-        bottomNavigationBar: Stack(
-          alignment: Alignment.bottomLeft,
-          children: [
-            bottom.ConvexAppBar(
-              style: bottom.TabStyle.reactCircle,
-              height: 44,
-              top: -12,
-              curveSize: 47,
-              //cornerRadius: 15,
-              backgroundColor: COLOR_SCAFFOLD,
-              activeColor: Color.fromRGBO(34, 28, 38, 1),
-              color: Colors.grey,
-              initialActiveIndex: 0,
-              onTap: (int index) => _selectTab(TabItem.values[index]),
-              items: [
-                bottom.TabItem(
-                    icon: Icon(Icons.home_filled, color: Colors.white60, size: KIconSize),
-                    activeIcon: Icon(Icons.home_filled, color: COLOR_ACCENT, size: KActiveIconSize + 2),
-                    title: 'Home'),
-                bottom.TabItem(
-                    icon: Icon(Icons.assessment_outlined, color: Colors.white60, size: KIconSize),
-                    activeIcon: Icon(Icons.assessment, color: COLOR_ACCENT, size: KActiveIconSize),
-                    title: 'Statistics'),
-                bottom.TabItem(
-                    icon: Icon(Icons.chat_outlined, color: Colors.white60, size: KIconSize),
-                    activeIcon: Icon(Icons.chat, color: COLOR_ACCENT, size: KActiveIconSize - 2),
-                    title: 'Chat'),
-              ],
-            ),
-            //*** walk around
-            //since clipRRect not working for that && cornerRadius in ConvexAppBar available in fixed styles only
-            // Row(
-            //   children: [
-            //     Container(
-            //       margin: const EdgeInsets.only(bottom: 24),
-            //       color: COLOR_SCAFFOLD,
-            //       height: 20,
-            //       width: 20,
-            //       child: ClipRRect(
-            //           borderRadius: BorderRadius.only(topLeft: Radius.circular(KAppBarRound)),
-            //           child: Container(color: COLOR_ACCENT)),
-            //     ),
-            //     Spacer(),
-            //     Container(
-            //       margin: const EdgeInsets.only(bottom: 24),
-            //       color: COLOR_SCAFFOLD,
-            //       height: 20,
-            //       width: 20,
-            //       child: ClipRRect(
-            //           borderRadius: BorderRadius.only(topRight: Radius.circular(KAppBarRound)),
-            //           child: Container(color: COLOR_ACCENT)),
-            //     )
-            //   ],
-            // ),
+        bottomNavigationBar: bottom.ConvexAppBar(
+          style: bottom.TabStyle.reactCircle,
+          height: 44,
+          top: -12,
+          curveSize: 47,
+          //cornerRadius: 15,
+          backgroundColor: COLOR_SCAFFOLD,
+          activeColor: Color.fromRGBO(34, 28, 38, 1),
+          color: Colors.grey,
+          initialActiveIndex: 0,
+          onTap: (int index) => _selectTab(TabItem.values[index]),
+          items: [
+            bottom.TabItem(
+                icon: Icon(Icons.home_filled, color: Colors.white60, size: KIconSize),
+                activeIcon: Icon(Icons.home_filled, color: COLOR_ACCENT, size: KActiveIconSize + 2),
+                title: 'Home'),
+            bottom.TabItem(
+                icon: Icon(Icons.assessment_outlined, color: Colors.white60, size: KIconSize),
+                activeIcon: Icon(Icons.assessment, color: COLOR_ACCENT, size: KActiveIconSize),
+                title: 'Statistics'),
+            bottom.TabItem(
+                icon: Icon(Icons.chat_outlined, color: Colors.white60, size: KIconSize),
+                activeIcon: Icon(Icons.chat, color: COLOR_ACCENT, size: KActiveIconSize - 2),
+                title: 'Chat'),
           ],
         ),
       ),

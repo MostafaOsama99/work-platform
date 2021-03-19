@@ -26,8 +26,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
   @override
   void initState() {
     //TODO: check for online working task
-    // _teamId = -1;
-    // _activeTask = Task(name: null, id: '--1', datePlannedEnd: null);
     super.initState();
   }
 
