@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/demoData.dart';
 
 import '../../constants.dart';
 
@@ -46,31 +47,14 @@ class ChatsScreen extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
-              Column(
-                children: [
-                  ChatTile(
-                    chatName: 'Software Engineers',
-                    lastMessage: 'this is an example of long last sent message to be displayed in the screen',
-                    timeStamp: DateTime(2021, 3, 17),
-                    announce: 2,
-                    issue: 5,
-                  ),
-                  Divider(endIndent: 20, indent: 20, height: 10),
-                  ChatTile(
-                    chatName: 'Marketing',
-                    lastMessage: 'this is an example of long last sent message to be displayed in the screen',
-                    timeStamp: DateTime(2021, 3, 18),
-                    issue: 4,
-                  ),
-                  Divider(endIndent: 20, indent: 20, height: 10),
-                  ChatTile(
-                    chatName: 'UI UX',
-                    lastMessage: 'this is an example of long last sent message to be displayed in the screen',
-                    timeStamp: DateTime(2021, 3, 10),
-                    announce: 7,
-                  ),
-                ],
-              ),
+              ListView.separated(
+                  itemBuilder: (_, index) => ChatTile(
+                        chatName: teams[index].name,
+                        announce: 3,
+                        issue: 4,
+                      ),
+                  separatorBuilder: (_, index) => Divider(endIndent: 20, indent: 20, height: 10),
+                  itemCount: teams.length),
               Container(
                 child: Text('2'),
               ),
@@ -99,7 +83,12 @@ class ChatTile extends StatelessWidget {
   final DateTime timeStamp;
 
   const ChatTile(
-      {Key key, @required this.chatName, this.announce = 0, this.issue = 0, this.lastMessage = '', this.timeStamp})
+      {Key key,
+      @required this.chatName,
+      this.announce = 0,
+      this.issue = 0,
+      this.lastMessage = 'send your first message',
+      this.timeStamp})
       : super(key: key);
 
   String internalFormatDate() {

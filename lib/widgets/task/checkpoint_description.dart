@@ -71,6 +71,7 @@ class _CheckpointDescriptionState extends State<CheckpointDescription> {
     return TextField(
         readOnly: widget.readOnly,
         autofocus: false,
+        scrollPhysics: NeverScrollableScrollPhysics(),
         enableInteractiveSelection: !widget.readOnly,
         controller: widget.controller,
         maxLines: _expandDes ? null : KDescriptionMaxLines,
