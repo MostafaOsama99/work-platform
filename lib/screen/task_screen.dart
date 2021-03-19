@@ -123,7 +123,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: DescriptionWidget(
                   widget.task.description,
-                  isEditing: _isEditing,
+
                   taskAccentColor: taskTypes[widget.task.type].accentColor,
                 ),
               ),

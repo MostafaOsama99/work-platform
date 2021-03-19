@@ -5,6 +5,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:project/demoData.dart';
 import 'package:project/screen/team_screen.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:project/widgets/dateField_widget.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
 
 class ProjectScreen extends StatefulWidget {
@@ -124,7 +125,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 18),
         child: ListView(
           children: [
             Row(
@@ -154,66 +155,14 @@ class _ProjectScreenState extends State<ProjectScreen> {
                         ),
                         Padding(
                             padding: const EdgeInsets.only(top: 22),
-                            child: SizedBox(
-                              width: 170,
-                              //height: 10,
-
-                              child: DateTimeField(
-                                style: TextStyle(fontSize: 15, color: Colors.white),
-                                decoration: InputDecoration(
-                                    contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
-                                    border: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    errorBorder: InputBorder.none,
-                                    disabledBorder: InputBorder.none,
-                                    //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
-                                    hintStyle: TextStyle(color: Colors.white)),
-                                format: DateFormat('EEEE, d MMM, yyyy'),
-                                initialValue: DateTime.now(),
-                                onChanged: (value) {},
-                                resetIcon: null,
-                                onShowPicker: (context, currentValue) {
-                                  return showDatePicker(
-                                    context: context,
-                                    firstDate: DateTime(1900),
-                                    initialDate: DateTime.now(),
-                                    lastDate: DateTime(2100),
-                                  );
-                                },
-                              ),
-                            ))
+                            child: DateField(initialDate:DateTime.now()))
                       ],
                     ),
+                    SizedBox(height: 10,),
                     Row(
                       children: [
                         Text("due:   ", style: TextStyle(color: Colors.grey, fontSize: 15)),
-                        SizedBox(
-                            width: 170,
-                            child: DateTimeField(
-                              style: TextStyle(fontSize: 15, color: Colors.white),
-                              decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
-                                  border: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                  enabledBorder: InputBorder.none,
-                                  errorBorder: InputBorder.none,
-                                  disabledBorder: InputBorder.none,
-                                  //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
-                                  hintStyle: TextStyle(color: Colors.white)),
-                              format: DateFormat('EEEE, d MMM, yyyy'),
-                              initialValue: DateTime.now(),
-                              onChanged: (value) {},
-                              resetIcon: null,
-                              onShowPicker: (context, currentValue) {
-                                return showDatePicker(
-                                  context: context,
-                                  firstDate: DateTime(1900),
-                                  initialDate: DateTime.now(),
-                                  lastDate: DateTime(2100),
-                                );
-                              },
-                            )),
+                        DateField(initialDate: DateTime.now()),
                       ],
                     )
                   ],
@@ -238,25 +187,13 @@ class _ProjectScreenState extends State<ProjectScreen> {
               style: TextStyle(color: Colors.white),
               decoration: TEXT_FIELD_DECORATION_2,
             ),
-            FlatButton(
-                onPressed: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "attachment",
-                      style: TextStyle(fontSize: 15, color: Colors.white),
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Icon(
-                      Icons.attachment_outlined,
-                      color: Colors.white,
-                      size: 15,
-                    )
-                  ],
-                )),
+            Padding(
+              padding: const EdgeInsets.only(left: 8,top: 10),
+              child: Text(
+                "Teams",
+                style: TextStyle(fontSize: 15, color: Colors.white),
+              ),
+            ),
             SizedBox(
               height: 500,
               child: ListView.builder(
