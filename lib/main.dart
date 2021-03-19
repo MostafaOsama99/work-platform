@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/constants.dart';
 
 import 'screen/navigation/app.dart';
 
@@ -44,19 +45,19 @@ class MyApp extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         ),
         splashColor: Colors.blueGrey[700],
-        appBarTheme: AppBarTheme(
-          brightness: Brightness.dark,
-          color: Color.fromRGBO(13, 56, 130, 1),
-          elevation: 2,
-        ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Color.fromRGBO(13, 56, 130, 1),
-        ),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: 'pt_sans',
-        scaffoldBackgroundColor:
-            const Color.fromRGBO(17, 20, 25, 1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
-      ),
+          appBarTheme: AppBarTheme(
+            brightness: Brightness.dark,
+            color: Color.fromRGBO(13, 56, 130, 1),
+            elevation: 2,
+          ),
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: Color.fromRGBO(13, 56, 130, 1),
+          ),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          fontFamily: 'pt_sans',
+          scaffoldBackgroundColor: COLOR_SCAFFOLD
+          //const Color.fromRGBO(17, 20, 25, 1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
+          ),
       themeMode: ThemeMode.dark,
       home: App(),
     );
