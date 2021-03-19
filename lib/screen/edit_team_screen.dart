@@ -3,9 +3,9 @@ import 'package:project/widgets/task/add_teams_button.dart';
 import 'package:project/widgets/task/description_widget.dart';
 import 'package:project/widgets/task/editTextField_method.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
-
+import 'package:share/share.dart';
 import '../constants.dart';
-
+import 'package:project/model/share_package.dart';
 class EditTeamScreen extends StatefulWidget {
   @override
   _EditTeamScreenState createState() => _EditTeamScreenState();
@@ -13,6 +13,9 @@ class EditTeamScreen extends StatefulWidget {
 
 class _EditTeamScreenState extends State<EditTeamScreen> {
   final _nameController = TextEditingController();
+  final String teamCode="#TeamCode7854";
+
+
 
   var names = [
     'Ahmed Mohamed',
@@ -24,7 +27,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
     'Habiba Sayed'
   ];
 
-  var description = '''this an example of a l
+  var description = '''this an example o  f a l
     ''';
 
   List<Widget> users;
@@ -43,9 +46,16 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(KAppBarHeight),
         child: ClipRRect(
-          borderRadius:
-              BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(KAppBarRound),
+              bottomRight: Radius.circular(KAppBarRound)),
           child: AppBar(
+            leading: IconButton(
+                padding: EdgeInsets.all(0),
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(
+                  Icons.arrow_back,
+                )),
             title: Text('Edit Team'),
             centerTitle: true,
           ),
@@ -76,11 +86,12 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                 )),
           ),
           Divider(height: 16, indent: 30, endIndent: 30),
-          DescriptionWidget(description, isEditing: true),
+          DescriptionWidget(description),
           Divider(height: 16, indent: 30, endIndent: 30),
           Padding(
             padding: const EdgeInsets.only(left: 8, bottom: 6, top: 6),
-            child: Text('Members', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+            child: Text('Members',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
           ),
           ...users,
           Divider(height: 16, indent: 30, endIndent: 30),
@@ -103,11 +114,15 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Invite Members to this team:', style: TextStyle(fontSize: 15)),
+                    Text('Invite Members to this team:',
+                        style: TextStyle(fontSize: 15)),
                     Padding(
                       padding: const EdgeInsets.only(top: 4, left: 16),
-                      child: Text('#TeamCode7854',
-                          style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic, color: Colors.white70)),
+                      child: Text(teamCode,
+                          style: TextStyle(
+                              fontSize: 15,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white70)),
                     ),
                   ],
                 ),
@@ -116,7 +131,11 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                   padding: EdgeInsets.zero,
                   iconSize: 22,
                   icon: Icon(Icons.share),
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      onShare(context, "This is Code $teamCode");
+                    });
+                  },
                   splashRadius: 18,
                 )
               ],
@@ -134,14 +153,16 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
             title: Text('Create Team below this', style: TS_TITLE),
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
                 child: SizedBox(
                   height: 40,
                   child: TextFormField(
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) {},
                     decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 8),
                       hintText: 'Name',
                       errorStyle: TextStyle(height: 1),
                     ),
@@ -149,7 +170,8 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
                 child: TextFormField(
                   maxLines: null,
                   textInputAction: TextInputAction.newline,
@@ -159,7 +181,11 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 48, child: FittedBox(child: addTeamsButton(hintText: "Create Team", onPressed: () {}))),
+              SizedBox(
+                  height: 48,
+                  child: FittedBox(
+                      child: addTeamsButton(
+                          hintText: "Create Team", onPressed: () {}))),
             ],
           ),
         ],
@@ -190,7 +216,8 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
           children: [
             CircleAvatar(
               radius: 22,
-              child: Text(name[0] + name[lastLitter], style: TextStyle(fontSize: 16)),
+              child: Text(name[0] + name[lastLitter],
+                  style: TextStyle(fontSize: 16)),
               backgroundColor: COLOR_ACCENT,
             ),
             SizedBox(width: 12),
@@ -199,7 +226,8 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(name, style: TextStyle(fontSize: 15)),
-                Text('@UserName', style: TextStyle(fontSize: 13, color: Colors.grey))
+                Text('@UserName',
+                    style: TextStyle(fontSize: 13, color: Colors.grey))
               ],
             ),
             Spacer(),
@@ -210,4 +238,6 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
       ),
     );
   }
+
+
 }
