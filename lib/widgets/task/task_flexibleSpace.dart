@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/model/task.dart';
-import 'package:project/screen/activity_screen.dart';
+import 'package:project/screen/main_screen/activity_screen.dart';
 
 import '../../constants.dart';
 import '../../widgets/task/task_card.dart';
@@ -68,7 +68,7 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
   }
 
   void _positionListener() {
-    final FlexibleSpaceBarSettings settings = context.inheritFromWidgetOfExactType(FlexibleSpaceBarSettings);
+    final FlexibleSpaceBarSettings settings = context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
 
     // final t =
     // (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent)
@@ -207,7 +207,7 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                     splashRadius: 13,
                     padding: const EdgeInsets.all(0),
                     onPressed: () => Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (BuildContext context) => ActivityScreen()))),
+                        .push(MaterialPageRoute(builder: (BuildContext context) => Activity()))),
               ),
             ),
             SizedBox(width: 8),

@@ -4,9 +4,10 @@ import 'package:intl/intl.dart';
 class DateField extends StatefulWidget {
   final bool isEditing;
   final DateTime firstDate, lastDate, initialDate;
+  final textStyle;
   final Function(DateTime newDate) onChanged;
 
-  const DateField({Key key, this.isEditing = false, this.firstDate, this.lastDate, this.initialDate, this.onChanged }) : super(key: key);
+  const DateField({Key key, this.isEditing = false, this.firstDate, this.lastDate, this.initialDate, this.onChanged,this.textStyle }) : super(key: key);
 
   @override
   _DateFieldState createState() => _DateFieldState();
@@ -49,6 +50,7 @@ class _DateFieldState extends State<DateField> {
     return InkWell(
       child: Text(
           DateFormat(_dateFormat).format(_date)
+              ,style: widget.textStyle,
         //  _date.toString()
       ),
       onTap: widget.isEditing ? _showDatePicker : null,

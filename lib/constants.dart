@@ -1,4 +1,3 @@
-import 'dart:wasm';
 
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
@@ -28,16 +27,12 @@ const KTargetWorkHours = 6;
 
 // default TextFormField decoration
 // ignore: non_constant_identifier_names
-final TEXT_FIELD_DECORATION = InputDecoration(
+final TEXT_FIELD_DECORATION =InputDecoration(
+
   isDense: true,
   filled: true,
-  errorStyle: TextStyle(height: 0),
   fillColor: Colors.white,
   hintStyle: TextStyle(color: Colors.grey[700]),
-
-  ///use it in case => theme brightness: Brightness.dark,
-  //hintStyle: TextStyle(color: Colors.grey),
-  contentPadding: const EdgeInsets.only(left: 20, bottom: 0, top: 0),
   focusedBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Colors.white, width: 2),
     borderRadius: BorderRadius.circular(25),
@@ -54,10 +49,6 @@ final TEXT_FIELD_DECORATION = InputDecoration(
     borderSide: BorderSide(color: Colors.red, width: 2),
     borderRadius: BorderRadius.circular(25),
   ),
-  // disabledBorder: OutlineInputBorder(
-  //   borderSide: BorderSide(color: Colors.white),
-  //   borderRadius: BorderRadius.circular(25.7),
-  // ),
 );
 
 // ignore: non_constant_identifier_names
@@ -133,14 +124,16 @@ class BuildDateTime extends StatefulWidget {
   final DateTime selectedDate;
   final double padding;
 
-  const BuildDateTime({Key key, this.selectedDate, this.padding}) : super(key: key);
+  const BuildDateTime({ Key key,this.selectedDate,  this.padding}) : super(key: key);
 
   @override
   _BuildDateTimeState createState() => _BuildDateTimeState(selectedDate);
 }
 
+
+
 class _BuildDateTimeState extends State<BuildDateTime> {
-  DateTime date;
+ DateTime date;
 
   _BuildDateTimeState(this.date);
 

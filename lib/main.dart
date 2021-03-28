@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project/screen/chat_screen.dart';
+import 'package:project/screen/main_screen/activity_screen.dart';
+import 'package:project/screen/main_screen/attachment%20screen.dart';
 
 import 'screen/navigation/app.dart';
 
@@ -58,7 +61,7 @@ class MyApp extends StatelessWidget {
             const Color.fromRGBO(17, 20, 25, 1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
       ),
       themeMode: ThemeMode.dark,
-      home: App(),
+      home: Attachment(),
     );
   }
 }

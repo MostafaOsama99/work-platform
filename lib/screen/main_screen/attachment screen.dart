@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:project/screen/navigation/app.dart';
 
 import '../../constants.dart';
 import 'package:full_screen_image/full_screen_image.dart';
 
-class MyApp2 extends StatefulWidget {
+class Attachment extends StatefulWidget {
   @override
-  _MyApp2State createState() => _MyApp2State();
+  _AttachmentState createState() => _AttachmentState();
 }
 
-class _MyApp2State extends State<MyApp2> with SingleTickerProviderStateMixin {
+class _AttachmentState extends State<Attachment> with SingleTickerProviderStateMixin {
   TabController _tabController;
 
   @override
@@ -20,14 +21,32 @@ class _MyApp2State extends State<MyApp2> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(45),
+        child: ClipRRect(
+
+          borderRadius:
+          BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
+          child: AppBar(
+            backgroundColor: COLOR_SCAFFOLD,
+            centerTitle: true,
+           leading:   Padding(
+             padding: const EdgeInsets.only(left: 20),
+             child: SizedBox(height: 50, child: Icon(Icons.arrow_back, size: 30)),
+           ),
+            title: Text(
+              "Recently Added",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: SizedBox(height: 50, child: Icon(Icons.arrow_back, size: 30)),
-            ),
+        // SizedBox(height: 35,),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -37,91 +56,20 @@ class _MyApp2State extends State<MyApp2> with SingleTickerProviderStateMixin {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 25, top: 20, bottom: 20),
-                      child: Text(
-                        "Recently Added",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+
                     SizedBox(
                       height: 150,
                       child: TabBar(
-                        isScrollable: true,
+                        isScrollable: false,
                         indicatorPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                         labelPadding: const EdgeInsets.symmetric(horizontal: 8),
                         //indicator: BoxDecoration(borderRadius: BorderRadius.circular(50), color: COLOR_ACCENT),
                         indicatorSize: TabBarIndicatorSize.label,
+
                         tabs: [
-                          Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                CircleAvatar(
-                                  radius: 30,
-                                  child: Icon(
-                                    Icons.insert_drive_file,
-                                    color: Colors.blue,
-                                    size: 28,
-                                  ),
-                                  backgroundColor: COLOR_BACKGROUND,
-                                ),
-                                Text(
-                                  "Files",
-                                  style: TextStyle(fontSize: 18),
-                                )
-                              ],
-                            ),
-                            decoration: BoxDecoration(color: COLOR_SCAFFOLD, borderRadius: BorderRadius.circular(15)),
-                            width: 100,
-                            height: 120,
-                          ),
-                          Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                CircleAvatar(
-                                  radius: 30,
-                                  child: Icon(
-                                    Icons.insert_drive_file,
-                                    color: Colors.blue,
-                                    size: 28,
-                                  ),
-                                  backgroundColor: COLOR_BACKGROUND,
-                                ),
-                                Text(
-                                  "Files",
-                                  style: TextStyle(fontSize: 20),
-                                )
-                              ],
-                            ),
-                            decoration: BoxDecoration(color: COLOR_SCAFFOLD, borderRadius: BorderRadius.circular(15)),
-                            width: 120,
-                            height: 150,
-                          ),
-                          Container(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                CircleAvatar(
-                                  radius: 30,
-                                  child: Icon(
-                                    Icons.insert_drive_file,
-                                    color: Colors.blue,
-                                    size: 28,
-                                  ),
-                                  backgroundColor: COLOR_BACKGROUND,
-                                ),
-                                Text(
-                                  "Files",
-                                  style: TextStyle(fontSize: 20),
-                                )
-                              ],
-                            ),
-                            decoration: BoxDecoration(color: COLOR_SCAFFOLD, borderRadius: BorderRadius.circular(15)),
-                            width: 120,
-                            height: 150,
-                          ),
+                         attachmentsTaps(Icons.insert_drive_file, "Files",false),
+                        attachmentsTaps(Icons.link_outlined, "Links",true),
+                          attachmentsTaps(Icons.image, "Images",false)
                         ],
                         controller: _tabController,
                       ),
@@ -129,139 +77,9 @@ class _MyApp2State extends State<MyApp2> with SingleTickerProviderStateMixin {
                     Expanded(
                       child: TabBarView(
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                                child: Text(
-                                  "Folders",
-                                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Expanded(
-                                child: ListView.builder(
-                                    itemCount: 5,
-                                    itemBuilder: (context, i) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
-                                        child: Container(
-                                          height: 60,
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 80,
-                                                child: CircleAvatar(
-                                                  radius: 22.5,
-                                                  child: Icon(
-                                                    Icons.file_copy_sharp,
-                                                    color: Colors.blue,
-                                                  ),
-                                                  backgroundColor: COLOR_BACKGROUND,
-                                                ),
-                                              ),
-                                              Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text("My Files"),
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(top: 5),
-                                                    child: Text(
-                                                      "created at:",
-                                                      style: const TextStyle(color: Colors.white54),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          decoration: BoxDecoration(
-                                              color: COLOR_SCAFFOLD, borderRadius: BorderRadius.circular(15)),
-                                        ),
-                                      );
-                                    }),
-                              )
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 20, left: 20, bottom: 10),
-                                child: Text(
-                                  "Folders",
-                                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Expanded(
-                                child: ListView.builder(
-                                    itemCount: 5,
-                                    itemBuilder: (context, i) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
-                                        child: Container(
-                                          height: 100,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(top: 15),
-                                            child: ListTile(
-                                              leading: CircleAvatar(
-                                                radius: 30,
-                                                child: Icon(
-                                                  Icons.file_copy_sharp,
-                                                  color: COLOR_ACCENT,
-                                                ),
-                                                backgroundColor: Colors.white,
-                                              ),
-                                              title: Text(
-                                                "My Files",
-                                              ),
-                                              subtitle: Padding(
-                                                padding: const EdgeInsets.only(top: 5),
-                                                child: Text("Created at"),
-                                              ),
-                                            ),
-                                          ),
-                                          decoration: BoxDecoration(
-                                              color: Color.fromRGBO(15, 15, 45, 1),
-                                              borderRadius: BorderRadius.circular(15)),
-                                        ),
-                                      );
-                                    }),
-                              )
-                            ],
-                          ),
-                          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20, left: 20, bottom: 20),
-                              child: Text(
-                                "Images",
-                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Expanded(
-                                child: GridView.builder(
-                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        childAspectRatio: 5 / 3,
-                                        crossAxisSpacing: 3,
-                                        mainAxisSpacing: 10),
-                                    itemBuilder: (context, i) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(left: 10, right: 10),
-                                        child: FullScreenWidget(
-                                          disposeLevel: DisposeLevel.Low,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(16),
-                                            child: Image.network(
-                                              "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8aHVtYW58ZW58MHx8MHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }))
-                          ]),
+                         tapViewList("Files", Icons.file_copy_sharp, "My Files"),
+                          tapViewList("Hyper link ", Icons.link_outlined, "My Links"),
+                         imagesTap(),
                         ],
                         controller: _tabController,
                       ),
@@ -277,26 +95,127 @@ class _MyApp2State extends State<MyApp2> with SingleTickerProviderStateMixin {
   }
 }
 
-/**  Container(
+
+Widget attachmentsTaps (IconData icon,String tapName,bool isLink){
+  return   Container(
     child: Column(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        CircleAvatar(
+          radius: 30,
+          child: isLink ? Transform.rotate(angle: 3.14 / 4, child: Icon(
+            Icons.link_outlined,
+            color: Colors.blue,
+            size: 28,
+          ),) : Icon(
+            icon,
+            color: Colors.blue,
+            size: 28,
+          ),
+          backgroundColor: COLOR_BACKGROUND,
+        ),
+        Text(
+          tapName,
+          style: TextStyle(fontSize: 18),
+        )
+      ],
+    ),
+    decoration: BoxDecoration(color: COLOR_SCAFFOLD, borderRadius: BorderRadius.circular(15)),
+    width: 100,
+    height: 120,
+  );
+}
+
+
+Widget tapViewList (String tapName,IconData icon,String title){
+  
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-    CircleAvatar(
-    radius: 30,
-    child: Icon(
-    Icons.insert_drive_file,color: Colors.blue,size: 28,
-    ),
-    backgroundColor: COLOR_SCAFFOLD,
-    )
-    , Text("Files",style: TextStyle(fontSize: 20),)
+      Padding(
+        padding: const EdgeInsets.only(top: 20, left: 20, bottom: 10),
+        child: Text(
+          tapName,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ),
+      Expanded(
+        child: ListView.builder(
+            itemCount: 10,
+            itemBuilder: (context, i) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15, top: 10),
+                child: Container(
+                  height: 60,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 80,
+                        child: CircleAvatar(
+                          radius: 22.5,
+                          child: Icon(
+                            icon,
+                            color: Colors.blue,
+                          ),
+                          backgroundColor: COLOR_BACKGROUND,
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(title),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              "created at:",
+                              style: const TextStyle(color: Colors.white54),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                      color: COLOR_SCAFFOLD, borderRadius: BorderRadius.circular(15)),
+                ),
+              );
+            }),
+      )
     ],
-    ),
-    decoration: BoxDecoration(
-    color: Color.fromRGBO(15, 15, 45, 1),
-    borderRadius: BorderRadius.circular(15)
-    ),
+  );
+}
 
-
-    width: 120,
-    height: 150,
-    ) **/
+Widget imagesTap (){
+  return  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    Padding(
+      padding: const EdgeInsets.only(top: 20, left: 20, bottom: 20),
+      child: Text(
+        "Images",
+        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+      ),
+    ),
+    Expanded(
+        child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 5 / 3,
+                crossAxisSpacing: 3,
+                mainAxisSpacing: 10),
+            itemBuilder: (context, i) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: FullScreenWidget(
+                  disposeLevel: DisposeLevel.Low,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(
+                      "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MXx8aHVtYW58ZW58MHx8MHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              );
+            }))
+  ]);
+}

@@ -162,7 +162,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                     Row(
                       children: [
                         Text("due:   ", style: TextStyle(color: Colors.grey, fontSize: 15)),
-                        DateField(initialDate: DateTime.now()),
+                        DateField(initialDate: DateTime.now(),),
                       ],
                     )
                   ],

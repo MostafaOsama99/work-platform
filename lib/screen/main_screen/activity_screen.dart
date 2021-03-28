@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:project/widgets/dateField_widget.dart';
+import 'package:project/widgets/home/dropDownMenu.dart';
 import 'dart:io';
 import 'package:project/widgets/task/add_teams_button.dart';
 
@@ -14,7 +16,7 @@ class Activity extends StatefulWidget {
 }
 
 class _ActivityState extends State<Activity> {
-
+  final TextEditingController _textEditingController = TextEditingController();
   var names = [
     'Ahmed Mohamed',
     'Mostafa Osama',
@@ -28,10 +30,9 @@ class _ActivityState extends State<Activity> {
   @override
   void initState() {
     super.initState();
-   // widget.users =
-     //   List.generate(names.length, (index) => _userTileName(names[index]));
+    // widget.users =
+    //   List.generate(names.length, (index) => _userTileName(names[index]));
     //names.forEach((name) => users.add(_userTile(name)));
-
   }
 
   File file;
@@ -48,35 +49,41 @@ class _ActivityState extends State<Activity> {
 
   @override
   Widget build(BuildContext context) {
-
-
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          "Activity",
-          style: TextStyle(fontSize: 18),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(45),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(KAppBarRound),
+              bottomRight: Radius.circular(KAppBarRound)),
+          child: AppBar(
+            centerTitle: true,
+            title: InkWell(
+                onTap: () {
+                  changeTeam(context, MediaQuery.of(context).size.height, []);
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("Room", style: TextStyle(color: Colors.white)),
+                    Icon(Icons.arrow_drop_down, color: Colors.grey[600])
+                  ],
+                )),
+          ),
         ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 20),
+          //   child: NotificationViewer(),
+          // ),
 
-           Row(
-             children: [
-               Padding(
-                 padding: const EdgeInsets.only(top: 15,bottom: 10,left: 15),
-                 child: Text("Activity",style: TextStyle(fontSize: 18,),textAlign: TextAlign.left,),
-               ),
-               Spacer(flex: 5,)
-             ],
-           ),
-          NotificationViewer(),
-           Text("Comments",style: TextStyle(fontSize: 18,),),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 15, top: 10,left: 5),
+              padding: const EdgeInsets.only(bottom: 15, top: 10, left: 5),
               child: ListView.builder(
                   itemCount: 10,
                   itemBuilder: (context, i) {
@@ -85,23 +92,50 @@ class _ActivityState extends State<Activity> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 12,),
+            padding: const EdgeInsets.only(
+              bottom: 12,
+            ),
             child: Row(
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.66,
+                  height: 42,
                   child: TextFormField(
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.newline,
                     onFieldSubmitted: (_) {},
                     autofocus: false,
-                    decoration: TEXT_FIELD_DECORATION.copyWith(
-                      hintText: 'Add comment',
-                      prefixIcon: Icon(Icons.mode_comment_outlined,color: Colors.grey,),
+                    maxLines: 3,
+                    controller: _textEditingController,
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                      hintText: "Add Comment",
+                      contentPadding: EdgeInsets.only(
+                          left: 20, right: 20, bottom: 20, top: 5),
+                      isDense: true,
+                      filled: true,
+                      fillColor: Colors.white54,
+                      hintStyle: TextStyle(color: Colors.grey[700]),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 2),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white54),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red, width: 1.5),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red, width: 2),
+                        borderRadius: BorderRadius.circular(25),
+                      ),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 10),
+                  padding: EdgeInsets.only(left: 20),
                   child: addTeamsButton(hintText: "Send", onPressed: () {}),
                 )
               ],
@@ -115,23 +149,44 @@ class _ActivityState extends State<Activity> {
 
 Widget commentsViewer(context) {
   return ListTile(
-    contentPadding: EdgeInsets.only(right: 40, top: 10),
+    contentPadding: EdgeInsets.only(right: 15, top: 10, left: 5),
     leading: CircleAvatar(
       radius: 25,
       child: Icon(Icons.person),
       backgroundColor: Colors.grey[400],
     ),
     title: Column(
- crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 8),
-          child: Text(
-            "Name",
-            style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-                fontWeight: FontWeight.bold),
+          child: Row(
+            children: [
+              Text(
+                "Name",
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+              Spacer(
+                flex: 5,
+              ),
+              Text(
+                "by ",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: DateField(
+                  initialDate: DateTime.now(),
+                  textStyle: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                ),
+              )
+            ],
           ),
         ),
         Container(
@@ -142,28 +197,24 @@ Widget commentsViewer(context) {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(bottom: 3),
-
                   ),
                   Text(
                     "this should be comment",
-                    style: TextStyle(fontSize: 18,color: Colors.white),
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+
                   ),
                 ],
               ),
             ),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color:COLOR_BACKGROUND,
+              color: COLOR_BACKGROUND,
               borderRadius: BorderRadius.circular(15),
             )),
       ],
     ),
   );
 }
-
-
-
-
 
 class NotificationViewer extends StatelessWidget {
   final message, image, name;
@@ -178,7 +229,8 @@ class NotificationViewer extends StatelessWidget {
         height: 95,
         child: Column(
           children: <Widget>[
-            ListTile(contentPadding: EdgeInsets.only(left: 5),
+            ListTile(
+              contentPadding: EdgeInsets.only(left: 5),
               leading: CircleAvatar(
                 backgroundColor: Colors.grey,
                 radius: 30,

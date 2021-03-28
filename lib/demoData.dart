@@ -1,3 +1,5 @@
+import 'package:project/widgets/chat/chat_design.dart';
+
 import 'model/task.dart';
 import 'model/project.dart';
 
@@ -25,6 +27,20 @@ const List<User> usersLong = [
   User(id: 11, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
 ];
 
+
+List <Messages> messagesList =[
+  Messages(isMe: true,text: "Hello",senderName: "test"),
+  Messages(isMe: false,text: "How are you",senderName: "test"),
+  Messages(isMe: true,text: "are you there ?",senderName: "test"),
+  Messages(isMe: false,text: "holaaa",senderName: "test"),
+  Messages(isMe: true,text: "laaaa",senderName: "test"),
+  Messages(isMe: false,text: "wwwwwwwww",senderName: "test"),
+  Messages(isMe: true,text: "eeeeeee",senderName: "test"),
+  Messages(isMe: false,text: "eeeee",senderName: "test"),
+  Messages(isMe: true,text: "aaaaaa",senderName: "test"),
+
+
+];
 final List<Team> teams = [
   Team(id: 0, name: 'Software Engineers', tasks: demoTasks),
   Team(id: 1, name: 'Designers', tasks: demoTasks.getRange(0, 2).toList()),
