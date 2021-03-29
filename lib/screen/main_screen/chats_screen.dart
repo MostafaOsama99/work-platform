@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:project/demoData.dart';
 
 import '../../constants.dart';
+import '../chat_screen.dart';
 
 const KTapTS = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
-
+ List <String> lastMessages =['bye',"see you later", 'hello','okey'];
 class ChatsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -48,19 +49,56 @@ class ChatsScreen extends StatelessWidget {
           body: TabBarView(
             children: [
               ListView.separated(
-                  itemBuilder: (_, index) => ChatTile(
-                        chatName: teams[index].name,
-                        announce: 3,
-                        issue: 4,
-                      ),
+                  itemBuilder: (_, index) => InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+
+                        return ChatScreen();
+                      }));
+                    },
+                    child: ChatTile(
+                          chatName: teams[index].name,
+                          lastMessage: lastMessages[index],
+                          announce: 3,
+                          issue: 4,
+                        ),
+                  ),
                   separatorBuilder: (_, index) => Divider(endIndent: 20, indent: 20, height: 10),
                   itemCount: teams.length),
-              Container(
-                child: Text('2'),
-              ),
-              Container(
-                child: Text('3'),
-              ),
+              ListView.separated(
+                  itemBuilder: (_, index) => InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+
+                        return ChatScreen();
+                      }));
+                    },
+                    child: ChatTile(
+                      chatName: "Mohamed (Hr)",
+                      lastMessage: lastMessages[index],
+                      announce: 3,
+                      issue: 4,
+                    ),
+                  ),
+                  separatorBuilder: (_, index) => Divider(endIndent: 20, indent: 20, height: 10),
+                  itemCount: 1),
+              ListView.separated(
+                  itemBuilder: (_, index) => InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+
+                        return ChatScreen();
+                      }));
+                    },
+                    child: ChatTile(
+                      chatName: "Assign tasks",
+                      lastMessage: lastMessages[index],
+                      announce: 3,
+                      issue: 4,
+                    ),
+                  ),
+                  separatorBuilder: (_, index) => Divider(endIndent: 20, indent: 20, height: 10),
+                  itemCount: 1),
             ],
           ),
         ),
@@ -79,7 +117,7 @@ class TeamsBody extends StatelessWidget {
 class ChatTile extends StatelessWidget {
   final String chatName;
   final int announce, issue;
-  final String lastMessage;
+  final  lastMessage;
   final DateTime timeStamp;
 
   const ChatTile(
@@ -87,7 +125,7 @@ class ChatTile extends StatelessWidget {
       @required this.chatName,
       this.announce = 0,
       this.issue = 0,
-      this.lastMessage = 'send your first message',
+      this.lastMessage ,
       this.timeStamp})
       : super(key: key);
 

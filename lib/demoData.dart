@@ -95,8 +95,8 @@ List<Messages> messagesList = [
   Messages(isMe: true, text: "laaaa", senderName: "test"),
   Messages(isMe: false, text: "wwwwwwwww", senderName: "test"),
   Messages(isMe: true, text: "eeeeeee", senderName: "test"),
-  Messages(isMe: false, text: "eeeee", senderName: "test"),
-  Messages(isMe: true, text: "aaaaaa", senderName: "test"),
+  Messages(isMe: false, text: "bye", senderName: "test"),
+
 ];
 final List<Team> teams = [
   Team(id: 0, name: 'Marketing', tasks: demoTasks),

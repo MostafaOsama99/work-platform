@@ -17,7 +17,7 @@ class Activity extends StatefulWidget {
 
 class _ActivityState extends State<Activity> {
   final TextEditingController _textEditingController = TextEditingController();
-  var names = [
+  var namess = [
     'Ahmed Mohamed',
     'Mostafa Osama',
     'Mohamed Hesham',
@@ -66,8 +66,8 @@ class _ActivityState extends State<Activity> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("Room", style: TextStyle(color: Colors.white)),
-                    Icon(Icons.arrow_drop_down, color: Colors.grey[600])
+                    Text("Activity", style: TextStyle(color: Colors.white)),
+
                   ],
                 )),
           ),
@@ -85,9 +85,9 @@ class _ActivityState extends State<Activity> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 15, top: 10, left: 5),
               child: ListView.builder(
-                  itemCount: 10,
+                  itemCount: comments.length,
                   itemBuilder: (context, i) {
-                    return commentsViewer(context);
+                    return commentsViewer(context,comments[i],names[i]);
                   }),
             ),
           ),
@@ -147,9 +147,9 @@ class _ActivityState extends State<Activity> {
   }
 }
 
-Widget commentsViewer(context) {
+Widget commentsViewer(context,String text,String names) {
   return ListTile(
-    contentPadding: EdgeInsets.only(right: 15, top: 10, left: 5),
+    contentPadding: EdgeInsets.only(right: 15, top: 15, left: 5),
     leading: CircleAvatar(
       radius: 25,
       child: Icon(Icons.person),
@@ -163,7 +163,7 @@ Widget commentsViewer(context) {
           child: Row(
             children: [
               Text(
-                "Name",
+                names,
                 style: TextStyle(
                     fontSize: 18,
                     color: Colors.white,
@@ -199,7 +199,7 @@ Widget commentsViewer(context) {
                     padding: EdgeInsets.only(bottom: 3),
                   ),
                   Text(
-                    "this should be comment",
+                    text,
                     style: TextStyle(fontSize: 18, color: Colors.white),
 
                   ),
@@ -263,3 +263,5 @@ class NotificationViewer extends StatelessWidget {
         ));
   }
 }
+List <String> names =["Hesham" , "Mostafa Osama ", "Yousef" , "Mahmoud"];
+List <String> comments =["Hey there what is the task today ? ", "it`s about Dsc Solution challenge !" ," WOW" , "i would like to join"];
