@@ -53,10 +53,7 @@ class _SingleTaskState extends State<SingleTask> {
     //names.forEach((name) => users.add(_userTile(name)));
     _nameController.text = 'Team Name';
     _descriptionController.text =
-        '''this an example of a long description to test the three line in description text form field 
-    this an example of a long description to test the three line in description text form field 
-    this an example of a long description to test the three line in description text form field 
-    this an example of a long description to test the three line in description text form field 
+        '''Human resources (HR) is the division of a business that is charged with finding, screening, recruiting, and training job applicants, as well as administering employee-benefit programs. HR plays a key role in helping companies deal with a fast-changing business environment and a greater demand for quality employees in the 21st century. example of a long description to test the three line in description text form field 
     ''';
   }
 

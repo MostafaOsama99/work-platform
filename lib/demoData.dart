@@ -4,87 +4,366 @@ import 'model/task.dart';
 import 'model/project.dart';
 
 const longDescription =
-    'this an example of a long description to test the three line in description text form field this an example of a long description to test the three line in description text form field this an example of a long description to test the three line in description text form field this an example of a long description to test the three line in description text form field';
+    'Human resources (HR) is the division of a business that is charged with finding, screening, recruiting, and training job applicants, as well as administering employee-benefit programs. HR plays a key role in helping companies deal with a fast-changing business environment and a greater demand for quality employees in the 21st century. example of a long description to test the three line in description text form field Human resources (HR) is the division of a business that is charged with finding, screening, recruiting, and training job applicants, as well as administering employee-benefit programs. HR plays a key role in helping companies deal with a fast-changing business environment and a greater demand for quality employees in the 21st century. example of a long description to test the three line in description text form field Human resources (HR) is the division of a business that is charged with finding, screening, recruiting, and training job applicants, as well as administering employee-benefit programs. HR plays a key role in helping companies deal with a fast-changing business environment and a greater demand for quality employees in the 21st century. example of a long description to test the three line in description text form field Human resources (HR) is the division of a business that is charged with finding, screening, recruiting, and training job applicants, as well as administering employee-benefit programs. HR plays a key role in helping companies deal with a fast-changing business environment and a greater demand for quality employees in the 21st century. example of a long description to test the three line in description text form field';
 
 const List<User> users = [
-  User(name: 'Mostafa Osama Hamed', id: 0, jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
-  User(name: 'Youssef Essam Name', id: 1, jobTitle: 'Java Developer', userName: '@Youssef_12'),
-  User(name: 'Mohammed Hesham Name', id: 2, jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
+  User(
+      name: 'Mostafa Osama Hamed',
+      id: 0,
+      jobTitle: 'Flutter Developer',
+      userName: '@Mostafa99'),
+  User(
+      name: 'Youssef Essam Name',
+      id: 1,
+      jobTitle: 'Java Developer',
+      userName: '@Youssef_12'),
+  User(
+      name: 'Mohammed Hesham Name',
+      id: 2,
+      jobTitle: 'Flutter Developer',
+      userName: '@MohammedH65'),
 ];
 
 const List<User> usersLong = [
-  User(id: 0, name: 'Mostafa Osama Hamed', jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
-  User(id: 1, name: 'Youssef Essam Name', jobTitle: 'Java Developer', userName: '@Youssef_12'),
-  User(id: 2, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
-  User(id: 3, name: 'Mostafa Osama Hamed', jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
-  User(id: 4, name: 'Youssef Essam Name', jobTitle: 'Java Developer', userName: '@Youssef_12'),
-  User(id: 5, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
-  User(id: 6, name: 'Mostafa Osama Hamed', jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
-  User(id: 7, name: 'Youssef Essam Name', jobTitle: 'Java Developer', userName: '@Youssef_12'),
-  User(id: 8, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
-  User(id: 9, name: 'Mostafa Osama Hamed', jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
-  User(id: 10, name: 'Youssef Essam Name', jobTitle: 'Java Developer', userName: '@Youssef_12'),
-  User(id: 11, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
+  User(
+      id: 0,
+      name: 'Mostafa Osama Hamed',
+      jobTitle: 'Flutter Developer',
+      userName: '@Mostafa99'),
+  User(
+      id: 1,
+      name: 'Youssef Essam Name',
+      jobTitle: 'Java Developer',
+      userName: '@Youssef_12'),
+  User(
+      id: 2,
+      name: 'Mohammed Hesham Name',
+      jobTitle: 'Flutter Developer',
+      userName: '@MohammedH65'),
+  User(
+      id: 3,
+      name: 'Mostafa Osama Hamed',
+      jobTitle: 'Flutter Developer',
+      userName: '@Mostafa99'),
+  User(
+      id: 4,
+      name: 'Youssef Essam Name',
+      jobTitle: 'Java Developer',
+      userName: '@Youssef_12'),
+  User(
+      id: 5,
+      name: 'Mohammed Hesham Name',
+      jobTitle: 'Flutter Developer',
+      userName: '@MohammedH65'),
+  User(
+      id: 6,
+      name: 'Mostafa Osama Hamed',
+      jobTitle: 'Flutter Developer',
+      userName: '@Mostafa99'),
+  User(
+      id: 7,
+      name: 'Youssef Essam Name',
+      jobTitle: 'Java Developer',
+      userName: '@Youssef_12'),
+  User(
+      id: 8,
+      name: 'Mohammed Hesham Name',
+      jobTitle: 'Flutter Developer',
+      userName: '@MohammedH65'),
+  User(
+      id: 9,
+      name: 'Mostafa Osama Hamed',
+      jobTitle: 'Flutter Developer',
+      userName: '@Mostafa99'),
+  User(
+      id: 10,
+      name: 'Youssef Essam Name',
+      jobTitle: 'Java Developer',
+      userName: '@Youssef_12'),
+  User(
+      id: 11,
+      name: 'Mohammed Hesham Name',
+      jobTitle: 'Flutter Developer',
+      userName: '@MohammedH65'),
 ];
 
-
-List <Messages> messagesList =[
-  Messages(isMe: true,text: "Hello",senderName: "test"),
-  Messages(isMe: false,text: "How are you",senderName: "test"),
-  Messages(isMe: true,text: "are you there ?",senderName: "test"),
-  Messages(isMe: false,text: "holaaa",senderName: "test"),
-  Messages(isMe: true,text: "laaaa",senderName: "test"),
-  Messages(isMe: false,text: "wwwwwwwww",senderName: "test"),
-  Messages(isMe: true,text: "eeeeeee",senderName: "test"),
-  Messages(isMe: false,text: "eeeee",senderName: "test"),
-  Messages(isMe: true,text: "aaaaaa",senderName: "test"),
-
-
+List<Messages> messagesList = [
+  Messages(isMe: true, text: "Hello", senderName: "test"),
+  Messages(isMe: false, text: "How are you", senderName: "test"),
+  Messages(isMe: true, text: "are you there ?", senderName: "test"),
+  Messages(isMe: false, text: "holaaa", senderName: "test"),
+  Messages(isMe: true, text: "laaaa", senderName: "test"),
+  Messages(isMe: false, text: "wwwwwwwww", senderName: "test"),
+  Messages(isMe: true, text: "eeeeeee", senderName: "test"),
+  Messages(isMe: false, text: "eeeee", senderName: "test"),
+  Messages(isMe: true, text: "aaaaaa", senderName: "test"),
 ];
 final List<Team> teams = [
-  Team(id: 0, name: 'Software Engineers', tasks: demoTasks),
-  Team(id: 1, name: 'Designers', tasks: demoTasks.getRange(0, 2).toList()),
-  Team(id: 2, name: 'Marketing', tasks: demoTasks),
-  Team(id: 3, name: 'Sales', tasks: demoTasks),
-  Team(id: 4, name: 'Software Engineers'),
-  Team(id: 5, name: 'Designers', tasks: demoTasks.getRange(0, 3).toList()),
-  Team(id: 6, name: 'Marketing', tasks: demoTasks),
-  Team(id: 7, name: 'Sales', tasks: demoTasks),
-  Team(id: 8, name: 'Software Engineers'),
-  Team(id: 9, name: 'Designers'),
-  Team(id: 10, name: 'Marketing'),
-  Team(id: 11, name: 'Sales'),
+  Team(id: 0, name: 'Marketing', tasks: demoTasks),
+  Team(id: 1, name: 'Public Relations', tasks: [
+    Task(
+        id: '0',
+        name: 'planning publicity strategies',
+        datePlannedStart: DateTime(2020, 12, 1),
+        datePlannedEnd: DateTime(2021, 1, 25),
+        description: 'Create Marketing strategy for new year',
+        progress: 80,
+        projectName: 'Hr  ',
+        checkPoints: const [
+          CheckPoint(
+              id: 0,
+              name: 'strategy plan for first week',
+              isFinished: false,
+              description:
+              'in this week we would create strategy plan to achieve our strategy goal'),
+          CheckPoint(
+              id: 1,
+              name: 'assign task for marketing team',
+              isFinished: false,
+              percentage: 10,
+              description: "marketing team should be working on our plan ")
+        ],
+        //members:users ,
+        assignedTeam: team,
+        taskCreator: User(
+            userName: '@UserName',
+            jobTitle: 'job title',
+            id: 1,
+            name: 'Mostafa Osama')),
+    Task(
+        id: '0',
+        name: 'producing presentations',
+        datePlannedStart: DateTime(2020, 12, 1),
+        datePlannedEnd: DateTime(2021, 1, 25),
+        description: 'Create Marketing strategy for new year',
+        progress: 10,
+        projectName: 'Hr  ',
+        checkPoints: const [
+          CheckPoint(
+              id: 0,
+              name: 'strategy plan for first week',
+              isFinished: false,
+              description:
+              'in this week we would create strategy plan to achieve our strategy goal'),
+          CheckPoint(
+              id: 1,
+              name: 'assign task for marketing team',
+              isFinished: false,
+              percentage: 10,
+              description: "marketing team should be working on our plan ")
+        ],
+        //members:users ,
+        assignedTeam: team,
+        taskCreator: User(
+            userName: '@UserName',
+            jobTitle: 'job title',
+            id: 1,
+            name: 'Mostafa Osama')),
+    Task(
+        id: '0',
+        name: 'dealing with enquiries',
+        datePlannedStart: DateTime(2020, 12, 1),
+        datePlannedEnd: DateTime(2021, 1, 25),
+        description: 'Create Marketing strategy for new year',
+        progress: 60,
+        projectName: 'Hr  ',
+        checkPoints: const [
+          CheckPoint(
+              id: 0,
+              name: 'strategy plan for first week',
+              isFinished: false,
+              description:
+              'in this week we would create strategy plan to achieve our strategy goal'),
+          CheckPoint(
+              id: 1,
+              name: 'assign task for marketing team',
+              isFinished: false,
+              percentage: 10,
+              description: "marketing team should be working on our plan ")
+        ],
+        //members:users ,
+        assignedTeam: team,
+        taskCreator: User(
+            userName: '@UserName',
+            jobTitle: 'job title',
+            id: 1,
+            name: 'Mostafa Osama')),
+    Task(
+        id: '0',
+        name: 'analysing media coverage',
+        datePlannedStart: DateTime(2020, 12, 1),
+        datePlannedEnd: DateTime(2021, 1, 25),
+        description: 'Create Marketing strategy for new year',
+        progress: 20,
+        projectName: 'Hr  ',
+        checkPoints: const [
+          CheckPoint(
+              id: 0,
+              name: 'strategy plan for first week',
+              isFinished: true,
+              description:
+              'in this week we would create strategy plan to achieve our strategy goal'),
+          CheckPoint(
+              id: 1,
+              name: 'assign task for marketing team',
+              isFinished: false,
+              percentage: 10,
+              description: "marketing team should be working on our plan ")
+        ],
+        //members:users ,
+        assignedTeam: team,
+        taskCreator: User(
+            userName: '@UserName',
+            jobTitle: 'job title',
+            id: 1,
+            name: 'Mostafa Osama')),
+
+  ]),
+  Team(id: 2, name: 'Development', tasks: [
+    Task(
+        id: '0',
+        name: 'Develop a website',
+        datePlannedStart: DateTime(2020, 12, 1),
+        datePlannedEnd: DateTime(2021, 1, 25),
+        description: 'Create Marketing strategy for new year',
+        progress: 80,
+        projectName: 'Hr  ',
+        checkPoints: const [
+          CheckPoint(
+              id: 0,
+              name: 'strategy plan for first week',
+              isFinished: false,
+              description:
+              'in this week we would create strategy plan to achieve our strategy goal'),
+          CheckPoint(
+              id: 1,
+              name: 'assign task for marketing team',
+              isFinished: false,
+              percentage: 10,
+              description: "marketing team should be working on our plan ")
+        ],
+        //members:users ,
+        assignedTeam: team,
+        taskCreator: User(
+            userName: '@UserName',
+            jobTitle: 'job title',
+            id: 1,
+            name: 'Mostafa Osama')),
+    Task(
+        id: '0',
+        name: 'maintain database',
+        datePlannedStart: DateTime(2020, 12, 1),
+        datePlannedEnd: DateTime(2021, 1, 25),
+        description: 'Create Marketing strategy for new year',
+        progress: 30,
+        projectName: 'Hr  ',
+        checkPoints: const [
+          CheckPoint(
+              id: 0,
+              name: 'strategy plan for first week',
+              isFinished: false,
+              description:
+              'in this week we would create strategy plan to achieve our strategy goal'),
+          CheckPoint(
+              id: 1,
+              name: 'assign task for marketing team',
+              isFinished: false,
+              percentage: 10,
+              description: "marketing team should be working on our plan ")
+        ],
+        //members:users ,
+        assignedTeam: team,
+        taskCreator: User(
+            userName: '@UserName',
+            jobTitle: 'job title',
+            id: 1,
+            name: 'Mostafa Osama')),
+  ]),
+  Team(id: 0, name: 'Security', tasks: [
+    Task(
+        id: '0',
+        name: 'maintain server security',
+        datePlannedStart: DateTime(2020, 12, 1),
+        datePlannedEnd: DateTime(2021, 1, 25),
+        description: 'Create Marketing strategy for new year',
+        progress: 80,
+        projectName: 'Hr  ',
+        checkPoints: const [
+          CheckPoint(
+              id: 0,
+              name: 'strategy plan for first week',
+              isFinished: false,
+              description:
+              'in this week we would create strategy plan to achieve our strategy goal'),
+          CheckPoint(
+              id: 1,
+              name: 'assign task for marketing team',
+              isFinished: false,
+              percentage: 10,
+              description: "marketing team should be working on our plan ")
+        ],
+        //members:users ,
+        assignedTeam: team,
+        taskCreator: User(
+            userName: '@UserName',
+            jobTitle: 'job title',
+            id: 1,
+            name: 'Mostafa Osama')),
+  ]),
+
 ];
 
-Team team = Team(name: 'Software Engineers', id: 0);
+Team team = Team(name: 'Marketing team', id: 0);
 
 List<Task> demoTasks = [
   Task(
       id: '0',
-      name: 'Create front-end long name',
+      name: 'Create Marketing strategy',
       datePlannedStart: DateTime(2020, 12, 1),
       datePlannedEnd: DateTime(2021, 1, 25),
-      description: 'create app UI',
+      description: 'Create Marketing strategy for new year',
       progress: 80,
-      projectName: 'work platform',
+      projectName: 'Hr  ',
       checkPoints: const [
-        CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
-        CheckPoint(id: 1, name: 'team screen', isFinished: false, percentage: 10)
+        CheckPoint(
+            id: 0,
+            name: 'strategy plan for first week',
+            isFinished: false,
+            description:
+                'in this week we would create strategy plan to achieve our strategy goal'),
+        CheckPoint(
+            id: 1,
+            name: 'assign task for marketing team',
+            isFinished: false,
+            percentage: 10,
+            description: "marketing team should be working on our plan ")
       ],
       //members:users ,
       assignedTeam: team,
-      taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
+      taskCreator: User(
+          userName: '@UserName',
+          jobTitle: 'job title',
+          id: 1,
+          name: 'Mostafa Osama')),
   Task(
       id: '1',
-      name: 'Create team screen',
+      name: 'Social media marketing',
       datePlannedStart: DateTime(2021, 1, 18),
       datePlannedEnd: DateTime(2021, 1, 24),
-      description: longDescription,
+      description: "social media team is to grow the business by strategically creating content, ads, and engaging with the target audience on different social media platforms.",
       progress: 10,
-      projectName: 'work platform',
+      projectName: 'Hr',
       checkPoints: const [
-        CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
-        CheckPoint(id: 1, name: 're-design task widget', isFinished: false, description: longDescription)
+        CheckPoint(
+            id: 0,
+            name: 'create facebook content',
+            isFinished: false,
+            description: 'we need a strong content that attracts customer to our company '),
+        CheckPoint(
+            id: 1,
+            name: 'create twitter content',
+            isFinished: false,
+            description: "create twitter content and maintain company goals")
       ],
       parentCheckpoint: CheckPoint(
         id: 0,
@@ -93,21 +372,28 @@ List<Task> demoTasks = [
         percentage: 10,
         description: longDescription,
       ),
-      taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Ahmed'),
-      members: users ),
+      taskCreator: User(
+          userName: '@UserName',
+          jobTitle: 'job title',
+          id: 1,
+          name: 'Mostafa Ahmed'),
+      members: users),
   Task(
       id: '2',
-      name: 'Dependent Task',
+      name: 'Search Engine Marketing',
       datePlannedStart: DateTime(2021, 8, 21),
       datePlannedEnd: DateTime(2021, 9, 5),
-      description: longDescription,
+      description: 'Search engine marketing, or SEM, is one of the most effective ways to grow your business in an increasingly competitive marketplace. With millions of businesses out there all vying for the same eyeballs, it’s never been more important to advertise online, and search engine marketing is the most effective way to promote your products and grow your business.',
       progress: 95,
       checkPoints: const [
-        CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
-        CheckPoint(id: 1, name: 're-design task widget', isFinished: false)
+        CheckPoint(
+            id: 0,
+            name: 'assign task to search engine engineers',
+            isFinished: false,
+            description: 'we should achieve our search within a week'),
+        CheckPoint(id: 1, name: 'achieve plans goal',description: 'good luck', isFinished: false)
       ],
-      parentCheckpoint:
-          CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10, description: longDescription),
+
       members: users,
       dependentTask: Task(
         id: 'null',
@@ -115,217 +401,184 @@ List<Task> demoTasks = [
         name: 'Define team dataModel',
         description: longDescription,
       ),
-      taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Osama')),
-  Task(
-      id: '10',
-      name: 'Create team screen',
-      datePlannedStart: DateTime(2021, 1, 18),
-      datePlannedEnd: DateTime(2021, 1, 24),
-      description: longDescription,
-      progress: 50,
-      projectName: 'work platform',
-      checkPoints: const [
-        CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
-        CheckPoint(id: 1, name: 're-design task widget', isFinished: false, description: longDescription)
-      ],
-      parentCheckpoint: CheckPoint(
-        id: 0,
-        name: 'team screen',
-        isFinished: false,
-        percentage: 10,
-        description: longDescription,
-      ),
-      taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Ahmed'),
-      members: users ),
-  Task(
-      id: '11',
-      name: 'Create team screen',
-      datePlannedStart: DateTime(2021, 1, 18),
-      datePlannedEnd: DateTime(2021, 1, 24),
-      description: longDescription,
-      progress: 10,
-      projectName: 'work platform',
-      checkPoints: const [
-        CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
-        CheckPoint(id: 1, name: 're-design task widget', isFinished: false, description: longDescription)
-      ],
-      parentCheckpoint: CheckPoint(
-        id: 0,
-        name: 'team screen',
-        isFinished: false,
-        percentage: 10,
-        description: longDescription,
-      ),
-      taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name:'Mostafa Ahmed'),
-      members: users ),
+      taskCreator: User(
+          userName: '@UserName',
+          jobTitle: 'job title',
+          id: 1,
+          name: 'Mostafa Osama')),
+
 //  Task( id: '2', name: 'create front-end',datePlannedStart: DateTime(2020,12,1) , datePlannedEnd: DateTime(2021,1,15),description: 'create app UI', progress: 20.0, projectName: 'work platform', checkPoints: const [ CheckPoint( id: '0', name: 'room screen', value: false, description: 'description of room screen'), CheckPoint(id: 0 name: 'team screen', value: false, percentage: 10)],
 ];
 
 List<Teams> myTeams = [
-  Teams(tasks: demoTasks, teamName: "Mobile Team", leaderName: "Mostafa", description: "this is ui team description "),
-  Teams(tasks: [
-    Task(
-        id: '0',
-        name: 'Create front-end long name',
-        datePlannedStart: DateTime(2020, 12, 1),
-        datePlannedEnd: DateTime(2021, 1, 25),
-        description: 'create app UI',
-        progress: 20,
-        projectName: 'work platform',
-        checkPoints: const [
-          CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
-          CheckPoint(id: 1, name: 'team screen', isFinished: false, percentage: 10)
-        ],
-        members: users,
-        taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
-  ], teamName: "UI/UX Design", leaderName: "Ahmed", description: "this is ui team description "),
-  Teams(tasks: [
-    Task(
-        id: '0',
-        name: 'Create front-end long name',
-        datePlannedStart: DateTime(2020, 12, 1),
-        datePlannedEnd: DateTime(2021, 1, 25),
-        description: 'create app UI',
-        progress: 20,
-        projectName: 'work platform',
-        checkPoints: const [
-          CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
-          CheckPoint(id: 1, name: 'team screen', isFinished: false, percentage: 10)
-        ],
-        members: users,
-        taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
-    Task(
-        id: '1',
-        name: 'Create team screen',
-        datePlannedStart: DateTime(2021, 1, 18),
-        datePlannedEnd: DateTime(2021, 1, 24),
-        description: '',
-        progress: 10,
-        projectName: 'work platform',
-        checkPoints: const [
-          CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
-          CheckPoint(id: 1, name: 're-design task widget', isFinished: false)
-        ],
-        parentCheckpoint: CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10),
-        members: users),
-    Task(
-        id: '2',
-        name: 'Dependent Task',
-        datePlannedStart: DateTime(2021, 1, 24),
-        datePlannedEnd: DateTime(2021, 2, 5),
-        description: '',
-        progress: 10,
-        checkPoints: const [
-          CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
-          CheckPoint(id: 1, name: 're-design task widget', isFinished: false)
-        ],
-        parentCheckpoint: CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10),
-        members: users,
-        dependentTask: Task(
-          id: 'null',
-          datePlannedEnd: DateTime(2021, 8, 21),
-          name: 'Define team dataModel',
-        ))
-  ], teamName: "flutter", leaderName: "kamel", description: "this is flutter team description ")
+  Teams(
+      tasks: demoTasks,
+      teamName: "Marketing",
+      leaderName: "Mostafa",
+      description:
+          "The Marketing Department plays a vital role in promoting the business and mission of an organization. It serves as the face of your company, coordinating and producing all materials representing the business. It is the Marketing Department's job to reach out to prospects, customers, investors and/or the community, while creating an overarching image that represents your company in a positive light."),
+  Teams(
+      tasks: [
+        Task(
+            id: '0',
+            name: 'Create front-end long name',
+            datePlannedStart: DateTime(2020, 12, 1),
+            datePlannedEnd: DateTime(2021, 1, 25),
+            description: 'create app UI',
+            progress: 20,
+            projectName: 'work platform',
+            checkPoints: const [
+              CheckPoint(
+                  id: 0,
+                  name: 'room screen',
+                  isFinished: false,
+                  description: 'description of room screen'),
+              CheckPoint(
+                  id: 1, name: 'team screen', isFinished: false, percentage: 10)
+            ],
+            members: users,
+            taskCreator: User(
+                userName: '@UserName',
+                jobTitle: 'job title',
+                id: 1,
+                name: 'Mostafa Osama')),
+      ],
+      teamName: "Public Relations",
+      leaderName: "Ahmed",
+      description: "this is ui team description "),
+  Teams(
+      tasks: [
+        Task(
+            id: '0',
+            name: 'Create front-end long name',
+            datePlannedStart: DateTime(2020, 12, 1),
+            datePlannedEnd: DateTime(2021, 1, 25),
+            description: 'create app UI',
+            progress: 20,
+            projectName: 'work platform',
+            checkPoints: const [
+              CheckPoint(
+                  id: 0,
+                  name: 'room screen',
+                  isFinished: false,
+                  description: 'description of room screen'),
+              CheckPoint(
+                  id: 1, name: 'team screen', isFinished: false, percentage: 10)
+            ],
+            members: users,
+            taskCreator: User(
+                userName: '@UserName',
+                jobTitle: 'job title',
+                id: 1,
+                name: 'Mostafa Osama')),
+        Task(
+            id: '1',
+            name: 'Create team screen',
+            datePlannedStart: DateTime(2021, 1, 18),
+            datePlannedEnd: DateTime(2021, 1, 24),
+            description: '',
+            progress: 10,
+            projectName: 'work platform',
+            checkPoints: const [
+              CheckPoint(
+                  id: 0,
+                  name: 'task model',
+                  isFinished: false,
+                  description: 'finish task data model'),
+              CheckPoint(
+                  id: 1, name: 're-design task widget', isFinished: false)
+            ],
+            parentCheckpoint: CheckPoint(
+                id: 0, name: 'team screen', isFinished: false, percentage: 10),
+            members: users),
+        Task(
+            id: '2',
+            name: 'Dependent Task',
+            datePlannedStart: DateTime(2021, 1, 24),
+            datePlannedEnd: DateTime(2021, 2, 5),
+            description: '',
+            progress: 10,
+            checkPoints: const [
+              CheckPoint(
+                  id: 0,
+                  name: 'task model',
+                  isFinished: false,
+                  description: 'finish task data model'),
+              CheckPoint(
+                  id: 1, name: 're-design task widget', isFinished: false)
+            ],
+            parentCheckpoint: CheckPoint(
+                id: 0, name: 'team screen', isFinished: false, percentage: 10),
+            members: users,
+            dependentTask: Task(
+              id: 'null',
+              datePlannedEnd: DateTime(2021, 8, 21),
+              name: 'Define team dataModel',
+            ))
+      ],
+      teamName: "Development ",
+      leaderName: "kamel",
+      description: "this is flutter team description ")
 ];
 List<Project> project = [
   Project(
-      projectName: "GP Discussion",
+      projectName: "Hr Company",
       startDate: DateTime(2020, 12, 1),
       endDate: DateTime(2021, 1, 18),
-      mangerName: "Ahmed",
+      mangerName: "Mostafa osama",
       description: longDescription,
       teams: [
-        Teams(tasks: [
-          Task(
-              id: '0',
-              name: 'Create front-end long name',
-              datePlannedStart: DateTime(2020, 12, 1),
-              datePlannedEnd: DateTime(2021, 1, 25),
-              description: 'create app UI',
-              progress: 20,
-              projectName: 'work platform',
-              checkPoints: const [
-                CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
-                CheckPoint(id: 1, name: 'team screen', isFinished: false, percentage: 10)
-              ],
-              members: users,
-              taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
-        ], teamName: "UI/UX Design", leaderName: "Ahmed", description: "this is ui team description "),
-        Teams(tasks: [
-          Task(
-              id: '0',
-              name: 'Create front-end long name',
-              datePlannedStart: DateTime(2020, 12, 1),
-              datePlannedEnd: DateTime(2021, 1, 25),
-              description: 'create app UI',
-              progress: 20,
-              projectName: 'work platform',
-              checkPoints: const [
-                CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
-                CheckPoint(id: 01, name: 'team screen', isFinished: false, percentage: 10)
-              ],
-              members: users,
-              taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
-          Task(
-              id: '1',
-              name: 'Create team screen',
-              datePlannedStart: DateTime(2021, 1, 18),
-              datePlannedEnd: DateTime(2021, 1, 24),
-              description: '',
-              progress: 10,
-              projectName: 'work platform',
-              checkPoints: const [
-                CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
-                CheckPoint(id: 01, name: 're-design task widget', isFinished: false)
-              ],
-              parentCheckpoint: CheckPoint(
-                  id: 0, name: 'team screen', isFinished: false, percentage: 10, description: longDescription),
-              members: users),
-          Task(
-              id: '2',
-              name: 'Dependent Task',
-              datePlannedStart: DateTime(2021, 1, 24),
-              datePlannedEnd: DateTime(2021, 2, 5),
-              description: '',
-              progress: 10,
-              checkPoints: const [
-                CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
-                CheckPoint(id: 01, name: 're-design task widget', isFinished: false)
-              ],
-              parentCheckpoint: CheckPoint(
-                  id: 0, name: 'team screen', isFinished: false, percentage: 10, description: longDescription),
-              members: users,
-              dependentTask: Task(
-                id: 'null',
-                datePlannedEnd: DateTime(2021, 8, 21),
-                name: 'Define team dataModel',
-              ))
-        ], teamName: "flutter", leaderName: "kamel", description: "this is flutter team description ")
+        Teams(
+            tasks: demoTasks,
+            teamName: "Marketing strategy",
+            leaderName: "Mostafa osama",
+            description: "social media team is to grow the business by strategically creating content, ads, and engaging with the target audience on different social media platforms. "),
+        Teams(
+            tasks: demoTasks,
+            teamName: "Social media marketing",
+            leaderName: "Hesham",
+            description: "social media team is to grow the business by strategically creating content, ads, and engaging with the target audience on different social media platforms.")
       ]),
   Project(
-      projectName: "SoftWare Engineering  ",
+      projectName: "SoftWare Engineering",
       startDate: DateTime(2020, 12, 1),
       endDate: DateTime(2021, 1, 18),
-      mangerName: "Ibrahim",
-      description: "this is test description 2 wer are testing this application ",
+      mangerName: "Hesham",
+      description:
+          "this is test description 2 wer are testing this application ",
       teams: [
-        Teams(tasks: [
-          Task(
-              id: '0',
-              name: 'Create front-end long name',
-              datePlannedStart: DateTime(2020, 12, 1),
-              datePlannedEnd: DateTime(2021, 1, 25),
-              description: 'create app UI',
-              progress: 20,
-              projectName: 'work platform',
-              checkPoints: const [
-                CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
-                CheckPoint(id: 01, name: 'team screen', isFinished: false, percentage: 10)
-              ],
-              members: users,
-              taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Mostafa Osama')),
-        ], teamName: "Developer Design", leaderName: "Magda", description: longDescription),
+        Teams(
+            tasks: [
+              Task(
+                  id: '0',
+                  name: 'Create front-end long name',
+                  datePlannedStart: DateTime(2020, 12, 1),
+                  datePlannedEnd: DateTime(2021, 1, 25),
+                  description: 'create app UI',
+                  progress: 20,
+                  projectName: 'work platform',
+                  checkPoints: const [
+                    CheckPoint(
+                        id: 0,
+                        name: 'room screen',
+                        isFinished: false,
+                        description: 'description of room screen'),
+                    CheckPoint(
+                        id: 01,
+                        name: 'team screen',
+                        isFinished: false,
+                        percentage: 10)
+                  ],
+                  members: users,
+                  taskCreator: User(
+                      userName: '@UserName',
+                      jobTitle: 'job title',
+                      id: 1,
+                      name: 'Mostafa Osama')),
+            ],
+            teamName: "Developer Design",
+            leaderName: "Magda",
+            description: longDescription),
         Teams(
             tasks: [
               Task(
@@ -338,11 +591,22 @@ List<Project> project = [
                   projectName: 'Home Home',
                   checkPoints: const [
                     CheckPoint(
-                        id: 0, name: 'Home screen', isFinished: false, description: 'description of Home screen'),
-                    CheckPoint(id: 01, name: 'team screen', isFinished: false, percentage: 15)
+                        id: 0,
+                        name: 'Home screen',
+                        isFinished: false,
+                        description: 'description of Home screen'),
+                    CheckPoint(
+                        id: 01,
+                        name: 'team screen',
+                        isFinished: false,
+                        percentage: 15)
                   ],
                   members: users,
-                  taskCreator: User(userName: '@UserName', jobTitle: 'job title', id: 1, name: 'Hesham')),
+                  taskCreator: User(
+                      userName: '@UserName',
+                      jobTitle: 'job title',
+                      id: 1,
+                      name: 'Hesham')),
               Task(
                   id: '1',
                   name: 'screen',
@@ -353,16 +617,26 @@ List<Project> project = [
                   projectName: 'flutter',
                   checkPoints: const [
                     CheckPoint(
-                        id: 0, name: 'flutter model', isFinished: false, description: 'finish flutter data model'),
-                    CheckPoint(id: 01, name: 're-design task widget', isFinished: false)
+                        id: 0,
+                        name: 'flutter model',
+                        isFinished: false,
+                        description: 'finish flutter data model'),
+                    CheckPoint(
+                        id: 01,
+                        name: 're-design task widget',
+                        isFinished: false)
                   ],
-                  parentCheckpoint: CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10),
+                  parentCheckpoint: CheckPoint(
+                      id: 0,
+                      name: 'team screen',
+                      isFinished: false,
+                      percentage: 10),
                   members: users),
             ],
-            teamName: "marwan",
+            teamName: "Apis migrate",
             leaderName: "momen",
             description:
-                "this an example of a long an example of a long description to test the three line in description text form field ")
+                "Human resources (HR) is the division of a business that is charged with finding, screening, recruiting, and training job applicants, as well as administering employee-benefit programs. HR plays a key role in helping companies deal with a fast-changing business environment and a greater demand for quality employees in the 21st century. example of a long an example of a long description to test the three line in description text form field ")
       ])
 ];
 

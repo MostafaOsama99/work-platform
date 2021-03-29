@@ -27,7 +27,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
     'Habiba Sayed'
   ];
 
-  var description = '''this an example o  f a l
+  var description = '''Human resources (HR) is the division of a business that is charged with finding, screening, recruiting, and training job applicants, as well as administering employee-benefit programs. HR plays a key role in helping companies deal with a fast-changing business environment and a greater demand for quality employees in the 21st century. example o  f a l
     ''';
 
   List<Widget> users;

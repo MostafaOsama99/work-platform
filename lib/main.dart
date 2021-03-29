@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
             const Color.fromRGBO(17, 20, 25, 1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
       ),
       themeMode: ThemeMode.dark,
-      home: Attachment(),
+      home: App(),
     );
   }
 }
