@@ -4,28 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:project/widgets/dateField_widget.dart';
-import 'package:project/widgets/home/dropDownMenu.dart';
 import 'dart:io';
 import 'package:project/widgets/task/add_teams_button.dart';
 
-class Activity extends StatefulWidget {
+class ActivityScreen extends StatefulWidget {
   List<Widget> users;
 
   @override
-  _ActivityState createState() => _ActivityState();
+  _ActivityScreenState createState() => _ActivityScreenState();
 }
 
-class _ActivityState extends State<Activity> {
+class _ActivityScreenState extends State<ActivityScreen> {
   final TextEditingController _textEditingController = TextEditingController();
-  var namess = [
-    'Ahmed Mohamed',
-    'Mostafa Osama',
-    'Mohamed Hesham',
-    'Yousef Essam',
-    'Mahmoud Yousef',
-    'Beshoy Wagdy',
-    'Habiba Sayed'
-  ];
+  var names = ['Mostafa Osama', 'Mohamed Hesham', 'Yousef Essam', 'Mahmoud Yousef', 'Beshoy Wagdy', 'Habiba Sayed'];
 
   @override
   void initState() {
@@ -49,27 +40,19 @@ class _ActivityState extends State<Activity> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(45),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(KAppBarRound),
-              bottomRight: Radius.circular(KAppBarRound)),
+          borderRadius:
+              BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
           child: AppBar(
+            backgroundColor: COLOR_BACKGROUND,
             centerTitle: true,
-            title: InkWell(
-                onTap: () {
-                  changeTeam(context, MediaQuery.of(context).size.height, []);
-                },
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text("Activity", style: TextStyle(color: Colors.white)),
-
-                  ],
-                )),
+            title: Text(
+              'Activity',
+              style: const TextStyle(color: Colors.white, fontSize: 18),
+            ),
           ),
         ),
       ),
@@ -83,59 +66,47 @@ class _ActivityState extends State<Activity> {
 
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 15, top: 10, left: 5),
+              padding: const EdgeInsets.only(bottom: 8, left: 8),
               child: ListView.builder(
                   itemCount: comments.length,
                   itemBuilder: (context, i) {
-                    return commentsViewer(context,comments[i],names[i]);
+                    return commentsViewer(context, comments[i], names[i]);
                   }),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              bottom: 12,
-            ),
+            padding: const EdgeInsets.only(bottom: 12, left: 8, right: 8),
             child: Row(
               children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.66,
-                  height: 42,
+                Expanded(
                   child: TextFormField(
                     textInputAction: TextInputAction.newline,
                     onFieldSubmitted: (_) {},
                     autofocus: false,
-                    maxLines: 3,
+                    //TODO: fix max lines
+                    //need to
+                    maxLines: 1,
+                    style: const TextStyle(color: Colors.black),
                     controller: _textEditingController,
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
-                      hintText: "Add Comment",
-                      contentPadding: EdgeInsets.only(
-                          left: 20, right: 20, bottom: 20, top: 5),
+                      hintText: "Add comment",
+                      contentPadding: EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 5),
                       isDense: true,
                       filled: true,
                       fillColor: Colors.white54,
                       hintStyle: TextStyle(color: Colors.grey[700]),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 2),
                         borderRadius: BorderRadius.circular(25),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white54),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 1.5),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 2),
                         borderRadius: BorderRadius.circular(25),
                       ),
                     ),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 20),
+                  padding: EdgeInsets.only(left: 8),
                   child: addTeamsButton(hintText: "Send", onPressed: () {}),
                 )
               ],
@@ -164,14 +135,9 @@ Widget commentsViewer(context,String text,String names) {
             children: [
               Text(
                 names,
-                style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
               ),
-              Spacer(
-                flex: 5,
-              ),
+              Spacer(flex: 5),
               Text(
                 "by ",
                 style: TextStyle(
@@ -195,13 +161,10 @@ Widget commentsViewer(context,String text,String names) {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 3),
-                  ),
+                  Padding(padding: EdgeInsets.only(bottom: 3)),
                   Text(
                     text,
                     style: TextStyle(fontSize: 18, color: Colors.white),
-
                   ),
                 ],
               ),
@@ -236,18 +199,13 @@ class NotificationViewer extends StatelessWidget {
                 radius: 30,
                 child: Icon(Icons.person),
               ),
-              title: Text("name",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+              title: Text("name", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
               subtitle: Padding(
                 padding: EdgeInsets.only(top: 6),
                 child: Text(
                   "this user assigned task for you",
                   style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                 ),
-              ),
-              trailing: Text(
-                '',
-                style: TextStyle(color: Colors.grey, fontSize: 16),
               ),
             ),
             Padding(

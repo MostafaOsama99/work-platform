@@ -235,6 +235,7 @@ class _DurationDialogState extends State<DurationDialog> {
             ),
           ),
           Center(
+              //   child: Container(),
               child: DurationPicker(
             duration: _duration,
             onChange: (Duration value) => setState(() => _duration = value),

@@ -30,10 +30,6 @@ class _AttachmentState extends State<Attachment> with SingleTickerProviderStateM
           child: AppBar(
             backgroundColor: COLOR_SCAFFOLD,
             centerTitle: true,
-           leading:   Padding(
-             padding: const EdgeInsets.only(left: 20),
-             child: SizedBox(height: 50, child: Icon(Icons.arrow_back, size: 30)),
-           ),
             title: Text(
               "Recently Added",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

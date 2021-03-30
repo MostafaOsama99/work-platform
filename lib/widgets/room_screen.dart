@@ -29,7 +29,6 @@ Widget teamCard (context,String teamName,tasks){
           child: ListView.builder(
               itemCount: tasks.length,
               itemBuilder: (context,i){
-
                 return subTaskWidget(tasks[i].name, tasks[i].datePlannedEnd, tasks[i].progress,context);
               }),
         )

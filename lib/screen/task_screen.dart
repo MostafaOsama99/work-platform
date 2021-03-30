@@ -47,6 +47,7 @@ class _TaskScreenState extends State<TaskScreen> {
             //leading: IconButton(icon: Icon(Icons.arrow_back, size: 22),splashRadius: 15, onPressed: () =>Navigator.of(context).pop(),),
             actions: [
               IconButton(
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 icon: _isEditing
                     ? Icon(
                         Icons.check_circle_outline,
