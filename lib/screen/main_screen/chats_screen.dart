@@ -5,7 +5,10 @@ import '../../constants.dart';
 import '../chat_screen.dart';
 
 const KTapTS = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
- List <String> lastMessages =['bye',"see you later", 'hello','okey'];
+List<String> lastMessages = ['bye', "see you later", 'hello', 'okey'];
+var announce = [5, 4, 0, 1];
+var issue = [2, 3, 1, 0];
+
 class ChatsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -57,10 +60,10 @@ class ChatsScreen extends StatelessWidget {
                       }));
                     },
                     child: ChatTile(
-                          chatName: teams[index].name,
+                      chatName: teams[index].name,
                           lastMessage: lastMessages[index],
-                          announce: 3,
-                          issue: 4,
+                          announce: announce[index],
+                          issue: issue[index],
                         ),
                   ),
                   separatorBuilder: (_, index) => Divider(endIndent: 20, indent: 20, height: 10),
@@ -76,9 +79,7 @@ class ChatsScreen extends StatelessWidget {
                     child: ChatTile(
                       chatName: "Mohamed (Hr)",
                       lastMessage: lastMessages[index],
-                      announce: 3,
-                      issue: 4,
-                    ),
+                        ),
                   ),
                   separatorBuilder: (_, index) => Divider(endIndent: 20, indent: 20, height: 10),
                   itemCount: 1),
@@ -91,11 +92,9 @@ class ChatsScreen extends StatelessWidget {
                       }));
                     },
                     child: ChatTile(
-                      chatName: "Assign tasks",
-                      lastMessage: lastMessages[index],
-                      announce: 3,
-                      issue: 4,
-                    ),
+                      chatName: "Marketing strategy",
+                          lastMessage: lastMessages[index],
+                        ),
                   ),
                   separatorBuilder: (_, index) => Divider(endIndent: 20, indent: 20, height: 10),
                   itemCount: 1),

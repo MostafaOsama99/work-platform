@@ -92,7 +92,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
                             color: COLOR_SCAFFOLD,
                           ),
                           child: Text('Daily Progress',
-                              softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20))),
+                              softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 19))),
                       if (_activeTask != null)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -168,7 +168,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
                           height: 38,
                           child: TabBar(
                             isScrollable: true,
-                            indicatorPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
                             labelPadding: const EdgeInsets.symmetric(horizontal: 8),
                             indicator: BoxDecoration(borderRadius: BorderRadius.circular(50), color: COLOR_ACCENT),
                             indicatorSize: TabBarIndicatorSize.label,
@@ -275,126 +274,129 @@ class WorkTile extends StatelessWidget {
     else
       _timeGradient = LinearGradient(colors: [Colors.redAccent, Colors.redAccent.shade700], stops: [0.2, 0.8]);
 
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      color: COLOR_BACKGROUND,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 35,
-                      height: 35,
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Theme.of(context).scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
+    return InkWell(
+      //onTap: => Navigator.of(context).push(MaterialPageRoute(builder: (_)=> )),
+      child: Card(
+        elevation: 2,
+        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        color: COLOR_BACKGROUND,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 35,
+                        height: 35,
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Theme.of(context).scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
+                        ),
+                        child: Image.asset(taskTypes[task.type].icon, color: taskTypes[task.type].accentColor),
                       ),
-                      child: Image.asset(taskTypes[task.type].icon, color: taskTypes[task.type].accentColor),
-                    ),
-                    SizedBox(width: 10),
-                    Text(task.name, style: const TextStyle(fontSize: 16)),
-                    Spacer(),
-                    if (_isExceed)
+                      SizedBox(width: 10),
+                      Text(task.name, style: const TextStyle(fontSize: 16)),
+                      Spacer(),
+                      if (_isExceed)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Image.asset('assets/icons/warning.png', height: 25, color: Colors.red),
+                        ),
+                      SizedBox(
+                        height: 35,
+                        width: 35,
+                        child: RaisedButton(
+                            padding: const EdgeInsets.all(0),
+                            child: isWorking
+                                ? Icon(Icons.pause, color: Colors.white)
+                                : Icon(Icons.play_arrow_sharp, color: Colors.white70),
+                            splashColor: Colors.deepOrange,
+                            textColor: Colors.deepOrange,
+                            color: isWorking ? Colors.deepOrange[800] : COLOR_BACKGROUND,
+                            highlightElevation: 2,
+                            //autofocus: false,
+                            //clipBehavior: Clip.antiAlias,
+
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: BorderSide(color: Colors.deepOrange[800].withOpacity(0.5)),
+                            ),
+                            onPressed: () => onPressed(!isWorking, task)),
+                      )
+                    ],
+                  ),
+                ),
+                SizedBox(height: 6),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Image.asset('assets/icons/warning.png', height: 25, color: Colors.red),
+                        child: Image.asset('assets/icons/sandClock-2.png', height: 18, color: Colors.white70),
                       ),
-                    SizedBox(
-                      height: 35,
-                      width: 35,
-                      child: RaisedButton(
-                          padding: const EdgeInsets.all(0),
-                          child: isWorking
-                              ? Icon(Icons.pause, color: Colors.white)
-                              : Icon(Icons.play_arrow_sharp, color: Colors.white70),
-                          splashColor: Colors.deepOrange,
-                          textColor: Colors.deepOrange,
-                          color: isWorking ? Colors.deepOrange[800] : COLOR_BACKGROUND,
-                          highlightElevation: 2,
-                          //autofocus: false,
-                          //clipBehavior: Clip.antiAlias,
-
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: BorderSide(color: Colors.deepOrange[800].withOpacity(0.5)),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: StepProgressIndicator(
+                            totalSteps: 100,
+                            currentStep: _spent,
+                            size: 12,
+                            roundedEdges: const Radius.circular(30),
+                            unselectedColor: Colors.black38,
+                            selectedColor: Colors.white,
+                            gradientColor: _timeGradient,
+                            padding: 0,
                           ),
-                          onPressed: () => onPressed(!isWorking, task)),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(height: 6),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Image.asset('assets/icons/sandClock-2.png', height: 18, color: Colors.white70),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: StepProgressIndicator(
-                          totalSteps: 100,
-                          currentStep: _spent,
-                          size: 12,
-                          roundedEdges: const Radius.circular(30),
-                          unselectedColor: Colors.black38,
-                          selectedColor: Colors.white,
-                          gradientColor: _timeGradient,
-                          padding: 0,
                         ),
                       ),
-                    ),
-                    SizedBox(width: 40),
-                  ],
+                      SizedBox(width: 40),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Image.asset('assets/icons/percent.png', height: 18, color: Colors.white70),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: StepProgressIndicator(
-                          totalSteps: 100,
-                          currentStep: task.progress,
-                          size: 12,
-                          roundedEdges: const Radius.circular(30),
-                          selectedColor: Colors.white,
-                          unselectedColor: Colors.black38,
-                          gradientColor: LinearGradient(
-                              colors: [Theme.of(context).appBarTheme.color, Colors.greenAccent[700]],
-                              stops: [0.2, 0.9],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight),
-                          padding: 0,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Image.asset('assets/icons/percent.png', height: 18, color: Colors.white70),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: StepProgressIndicator(
+                            totalSteps: 100,
+                            currentStep: task.progress,
+                            size: 12,
+                            roundedEdges: const Radius.circular(30),
+                            selectedColor: Colors.white,
+                            unselectedColor: Colors.black38,
+                            gradientColor: LinearGradient(
+                                colors: [Theme.of(context).appBarTheme.color, Colors.greenAccent[700]],
+                                stops: [0.2, 0.9],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight),
+                            padding: 0,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 40),
-                  ],
-                ),
-              )
-            ],
+                      SizedBox(width: 40),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

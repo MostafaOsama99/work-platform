@@ -207,7 +207,7 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                     splashRadius: 13,
                     padding: const EdgeInsets.all(0),
                     onPressed: () => Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (BuildContext context) => Activity()))),
+                        .push(MaterialPageRoute(builder: (BuildContext context) => ActivityScreen()))),
               ),
             ),
             SizedBox(width: 8),
