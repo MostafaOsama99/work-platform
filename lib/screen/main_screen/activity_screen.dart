@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:project/provider/user_data.dart';
 import 'package:project/widgets/dateField_widget.dart';
 import 'package:project/widgets/home/dropDownMenu.dart';
 import 'dart:io';
 import 'package:project/widgets/task/add_teams_button.dart';
+import 'package:provider/provider.dart';
 
 class Activity extends StatefulWidget {
   List<Widget> users;
@@ -49,6 +51,7 @@ class _ActivityState extends State<Activity> {
 
   @override
   Widget build(BuildContext context) {
+    var _userDataProvider =Provider.of<UserDataProvider>(context);
     // TODO: implement build
     return Scaffold(
       appBar: PreferredSize(
@@ -61,6 +64,7 @@ class _ActivityState extends State<Activity> {
             centerTitle: true,
             title: InkWell(
                 onTap: () {
+
                   changeTeam(context, MediaQuery.of(context).size.height, []);
                 },
                 child: Row(

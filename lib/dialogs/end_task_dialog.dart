@@ -1,6 +1,6 @@
 import 'package:circular_check_box/circular_check_box.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_duration_picker/flutter_duration_picker.dart';
+
 import 'package:project/model/task.dart';
 
 import '../constants.dart';
@@ -234,11 +234,11 @@ class _DurationDialogState extends State<DurationDialog> {
               style: const TextStyle(fontSize: 18),
             ),
           ),
-          Center(
-              child: DurationPicker(
-            duration: _duration,
-            onChange: (Duration value) => setState(() => _duration = value),
-          )),
+          // Center(
+          //     child: DurationPicker(
+          //   duration: _duration,
+          //   onChange: (Duration value) => setState(() => _duration = value),
+          // )),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
