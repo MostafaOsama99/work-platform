@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project/widgets/chat/chat_design.dart';
+import 'package:project/widgets/chat/message_bubble.dart';
 import 'package:project/widgets/task/add_teams_button.dart';
+
 import 'package:flutter_reaction_button/flutter_reaction_button.dart';
 import '../constants.dart';
 import '../demoData.dart';
@@ -8,7 +9,6 @@ import '../demoData.dart';
 class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
    return Scaffold(
      appBar: PreferredSize(
        preferredSize: Size.fromHeight(45),
@@ -28,8 +28,12 @@ class ChatScreen extends StatelessWidget {
            child: ListView.builder(
                itemCount: messagesList.length,
                itemBuilder: (context,i){
-             return messageBuble(sender: messagesList[i].senderName,text: messagesList[i].text,IsMe: messagesList[i].isMe,);
-           }),
+                 return MessageBubble(
+                    sender: messagesList[i].senderName,
+                    text: messagesList[i].text,
+                    isMe: messagesList[i].isMe,
+                  );
+                }),
 
 
          ),

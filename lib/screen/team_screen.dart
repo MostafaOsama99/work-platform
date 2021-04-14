@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:project/demoData.dart';
+import 'package:project/provider/navbar.dart';
 import 'create_task_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../model/task.dart';
 import '../widgets/task/task_card.dart' show TaskCard;
@@ -19,37 +21,60 @@ class TeamScreen extends StatefulWidget {
   _TeamScreenState createState() => _TeamScreenState();
 }
 
-class _TeamScreenState extends State<TeamScreen> {
+class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
   ScrollController _scrollController;
-  var _isVisible;
+  NavBar _navBarProvider;
 
   hideButton() {
-    if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-      if (_isVisible == true) {
-        // only set when the previous state is false, Less widget rebuilds
-        setState(() => _isVisible = false);
-      }
-    } else {
-      if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
-        if (_isVisible == false) {
-          // only set when the previous state is false, Less widget rebuilds
-          setState(() => _isVisible = true);
-        }
-      }
-    }
+    if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.reverse)
+      _animationController.reverse();
+    else if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) _animationController.forward();
   }
+
+  Animation _animation;
+  AnimationController _animationController;
 
   @override
   initState() {
-    _isVisible = true;
     _scrollController = ScrollController();
     _scrollController.addListener(hideButton);
+
+    _animationController = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 200),
+        reverseDuration: Duration(milliseconds: 175));
+    _animation = CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeIn,
+        reverseCurve: Curves.easeOutCirc);
+    _animationController.value = 1;
+
+    Future.delayed(Duration.zero).then((value) {
+      _navBarProvider = Provider.of<NavBar>(context, listen: false);
+      _navBarProvider.scrollController = _scrollController;
+    });
     super.initState();
   }
 
   @override
+  void deactivate() {
+    //_navBarProvider.showNavBar();
+    //_navBarProvider.removeController();
+    super.deactivate();
+  }
+
+  @override
   void dispose() {
+    // Future.delayed(Duration.zero)
+    //     .then(
+    //         (value) => Provider.of<NavBar>(context, listen: false).showNavBar())
+    //     .then((value) {
+    //   //_navBarProvider.removeController();
+    // });
     _scrollController.removeListener(hideButton);
+    _animationController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -60,7 +85,9 @@ class _TeamScreenState extends State<TeamScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(KAppBarHeight),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20)),
           child: AppBar(
             leading: IconButton(
                 padding: EdgeInsets.all(0),
@@ -76,7 +103,10 @@ class _TeamScreenState extends State<TeamScreen> {
                 icon: Icon(Icons.settings),
                 splashRadius: 21,
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => EditTeamScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditTeamScreen()));
                 },
               )
             ],
@@ -88,8 +118,8 @@ class _TeamScreenState extends State<TeamScreen> {
           // scrollDirection: Axis.horizontal,
           itemCount: widget.tasks.length,
           itemBuilder: (context, i) => TaskCard(widget.tasks[i])),
-      floatingActionButton: Visibility(
-        visible: _isVisible,
+      floatingActionButton: ScaleTransition(
+        scale: _animation,
         child: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(

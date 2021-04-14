@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:project/provider/navbar.dart';
 import 'package:project/screen/chat_screen.dart';
 import 'package:project/screen/main_screen/activity_screen.dart';
 import 'package:project/screen/main_screen/attachment%20screen.dart';
+import 'package:provider/provider.dart';
 
 import 'screen/navigation/app.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider.value(value: NavBar())],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +29,8 @@ class MyApp extends StatelessWidget {
         accentColor: Color.fromRGBO(13, 56, 120, 1),
         accentColorBrightness: Brightness.light,
         buttonTheme: ButtonTheme.of(context).copyWith(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
@@ -37,14 +45,16 @@ class MyApp extends StatelessWidget {
         accentColor: const Color.fromRGBO(13, 56, 130, 1),
         //Colors.white,
         accentIconTheme: IconThemeData(
-          color: Color.fromRGBO(13, 56, 130, 1), //Color.fromRGBO(33, 230, 193, 1),
+          color:
+              Color.fromRGBO(13, 56, 130, 1), //Color.fromRGBO(33, 230, 193, 1),
         ),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           foregroundColor: Colors.white,
         ),
         dividerColor: Colors.grey.withOpacity(0.3),
         buttonTheme: ButtonTheme.of(context).copyWith(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         ),
         splashColor: Colors.blueGrey[700],
         appBarTheme: AppBarTheme(
@@ -57,8 +67,8 @@ class MyApp extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'pt_sans',
-        scaffoldBackgroundColor:
-            const Color.fromRGBO(17, 20, 25, 1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
+        scaffoldBackgroundColor: const Color.fromRGBO(17, 20, 25,
+            1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
       ),
       themeMode: ThemeMode.dark,
       home: App(),

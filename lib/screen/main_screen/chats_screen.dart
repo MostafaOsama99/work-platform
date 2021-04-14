@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:project/demoData.dart';
 
+import '../../provider/navbar.dart';
 import '../../constants.dart';
 import '../chat_screen.dart';
 
+import 'package:provider/provider.dart';
+
 const KTapTS = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
-List<String> lastMessages = ['bye', "see you later", 'hello', 'okey'];
+List<String> lastMessages = [
+  'bye',
+  "see you later",
+  'hello',
+  'new tasks tomorrow'
+];
 var announce = [5, 4, 0, 1];
 var issue = [2, 3, 1, 0];
 
@@ -20,7 +28,8 @@ class ChatsScreen extends StatelessWidget {
             preferredSize: Size.fromHeight(45),
             child: ClipRRect(
               borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
+                  bottomLeft: Radius.circular(KAppBarRound),
+                  bottomRight: Radius.circular(KAppBarRound)),
               child: Container(
                 color: COLOR_SCAFFOLD,
                 //padding: const EdgeInsets.only(top: 15),
@@ -52,51 +61,30 @@ class ChatsScreen extends StatelessWidget {
           body: TabBarView(
             children: [
               ListView.separated(
-                  itemBuilder: (_, index) => InkWell(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-
-                        return ChatScreen();
-                      }));
-                    },
-                    child: ChatTile(
-                      chatName: teams[index].name,
-                          lastMessage: lastMessages[index],
-                          announce: announce[index],
-                          issue: issue[index],
-                        ),
-                  ),
-                  separatorBuilder: (_, index) => Divider(endIndent: 20, indent: 20, height: 10),
+                  itemBuilder: (_, index) => ChatTile(
+                        chatName: teams[index].name,
+                        lastMessage: lastMessages[index],
+                        announce: announce[index],
+                        issue: issue[index],
+                      ),
+                  separatorBuilder: (_, index) =>
+                      Divider(endIndent: 20, indent: 20, height: 10),
                   itemCount: teams.length),
               ListView.separated(
-                  itemBuilder: (_, index) => InkWell(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-
-                        return ChatScreen();
-                      }));
-                    },
-                    child: ChatTile(
-                      chatName: "Mohamed (Hr)",
-                      lastMessage: lastMessages[index],
-                        ),
-                  ),
-                  separatorBuilder: (_, index) => Divider(endIndent: 20, indent: 20, height: 10),
+                  itemBuilder: (_, index) => ChatTile(
+                        chatName: "Mohamed (Hr)",
+                        lastMessage: 'i do my best',
+                      ),
+                  separatorBuilder: (_, index) =>
+                      Divider(endIndent: 20, indent: 20, height: 10),
                   itemCount: 1),
               ListView.separated(
-                  itemBuilder: (_, index) => InkWell(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-
-                        return ChatScreen();
-                      }));
-                    },
-                    child: ChatTile(
-                      chatName: "Marketing strategy",
-                          lastMessage: lastMessages[index],
-                        ),
-                  ),
-                  separatorBuilder: (_, index) => Divider(endIndent: 20, indent: 20, height: 10),
+                  itemBuilder: (_, index) => ChatTile(
+                        chatName: "Marketing strategy",
+                        lastMessage: lastMessages[index],
+                      ),
+                  separatorBuilder: (_, index) =>
+                      Divider(endIndent: 20, indent: 20, height: 10),
                   itemCount: 1),
             ],
           ),
@@ -116,7 +104,7 @@ class TeamsBody extends StatelessWidget {
 class ChatTile extends StatelessWidget {
   final String chatName;
   final int announce, issue;
-  final  lastMessage;
+  final lastMessage;
   final DateTime timeStamp;
 
   const ChatTile(
@@ -124,7 +112,7 @@ class ChatTile extends StatelessWidget {
       @required this.chatName,
       this.announce = 0,
       this.issue = 0,
-      this.lastMessage ,
+      this.lastMessage,
       this.timeStamp})
       : super(key: key);
 
@@ -141,103 +129,125 @@ class ChatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            SizedBox(
-                height: 50,
-                width: 50,
-                child: CircleAvatar(
-                  backgroundColor: COLOR_BACKGROUND,
-                  child: Padding(
-                    padding: const EdgeInsets.all(6),
-                    child: Image.asset(
-                      'assets/icons/team-2.png',
-                      color: Colors.grey.shade600,
+    return InkWell(
+      onTap: () {
+        Provider.of<NavBar>(context, listen: false).hideNavBar();
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ChatScreen();
+        })).then((value) =>
+            Provider.of<NavBar>(context, listen: false).showNavBar());
+      },
+      child: Ink(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircleAvatar(
+                    backgroundColor: COLOR_BACKGROUND,
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: Image.asset(
+                        'assets/icons/team-2.png',
+                        color: Colors.grey.shade600,
+                      ),
                     ),
-                  ),
-                )),
-            SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
+                  )),
+              SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                              child: Text(
+                            chatName,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.85),
+                                fontSize: 17),
+                          )),
+                          Row(
+                            children: [
+                              if (announce > 0)
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: COLOR_BACKGROUND,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  padding: const EdgeInsets.all(2),
+                                  height: 27,
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5),
+                                        child: Text('$announce',
+                                            style: const TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 14)),
+                                      ),
+                                      Image.asset('assets/icons/announce.png')
+                                    ],
+                                  ),
+                                ),
+                              SizedBox(width: 4),
+                              if (issue > 0)
+                                Container(
+                                  padding: const EdgeInsets.all(2),
+                                  height: 27,
+                                  decoration: BoxDecoration(
+                                      color: COLOR_BACKGROUND,
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5),
+                                        child: Text('$issue',
+                                            style: const TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 14)),
+                                      ),
+                                      Image.asset('assets/icons/issue.png')
+                                    ],
+                                  ),
+                                )
+                            ],
+                          )
+                        ]),
+                    SizedBox(height: 4),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Expanded(
                             child: Text(
-                          chatName,
-                          overflow: TextOverflow.fade,
+                          lastMessage,
+                          overflow: TextOverflow.ellipsis,
                           softWrap: false,
-                          style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 17),
+                          style: const TextStyle(
+                              color: Colors.white54, fontSize: 15),
                         )),
-                        Row(
-                          children: [
-                            if (announce > 0)
-                              Container(
-                                decoration:
-                                    BoxDecoration(color: COLOR_BACKGROUND, borderRadius: BorderRadius.circular(15)),
-                                padding: const EdgeInsets.all(2),
-                                height: 27,
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                                      child: Text('$announce',
-                                          style: const TextStyle(color: Colors.white70, fontSize: 14)),
-                                    ),
-                                    Image.asset('assets/icons/announce.png')
-                                  ],
-                                ),
-                              ),
-                            SizedBox(width: 4),
-                            if (issue > 0)
-                              Container(
-                                padding: const EdgeInsets.all(2),
-                                height: 27,
-                                decoration:
-                                    BoxDecoration(color: COLOR_BACKGROUND, borderRadius: BorderRadius.circular(15)),
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                                      child:
-                                          Text('$issue', style: const TextStyle(color: Colors.white70, fontSize: 14)),
-                                    ),
-                                    Image.asset('assets/icons/issue.png')
-                                  ],
-                                ),
-                              )
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6, right: 2),
+                          child: Text(internalFormatDate(),
+                              style: const TextStyle(
+                                  color: Colors.white54, fontSize: 13)),
                         )
-                      ]),
-                  SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                          child: Text(
-                        lastMessage,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                        style: const TextStyle(color: Colors.white54, fontSize: 15),
-                      )),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 6, right: 2),
-                        child: Text(internalFormatDate(), style: const TextStyle(color: Colors.white54, fontSize: 13)),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

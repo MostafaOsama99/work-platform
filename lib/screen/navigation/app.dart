@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:project/constants.dart';
 import 'package:project/demoData.dart';
+import 'package:project/provider/navbar.dart';
 import 'package:project/screen/main_screen/chats_screen.dart';
 import 'package:project/screen/room_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../auth/auth_screen.dart';
 import '../../screen/team_screen.dart';
@@ -45,7 +48,8 @@ class AppState extends State<App> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        final isFirstRouteInCurrentTab = !await _navigatorKeys[_currentTab].currentState.maybePop();
+        final isFirstRouteInCurrentTab =
+            !await _navigatorKeys[_currentTab].currentState.maybePop();
         //TODO: change home route here
         if (isFirstRouteInCurrentTab) {
           // if not on the 'main' tab
@@ -83,7 +87,8 @@ class AppState extends State<App> {
                     builder = (_) => ChatsScreen();
                     break;
                 }
-                return MaterialPageRoute(builder: builder, settings: routeSettings);
+                return MaterialPageRoute(
+                    builder: builder, settings: routeSettings);
               },
             ),
           ),
@@ -91,7 +96,8 @@ class AppState extends State<App> {
             offstage: _currentTab != TabItem.statistics,
             child: Navigator(
               key: _navigatorKeys[TabItem.statistics],
-              onGenerateRoute: (routeSettings) => MaterialPageRoute(builder: (context) => StatisticsScreen()),
+              onGenerateRoute: (routeSettings) =>
+                  MaterialPageRoute(builder: (context) => StatisticsScreen()),
             ),
           ),
           Offstage(
@@ -99,35 +105,56 @@ class AppState extends State<App> {
             child: Navigator(
               key: _navigatorKeys[TabItem.chats],
               //initialRoute: '/home',
-              onGenerateRoute: (routeSettings) => MaterialPageRoute(builder: (context) => ChatsScreen()),
+              onGenerateRoute: (routeSettings) =>
+                  MaterialPageRoute(builder: (context) => ChatsScreen()),
             ),
           ),
         ]),
-        bottomNavigationBar: bottom.ConvexAppBar(
-          style: bottom.TabStyle.reactCircle,
-          height: 44,
-          top: -12,
-          curveSize: 47,
-          //cornerRadius: 15,
-          backgroundColor: COLOR_SCAFFOLD,
-          activeColor: Color.fromRGBO(34, 28, 38, 1),
-          color: Colors.grey,
-          initialActiveIndex: 0,
-          onTap: (int index) => _selectTab(TabItem.values[index]),
-          items: [
-            bottom.TabItem(
-                icon: Icon(Icons.home_filled, color: Colors.white60, size: KIconSize),
-                activeIcon: Icon(Icons.home_filled, color: COLOR_ACCENT, size: KActiveIconSize + 2),
-                title: 'Home'),
-            bottom.TabItem(
-                icon: Icon(Icons.assessment_outlined, color: Colors.white60, size: KIconSize),
-                activeIcon: Icon(Icons.assessment, color: COLOR_ACCENT, size: KActiveIconSize),
-                title: 'Statistics'),
-            bottom.TabItem(
-                icon: Icon(Icons.chat_outlined, color: Colors.white60, size: KIconSize),
-                activeIcon: Icon(Icons.chat, color: COLOR_ACCENT, size: KActiveIconSize - 2),
-                title: 'Chat'),
-          ],
+        bottomNavigationBar: Consumer<NavBar>(
+          builder: (BuildContext context, NavBar navBar, Widget child) {
+            return AnimatedBuilder(
+              builder: (BuildContext context, Widget child) {
+                return AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  height: navBar.navBarHeight,
+                  child: child,
+                );
+              },
+              animation: navBar.scrollController ?? TextEditingController(),
+              child: bottom.ConvexAppBar(
+                style: bottom.TabStyle.reactCircle,
+                height: 44,
+                top: navBar.navBarTopValue,
+                curveSize: 47,
+                //cornerRadius: 15,
+                backgroundColor: COLOR_SCAFFOLD,
+                activeColor: Color.fromRGBO(34, 28, 38, 1),
+                color: Colors.grey,
+                initialActiveIndex: 0,
+                onTap: (int index) => _selectTab(TabItem.values[index]),
+                items: [
+                  bottom.TabItem(
+                      icon: Icon(Icons.home_filled,
+                          color: Colors.white60, size: KIconSize),
+                      activeIcon: Icon(Icons.home_filled,
+                          color: COLOR_ACCENT, size: KActiveIconSize + 2),
+                      title: 'Home'),
+                  bottom.TabItem(
+                      icon: Icon(Icons.assessment_outlined,
+                          color: Colors.white60, size: KIconSize),
+                      activeIcon: Icon(Icons.assessment,
+                          color: COLOR_ACCENT, size: KActiveIconSize),
+                      title: 'Statistics'),
+                  bottom.TabItem(
+                      icon: Icon(Icons.chat_outlined,
+                          color: Colors.white60, size: KIconSize),
+                      activeIcon: Icon(Icons.chat,
+                          color: COLOR_ACCENT, size: KActiveIconSize - 2),
+                      title: 'Chat'),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

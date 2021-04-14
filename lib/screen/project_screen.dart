@@ -3,9 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:project/constants.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:project/demoData.dart';
+import 'package:project/provider/navbar.dart';
 import 'package:project/screen/team_screen.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:project/widgets/dateField_widget.dart';
+import 'package:provider/provider.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
 
 class ProjectScreen extends StatefulWidget {
@@ -151,18 +153,25 @@ class _ProjectScreenState extends State<ProjectScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
-                          child: Text("from:   ", style: TextStyle(color: Colors.grey, fontSize: 15)),
+                          child: Text("from:   ",
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 15)),
                         ),
                         Padding(
                             padding: const EdgeInsets.only(top: 22),
-                            child: DateField(initialDate:DateTime.now()))
+                            child: DateField(initialDate: DateTime.now()))
                       ],
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Row(
                       children: [
-                        Text("due:   ", style: TextStyle(color: Colors.grey, fontSize: 15)),
-                        DateField(initialDate: DateTime.now(),),
+                        Text("due:   ",
+                            style: TextStyle(color: Colors.grey, fontSize: 15)),
+                        DateField(
+                          initialDate: DateTime.now(),
+                        ),
                       ],
                     )
                   ],
@@ -174,7 +183,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Description', style: TextStyle(color: Colors.white, fontSize: 16)),
+                  Text('Description',
+                      style: TextStyle(color: Colors.white, fontSize: 16)),
                 ],
               ),
             ),
@@ -188,7 +198,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
               decoration: TEXT_FIELD_DECORATION_2,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 8,top: 10),
+              padding: const EdgeInsets.only(left: 8, top: 10),
               child: Text(
                 "Teams",
                 style: TextStyle(fontSize: 15, color: Colors.white),
@@ -199,7 +209,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
               child: ListView.builder(
                   itemCount: widget.teams.length,
                   itemBuilder: (context, i) {
-                    return teamCard(context, widget.teams[i].teamName, widget.teams[i].tasks);
+                    return teamCard(context, widget.teams[i].teamName,
+                        widget.teams[i].tasks);
                   }),
             )
           ],
@@ -209,6 +220,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   }
 }
 
+//TODO:Mohammed Hesham
 Widget teamCard(context, String teamName, tasks) {
   return Padding(
     padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -219,7 +231,12 @@ Widget teamCard(context, String teamName, tasks) {
             teamName: teamName,
             tasks: tasks,
           );
-        }));
+        })).then((value) =>
+
+            ///*** IMPORTANT ***
+            ///make sure to remove scrollController that added by the called screen
+            ///note: this method [removeController] re-shows the NavBar again
+            Provider.of<NavBar>(context, listen: false).removeController());
       },
       iconColor: Colors.white,
       backgroundColor: COLOR_BACKGROUND,
@@ -233,9 +250,11 @@ Widget teamCard(context, String teamName, tasks) {
           //disable scroll
           itemCount: tasks.length,
           itemBuilder: (context, i) {
-            return subTaskWidget(tasks[i].name, tasks[i].datePlannedEnd, tasks[i].progress, context);
+            return subTaskWidget(tasks[i].name, tasks[i].datePlannedEnd,
+                tasks[i].progress, context);
           },
-          separatorBuilder: (BuildContext context, int index) => Divider(indent: 15, endIndent: 15),
+          separatorBuilder: (BuildContext context, int index) =>
+              Divider(indent: 15, endIndent: 15),
         )
       ],
     ),
@@ -273,7 +292,8 @@ Widget subTaskWidget(String teamName, date, int percentage, context) {
         padding: EdgeInsets.only(left: 5, top: 3),
         child: Text(
           "${percentage.toInt()}%",
-          style: TextStyle(fontSize: 13, color: Colors.amber, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 13, color: Colors.amber, fontWeight: FontWeight.bold),
         ),
       )
     ],
@@ -296,7 +316,8 @@ Widget _userTileName(String name) {
           ),
           child: CircleAvatar(
             radius: 14,
-            child: Text(name[0] + name[lastLitter], style: TextStyle(fontSize: 13)),
+            child: Text(name[0] + name[lastLitter],
+                style: TextStyle(fontSize: 13)),
             backgroundColor: Colors.yellow,
           ),
         ),

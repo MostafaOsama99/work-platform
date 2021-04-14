@@ -11,10 +11,15 @@ Widget teamCard (context,String teamName,tasks){
   return  Padding(
     padding: const EdgeInsets.only(top: 10, bottom: 10),
     child: custom.ExpansionTile(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context){
-          return TeamScreen(teamName: teamName,tasks: tasks,);
+      onTap: () async {
+        print('blaa');
+        await Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return TeamScreen(
+            teamName: teamName,
+            tasks: tasks,
+          );
         }));
+        print('then called');
       },
       iconColor: Colors.teal,
       headerBackgroundColor: Theme.of(context).appBarTheme.color,

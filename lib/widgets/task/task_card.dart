@@ -58,17 +58,31 @@ class TaskCard extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(task.name, softWrap: false, overflow: TextOverflow.fade, style: TextStyle(fontSize: 17)),
+                        Text(task.name,
+                            softWrap: false,
+                            overflow: TextOverflow.fade,
+                            style: TextStyle(
+                              fontSize: 17,
+                            )),
                         SizedBox(height: 4),
 
                         Row(
                           children: task.parentCheckpoint != null
                               ? [
-                                  Icon(Icons.adjust, color: taskTypes[task.type].accentColor, size: 18),
+                                  Icon(Icons.adjust,
+                                      color: taskTypes[task.type].accentColor,
+                                      size: 18),
                                   SizedBox(width: 4),
-                                  Text(task.parentCheckpoint.name)
+                                  Expanded(
+                                      child: Text(task.parentCheckpoint.name,
+                                          overflow: TextOverflow.fade,
+                                          softWrap: false))
                                 ]
-                              : [buildUserAvatar(task.taskCreator.name), Text(task.taskCreator.name)],
+                              : [
+                                  buildUserAvatar(task.taskCreator.name),
+                                  Text(task.taskCreator.name,
+                                      overflow: TextOverflow.fade)
+                                ],
                         ),
                         // if(task.projectName != null)
                         // RichText(
@@ -96,16 +110,19 @@ class TaskCard extends StatelessWidget {
                     children: [
                       Text(
                         formatDate(task.datePlannedStart),
-                        style: TextStyle(color: Colors.grey, fontSize: 15),
+                        style: TextStyle(color: Colors.grey, fontSize: 14),
                       ),
                       SizedBox(height: 4),
                       Row(
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 6),
-                            child: Icon(Icons.calendar_today_rounded, size: 21, color: KIconColor),
+                            child: Icon(Icons.calendar_today_rounded,
+                                size: 20, color: KIconColor),
                           ),
-                          Text(formatDate(task.datePlannedEnd), style: TextStyle(color: Colors.grey, fontSize: 15)),
+                          Text(formatDate(task.datePlannedEnd),
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 14)),
                         ],
                       ),
                     ],

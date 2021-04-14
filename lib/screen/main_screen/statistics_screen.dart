@@ -128,15 +128,16 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Counter(
-                      _timerKey,
-                      (workTime) async => await showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (_) => EndTaskDialog(
-                                duration: workTime,
-                                task: _endedTask,
-                              ))),
+                  child: Counter(_timerKey, (workTime) async {
+                    final response = await showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) => EndTaskDialog(
+                              duration: workTime,
+                              task: _endedTask,
+                            ));
+                    return response;
+                  }),
                 ),
                 // SizedBox(height: 8),
               ],
@@ -447,15 +448,24 @@ class CounterState extends State<Counter> {
 
   ///save previous duration in [_duration]
   ///make sure that time is closed and colon is shown
-  stopTimer() {
+  stopTimer() async {
     _updateDuration();
-    //add this session time to total day time
-    _oldDuration = _duration;
+    var sessionDuration = DateTime.now().difference(_startTime);
     _timer.cancel();
     setState(() {
       _showColon = true;
     });
-    widget.onStop(DateTime.now().difference(_startTime));
+    var userDuration = await widget.onStop(sessionDuration);
+
+    //add this session time to total day time
+    //if user has edited the session time
+    if (userDuration != null) {
+      _oldDuration = _oldDuration + userDuration;
+      // re-update the screen
+      setState(() => _duration = _oldDuration);
+    } else
+      _oldDuration = _duration;
+
     _startTime = null;
   }
 

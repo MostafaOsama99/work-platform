@@ -95,8 +95,8 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
                   itemCount: widget.task.checkPoints.length),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: OutlineButton(
+                padding: const EdgeInsets.all(8.0),
+                child: OutlineButton(
                   padding: const EdgeInsets.all(0),
                   highlightedBorderColor: Colors.greenAccent.shade700,
                   splashColor: COLOR_BACKGROUND,
@@ -105,10 +105,19 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
                   borderSide: BorderSide(width: 1.5, color: COLOR_BACKGROUND),
                   child: Text(
                     'Okay',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green.shade700),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green.shade700),
                   ),
-                  onPressed: () => Navigator.of(context).pop()),
-            ),
+                  onPressed: () {
+                    if (_duration == widget.duration)
+                      Navigator.of(context).pop();
+                    else
+                      // user has edited the duration
+                      Navigator.of(context).pop(_duration);
+                  },
+                )),
           ],
         ),
       ),
