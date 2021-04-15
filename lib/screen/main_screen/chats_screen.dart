@@ -129,17 +129,21 @@ class ChatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Provider.of<NavBar>(context, listen: false).hideNavBar();
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ChatScreen();
-        })).then((value) =>
-            Provider.of<NavBar>(context, listen: false).showNavBar());
-      },
-      child: Ink(
+    return Padding(
+      padding: const EdgeInsets.all(3.0),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(15),
+        splashColor: Colors.green.shade800.withOpacity(0.8),
+        highlightColor: Color.fromRGBO(30, 100, 35, 0.5),
+        onTap: () {
+          Provider.of<NavBar>(context, listen: false).hideNavBar();
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return ChatScreen();
+          })).then((value) =>
+              Provider.of<NavBar>(context, listen: false).showNavBar());
+        },
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(5),
           child: Row(
             children: [
               SizedBox(

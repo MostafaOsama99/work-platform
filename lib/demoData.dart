@@ -1,5 +1,6 @@
 import 'package:project/widgets/chat/message_bubble.dart';
 
+import 'model/message.dart';
 import 'model/task.dart';
 import 'model/project.dart';
 
@@ -47,19 +48,44 @@ const List<User> usersLong = [
   User(id: 11, name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65')
 ];
 
-List<Messages> messagesList = [
-  Messages(isMe: true, text: "Hello", senderName: "test"),
-  Messages(
+List<Message> messagesList = [
+  Message(
+      dateTime: DateTime.now().subtract(Duration(hours: 12)),
+      isMe: true,
+      message: "Hello",
+      senderName: "test"),
+  Message(
+      dateTime: DateTime.now().subtract(Duration(hours: 6)),
       isMe: false,
-      text:
+      message:
           "How are you ?,How are you ?How are you ?How are you ?How are you ?How are you ?How are you ?How are you ?How are you ?How are you ?How are you ?How are you ?",
       senderName: "test"),
-  Messages(isMe: true, text: "fine, thanks", senderName: "test"),
-  Messages(
-      isMe: false,
-      text: "your progress is amazing this week",
+  Message(
+      dateTime: DateTime.now().subtract(Duration(minutes: 22)),
+      isMe: true,
+      message: "fine, thanks",
       senderName: "test"),
-  Messages(isMe: true, text: "i do my best", senderName: "test"),
+  Message(
+      dateTime: DateTime.now(),
+      isMe: false,
+      message: "your progress is amazing this week",
+      senderName: "test"),
+  Message(
+      dateTime: DateTime.now(),
+      isMe: false,
+      message: "your progress ",
+      senderName: "test"),
+  Message(
+      dateTime: DateTime.now(),
+      isMe: true,
+      message: "i do my best",
+      senderName: "test"),
+  Message(
+      dateTime: DateTime.now(),
+      isMe: true,
+      message:
+          "i do my best, i do my best, i do my best, i do my best, i do my best, i do my best, i do my best, i do my best, i do my best, i do my best, i do my best, i do my best, i do my best, ",
+      senderName: "test"),
 ];
 final List<Team> teams = [
   Team(id: 0, name: 'Marketing', tasks: demoTasks),
