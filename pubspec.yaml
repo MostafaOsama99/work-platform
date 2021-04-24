@@ -30,12 +30,12 @@ dependencies:
   date_time_picker: ^1.1.1
   step_progress_indicator: ^0.2.0+3
   provider: ^5.0.0
-  dio: ^3.0.10
+  dio: ^4.0.0
   share: ^0.6.5+3
   circular_check_box: ^1.0.4
-  file_picker: ^2.1.5
+  file_picker: ^3.0.1
   flutter_filereader: ^1.0.0
-  image_picker: ^0.6.7+11
+  image_picker: ^0.7.4
   full_screen_image: ^1.0.2
   flutter_reaction_button: ^1.0.7
   # The following adds the Cupertino Icons font to your application.
@@ -43,8 +43,9 @@ dependencies:
   cupertino_icons: ^1.0.0
 
   convex_bottom_bar: ^2.6.0
-  url_launcher: ^5.5.0
+  url_launcher: ^6.0.3
   fl_chart: ^0.12.3
+  http: ^0.13.1
 
 dev_dependencies:
   flutter_test:

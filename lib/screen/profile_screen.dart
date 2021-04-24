@@ -12,11 +12,11 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   File _image;
   String _email, _password, _confirmPassword, _name, _phone, _address;
-  File pickedFile;
+  PickedFile pickedFile;
   final picker = ImagePicker();
 
   Future getGalleryImage() async {
-    pickedFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    pickedFile = await picker.getImage(source: ImageSource.gallery);
 
     setState(() {
       if (pickedFile != null) {
@@ -29,7 +29,7 @@ class _ProfileState extends State<Profile> {
   }
 
   Future getCameraImage() async {
-    pickedFile = await ImagePicker.pickImage(source: ImageSource.camera);
+    pickedFile = await picker.getImage(source: ImageSource.camera);
 
     setState(() {
       if (pickedFile != null) {
