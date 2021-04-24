@@ -59,13 +59,6 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
   }
 
   @override
-  void deactivate() {
-    //_navBarProvider.showNavBar();
-    //_navBarProvider.removeController();
-    super.deactivate();
-  }
-
-  @override
   void dispose() {
     // Future.delayed(Duration.zero)
     //     .then(

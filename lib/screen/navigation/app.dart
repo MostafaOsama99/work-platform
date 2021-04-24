@@ -56,6 +56,7 @@ class AppState extends State<App> {
           if (_currentTab != TabItem.home) {
             // select 'main' tab
             _selectTab(TabItem.home);
+
             // back button handled by app
             return false;
           }
@@ -106,7 +107,7 @@ class AppState extends State<App> {
               key: _navigatorKeys[TabItem.chats],
               //initialRoute: '/home',
               onGenerateRoute: (routeSettings) =>
-                  MaterialPageRoute(builder: (context) => ChatsScreen()),
+                  MaterialPageRoute(builder: (context) => AuthScreen()),
             ),
           ),
         ]),

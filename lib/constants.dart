@@ -14,9 +14,12 @@ const PADDING_VERTICAL = 12.0;
 const double KAppBarRound = 15.0;
 
 const KAppBarHeight = 45.0;
-const TS_TITLE = TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
+const TS_TITLE =
+    TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
 
 const KIconSize = 18.0;
+
+const KTextFieldHeight = 40.0;
 
 const KIconColor = Colors.white;
 
@@ -25,10 +28,17 @@ const KDescriptionMaxLines = 3;
 ///timer progress target hours
 const KTargetWorkHours = 6;
 
+///this should be deffer from country to another
+const KMobileLength = 11;
+
+const server = 'http://10.0.2.2:5000/api/v1';
+
 // default TextFormField decoration
 // ignore: non_constant_identifier_names
-final TEXT_FIELD_DECORATION =InputDecoration(
-
+final TEXT_FIELD_DECORATION = InputDecoration(
+  errorStyle: TextStyle(height: 0),
+  errorMaxLines: null,
+  contentPadding: const EdgeInsets.all(8),
   isDense: true,
   filled: true,
   fillColor: Colors.white,
@@ -106,7 +116,7 @@ final InputDecoration TEXT_FIELD_DECORATION_CHECKPOINT = InputDecoration(
 bool isEmail(String em) {
   String p =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  RegExp regExp = new RegExp(p);
+  RegExp regExp = RegExp(p);
   return regExp.hasMatch(em);
 }
 

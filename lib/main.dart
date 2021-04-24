@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project/provider/navbar.dart';
+import 'provider/UserData.dart';
+import 'provider/navbar.dart';
 import 'package:project/screen/chat_screen.dart';
 import 'package:project/screen/main_screen/activity_screen.dart';
 import 'package:project/screen/main_screen/attachment%20screen.dart';
@@ -10,7 +11,10 @@ import 'screen/navigation/app.dart';
 void main() {
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider.value(value: NavBar())],
+      providers: [
+        ChangeNotifierProvider.value(value: NavBar()),
+        ChangeNotifierProvider.value(value: UserData())
+      ],
       child: MyApp(),
     ),
   );

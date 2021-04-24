@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'signUp.dart';
+import 'signUp1.dart';
+import 'signUp2.dart';
 import 'login.dart';
 import '../../constants.dart';
 
@@ -17,179 +18,92 @@ class _AuthScreenState extends State<AuthScreen> {
     final _buttonSocialWidth = MediaQuery.of(context).size.width / 2.7;
 
     final GlobalKey<LoginState> _loginForm = GlobalKey<LoginState>();
-    final GlobalKey<SignUpState> _signUp = GlobalKey<SignUpState>();
+    //final GlobalKey<SignUpState> _signUp = GlobalKey<SignUpState>();
 
     return Scaffold(
       backgroundColor: COLOR_BACKGROUND,
-      resizeToAvoidBottomInset: true,
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniStartDocked,
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        //crossAxisAlignment: CrossAxisAlignment.start,
-        children: !_isLogin
-            ? <Widget>[
-                IconButton(
-                    splashRadius: 28,
-                    iconSize: 40,
-                    icon: Image.asset('assets/icons/google_icon.png',
-                        color: Colors.red),
-                    onPressed: () {}),
-                SizedBox(height: 10),
-                IconButton(
-                    splashRadius: 28,
-                    iconSize: 40,
-                    icon: Image.asset(
-                      'assets/icons/facebook_icon.png',
-                      color: Colors.blue.shade700,
-                    ),
-                    onPressed: () {}),
-                SizedBox(height: 20),
-              ]
-            : [],
-      ),
+      // resizeToAvoidBottomInset: false,
+      // floatingActionButtonLocation:
+      //     FloatingActionButtonLocation.miniStartDocked,
+      // floatingActionButton: Column(
+      //   mainAxisAlignment: MainAxisAlignment.end,
+      //   //crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: !_isLogin
+      //       ? <Widget>[
+      //           IconButton(
+      //               splashRadius: 28,
+      //               iconSize: 40,
+      //               icon: Image.asset('assets/icons/google_icon.png',
+      //                   color: Colors.red),
+      //               onPressed: () {}),
+      //           SizedBox(height: 10),
+      //           IconButton(
+      //               splashRadius: 28,
+      //               iconSize: 40,
+      //               icon: Image.asset(
+      //                 'assets/icons/facebook_icon.png',
+      //                 color: Colors.blue.shade700,
+      //               ),
+      //               onPressed: () {}),
+      //           SizedBox(height: 20),
+      //         ]
+      //       : [],
+      // ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Center(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height -
+              MediaQuery.of(context).padding.top,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SingleChildScrollView(
               child: SizedBox(
                 height: MediaQuery.of(context).size.height -
                     MediaQuery.of(context).padding.top,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  //  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
-                      flex: _isLogin ? 5 : 11,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        //  mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Spacer(flex: 1),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 30),
-                            child: Text(
-                              _isLogin ? 'Welcome\nBack' : 'Create\nAccount',
-                              style: TextStyle(
-                                  fontFamily: 'pt_sans',
-                                  fontSize: 28,
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 30),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _isLogin ? 'Welcome\nBack' : 'Create\nAccount',
+                                style: TextStyle(
+                                    fontFamily: 'pt_sans',
+                                    fontSize: 28,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              MaterialButton(
+                                  minWidth: 100,
+                                  height: 35,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                                  splashColor: Colors.grey.withOpacity(0.5),
+                                  child: Text(
+                                    _isLogin ? 'Sign up' : 'Log in',
+                                    style: TextStyle(
+                                        fontSize: 18, fontFamily: 'pt_sans'),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isLogin = !_isLogin;
+                                    });
+                                  }),
+                            ],
                           ),
-                          Spacer(flex: 1),
-                          Expanded(
-                            flex: _isLogin ? 4 : 10,
-                            child: _isLogin
-                                ? Login(key: _loginForm)
-                                : SignUp(key: _signUp),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                     Expanded(
-                      flex: 4,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          if (_isLogin)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: _buttonSocialWidth,
-                                  child: MaterialButton(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 12),
-                                    color: Colors.red.shade700,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Image.asset(
-                                          'assets/icons/google_icon.png',
-                                          height: 30,
-                                        ),
-                                        Text(
-                                          'Google',
-                                          style: TextStyle(
-                                              fontFamily: 'pt_sans',
-                                              color: Colors.white,
-                                              fontSize: 18),
-                                        )
-                                      ],
-                                    ),
-                                    onPressed: () {},
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: _buttonSocialWidth,
-                                  child: MaterialButton(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 6, horizontal: 14),
-                                    color: Colors.blue.shade800,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Image.asset(
-                                          'assets/icons/facebook_icon.png',
-                                          height: 30,
-                                        ),
-                                        Text(
-                                          'Facebook',
-                                          style: TextStyle(
-                                              fontFamily: 'pt_sans',
-                                              color: Colors.white,
-                                              fontSize: 18),
-                                        )
-                                      ],
-                                    ),
-                                    onPressed: () {},
-                                  ),
-                                )
-                              ],
-                            ),
-                          MaterialButton(
-                              minWidth: 230,
-                              height: 45,
-                              color: Color.fromRGBO(40, 49, 230, 1),
-                              child: Text(
-                                _isLogin ? 'Log in' : 'Sign up',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontFamily: 'pt_sans',
-                                    color: Colors.white),
-                              ),
-                              onPressed: () {
-                                //calling method from child class
-                                _isLogin
-                                    ? _loginForm.currentState.submit()
-                                    : _signUp.currentState.submit();
-                              }),
-                          Text('or',
-                              style: TextStyle(
-                                  fontFamily: 'pt_sans', color: Colors.white)),
-                          MaterialButton(
-                              minWidth: 230,
-                              height: 45,
-                              color: Colors.white,
-                              child: Text(
-                                _isLogin ? 'Sign up' : 'Log in',
-                                style: TextStyle(
-                                    fontSize: 20, fontFamily: 'pt_sans'),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isLogin = !_isLogin;
-                                });
-                              }),
-                        ],
-                      ),
+                      child: _isLogin
+                          ? Login(key: _loginForm)
+                          : SignUp(UniqueKey()),
                     ),
                   ],
                 ),
@@ -202,4 +116,36 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 }
 
+class SignUp extends StatefulWidget {
+  SignUp(Key key) : super(key: key);
 
+  @override
+  _SignUpState createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  bool _showSignUp1;
+
+  SignUp1 _signUp1;
+
+  SignUp2 _signUp2;
+
+  @override
+  void initState() {
+    _showSignUp1 = true;
+    _signUp1 = SignUp1(
+      onNext: () => setState(() => _showSignUp1 = false),
+      key: UniqueKey(),
+    );
+    _signUp2 = SignUp2(
+      key: UniqueKey(),
+      onPrev: () => setState(() => _showSignUp1 = true),
+    );
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _showSignUp1 ? _signUp1 : _signUp2;
+  }
+}
