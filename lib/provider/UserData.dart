@@ -100,47 +100,47 @@ class UserData extends ChangeNotifier {
     print(temp);
 
     try {
-      final response = await Dio().post(url,
-          data: FormData.fromMap({
-            "username": _userName,
-            "email": _mail,
-            "name": _name,
-            "password": _password,
-            "confirmPassword": _password,
-            "phoneNumber": _mobile,
-            "jobTitle": _jobTitle,
-            "birthDate":
-                '${_birthDate.day}/${_birthDate.month}/${_birthDate.year}'
-          }));
+      // final response = await Dio().post(url,
+      //     data: FormData.fromMap({
+      //       "username": _userName,
+      //       "email": _mail,
+      //       "name": _name,
+      //       "password": _password,
+      //       "confirmPassword": _password,
+      //       "phoneNumber": _mobile,
+      //       "jobTitle": _jobTitle,
+      //       "birthDate":
+      //           '${_birthDate.day}/${_birthDate.month}/${_birthDate.year}'
+      //     }));
 
-      // final response = await http.post(Uri.parse(url), body: {
-      //   "username": _userName,
-      //   "email": _mail,
-      //   "name": _name,
-      //   "password": _password,
-      //   "confirmPassword": _password,
-      //   "phoneNumber": _mobile,
-      //   "jobTitle": _jobTitle,
-      //   "birthDate": '${_birthDate.day}/${_birthDate.month}/${_birthDate.year}'
-      // });
+      final response = await http.post(Uri.parse(url), body: {
+        "username": _userName,
+        "email": _mail,
+        "name": _name,
+        "password": _password,
+        "confirmPassword": _password,
+        "phoneNumber": _mobile,
+        "jobTitle": _jobTitle,
+        "birthDate": '${_birthDate.day}/${_birthDate.month}/${_birthDate.year}'
+      });
 
       print('status code: ${response.statusCode}');
       if (response.statusCode == 200) {
         return 'user created successfully';
       }
 
-      print('response data: ${response.data}');
+      // print('response data: ${response.data}');
 
-      // print(response.request);
-      // print(response.contentLength);
+      print(response.request);
+      print(response.contentLength);
 
       //Mm1010?
-      // print('body:  ${json.decode(response.body)}');
-      // print(response.body);
-      //
-      // final responseData = json.decode(response.body);
-      // if (responseData['errors'] != null) print(responseData['errors']);
-      // if (responseData['message'] != null) print(responseData['message']);
+      print('body:  ${json.decode(response.body)}');
+      print(response.body);
+
+      final responseData = json.decode(response.body);
+      if (responseData['errors'] != null) print(responseData['errors']);
+      if (responseData['message'] != null) print(responseData['message']);
       // else {
       // }
 

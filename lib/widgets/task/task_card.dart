@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:circular_check_box/circular_check_box.dart';
+//import 'package:circular_check_box/circular_check_box.dart';
 import 'package:project/model/taskType.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../screen/task_screen.dart';
 import '../../constants.dart';
 import '../../model/task.dart' as model;
+import '../circular_checkBox.dart';
 
 class TaskCard extends StatelessWidget {
   final model.Task task;
@@ -31,7 +32,8 @@ class TaskCard extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.red,
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => TaskScreen(task)));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => TaskScreen(task)));
         },
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -48,9 +50,11 @@ class TaskCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
+                      color: Theme.of(context)
+                          .scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
                     ),
-                    child: Image.asset(taskTypes[task.type].icon, color: taskTypes[task.type].accentColor),
+                    child: Image.asset(taskTypes[task.type].icon,
+                        color: taskTypes[task.type].accentColor),
                   ),
                   SizedBox(width: 8),
                   SizedBox(
@@ -142,11 +146,13 @@ class TaskCard extends StatelessWidget {
                   roundedEdges: const Radius.circular(30),
                   padding: 0,
                   selectedColor: Colors.white,
-                  gradientColor: LinearGradient(
-                      colors: [Theme.of(context).appBarTheme.color, Colors.greenAccent[700]],
-                      stops: [0.2, 0.9],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight),
+                  gradientColor: LinearGradient(colors: [
+                    Theme.of(context).appBarTheme.color,
+                    Colors.greenAccent[700]
+                  ], stops: [
+                    0.2,
+                    0.9
+                  ], begin: Alignment.topLeft, end: Alignment.bottomRight),
                   unselectedColor: Colors
                       .black38, // COLOR_BACKGROUND // Color.fromRGBO(31, 66, 156, 1), //Colors.deepPurple.shade600,
                 ),
@@ -167,19 +173,19 @@ class TaskCard extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 4, top: 4),
               child: Row(
                 children:
-                // task.parentCheckpoint != null
-                //     ? [
-                //         Icon(Icons.adjust, color: Colors.amber),
-                //         SizedBox(width: 4),
-                //         Text(
-                //           task.pa  rentCheckpoint.name,
-                //         ,
-                //         ),
-                //         Spacer(),
-                //         ...task.members.map((m) => _buildUserAvatar(m)),
-                //       ]
-                //     :
-                [
+                    // task.parentCheckpoint != null
+                    //     ? [
+                    //         Icon(Icons.adjust, color: Colors.amber),
+                    //         SizedBox(width: 4),
+                    //         Text(
+                    //           task.pa  rentCheckpoint.name,
+                    //         ,
+                    //         ),
+                    //         Spacer(),
+                    //         ...task.members.map((m) => _buildUserAvatar(m)),
+                    //       ]
+                    //     :
+                    [
                   // _buildUserAvatar(task.taskCreator),
                   // Text(task.taskCreator,
                   //     ),
@@ -189,14 +195,20 @@ class TaskCard extends StatelessWidget {
                         children: <TextSpan>[
                           TextSpan(
                               text: '  project: ',
-                              style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic, fontSize: 15)),
-                          TextSpan(text: task.projectName, style: TextStyle(fontSize: 15)),
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 15)),
+                          TextSpan(
+                              text: task.projectName,
+                              style: TextStyle(fontSize: 15)),
                         ],
                       ),
                     ),
 
                   Spacer(),
-                  if (task.members != null) ...task.members.map((u) => buildUserAvatar(u.name)),
+                  if (task.members != null)
+                    ...task.members.map((u) => buildUserAvatar(u.name)),
                 ],
               ),
             )
@@ -227,7 +239,8 @@ class CheckPoint extends StatefulWidget {
   final model.CheckPoint checkPoint;
   final Color taskAccentColor;
 
-  const CheckPoint({Key key, this.checkPoint, this.taskAccentColor}) : super(key: key);
+  const CheckPoint({Key key, this.checkPoint, this.taskAccentColor})
+      : super(key: key);
 
   static const TS_DONE = TextStyle(
     fontSize: 15,
@@ -269,20 +282,17 @@ class _CheckPointState extends State<CheckPoint> {
             // Spacer(),
             widget.checkPoint.percentage <= 0
                 ? CircularCheckBox(
-                value: _value,
-                checkColor: Colors.white,
-                //Theme.of(context).accentIconTheme.color,
-                activeColor: widget.taskAccentColor.withOpacity(0.8),
-                inactiveColor: Theme.of(context).appBarTheme.color,
-                materialTapTargetSize: MaterialTapTargetSize.padded,
-                onChanged: (value) => setState(() => _value = value))
+                    value: _value,
+                    activeColor: widget.taskAccentColor.withOpacity(0.8),
+                    onChanged: (value) => setState(() => _value = value))
                 : Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Text(
-                '${widget.checkPoint.percentage}%',
-                style: TextStyle(color: Colors.white70, fontStyle: FontStyle.italic),
-              ),
-            )
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Text(
+                      '${widget.checkPoint.percentage}%',
+                      style: TextStyle(
+                          color: Colors.white70, fontStyle: FontStyle.italic),
+                    ),
+                  )
           ],
         ),
       ),

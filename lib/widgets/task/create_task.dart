@@ -157,7 +157,7 @@ class _CreateTaskState extends State<CreateTask> {
                   ),
                   ListView(
                     shrinkWrap: true,
-                    padding: const EdgeInsets.all(0),
+                    padding: EdgeInsets.zero,
                     physics: ScrollPhysics(),
                     children: [...checkpoints],
                   ),
@@ -247,7 +247,7 @@ class _CustomCheckpointWidgetState extends State<CustomCheckpointWidget> {
                     autofocus: false,
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(0),
+                      contentPadding: EdgeInsets.zero,
                     ),
                   ),
                 ),
@@ -272,15 +272,14 @@ class _CustomCheckpointWidgetState extends State<CustomCheckpointWidget> {
             children: [
               IconButton(
                 icon: Icon(Icons.delete_outline),
-                onPressed: () =>
-                  widget.onRemove(widget.key),
-                splashRadius: 20,
-                iconSize: 30,
-                padding: const EdgeInsets.all(0),
-                disabledColor: Colors.grey[800],
-                tooltip: 'Delete Checkpoint',
-                color: Colors.red,
-              ),
+                  onPressed: () => widget.onRemove(widget.key),
+                  splashRadius: 20,
+                  iconSize: 30,
+                  padding: EdgeInsets.zero,
+                  disabledColor: Colors.grey[800],
+                  tooltip: 'Delete Checkpoint',
+                  color: Colors.red,
+                ),
               Expanded(
                 child: Padding(
                       padding: EdgeInsets.only(left: 5, right: 8),

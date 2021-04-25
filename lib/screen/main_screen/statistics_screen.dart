@@ -101,7 +101,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
                               height: 28,
                               width: 28,
                               child: RaisedButton(
-                                  padding: const EdgeInsets.all(0),
+                                  padding: EdgeInsets.zero,
                                   child: Icon(Icons.pause, color: Colors.white),
                                   splashColor: Colors.deepOrange,
                                   textColor: Colors.deepOrange,
@@ -109,9 +109,12 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
                                   highlightElevation: 2,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                    side: BorderSide(color: Colors.deepOrange[800].withOpacity(0.5)),
+                                    side: BorderSide(
+                                        color: Colors.deepOrange[800]
+                                            .withOpacity(0.5)),
                                   ),
-                                  onPressed: () => toggleTaskTime(isWorking: false)),
+                                  onPressed: () =>
+                                      toggleTaskTime(isWorking: false)),
                             ),
                             SizedBox(width: 10),
                             Expanded(
@@ -315,13 +318,16 @@ class WorkTile extends StatelessWidget {
                         height: 35,
                         width: 35,
                         child: RaisedButton(
-                            padding: const EdgeInsets.all(0),
+                            padding: EdgeInsets.zero,
                             child: isWorking
                                 ? Icon(Icons.pause, color: Colors.white)
-                                : Icon(Icons.play_arrow_sharp, color: Colors.white70),
+                                : Icon(Icons.play_arrow_sharp,
+                                    color: Colors.white70),
                             splashColor: Colors.deepOrange,
                             textColor: Colors.deepOrange,
-                            color: isWorking ? Colors.deepOrange[800] : COLOR_BACKGROUND,
+                            color: isWorking
+                                ? Colors.deepOrange[800]
+                                : COLOR_BACKGROUND,
                             highlightElevation: 2,
                             //autofocus: false,
                             //clipBehavior: Clip.antiAlias,

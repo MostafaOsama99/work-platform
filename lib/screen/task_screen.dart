@@ -212,7 +212,7 @@ class _TaskScreenState extends State<TaskScreen> {
                               height: 22,
                               child: IconButton(
                                   icon: Icon(Icons.add_circle_outline_rounded),
-                                  padding: const EdgeInsets.all(0),
+                                  padding: EdgeInsets.zero,
                                   tooltip: 'add member',
                                   color: Colors.white,
                                   splashRadius: 20,

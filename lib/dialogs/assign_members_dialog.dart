@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project/widgets/circular_checkBox.dart';
 
-import 'package:circular_check_box/circular_check_box.dart';
+//import 'package:circular_check_box/circular_check_box.dart';
 
 import '../widgets/user_tile.dart';
 import '../constants.dart';
@@ -94,10 +95,7 @@ class _AssignMembersDialogState extends State<AssignMembersDialog> {
                   SizedBox(
                     height: 20,
                     child: CircularCheckBox(
-                        checkColor: Colors.white,
                         activeColor: COLOR_ACCENT.withOpacity(0.8),
-                        inactiveColor: Theme.of(context).appBarTheme.color,
-                        materialTapTargetSize: MaterialTapTargetSize.padded,
                         value: _selectAll,
                         onChanged: (value) {
                           _selectAll = value;
@@ -154,14 +152,18 @@ class _AssignMembersDialogState extends State<AssignMembersDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                OutlineButton(
-                    padding: const EdgeInsets.all(0),
+                OutlinedButton(
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all(EdgeInsets.zero),
+                    ),
                     //borderSide: BorderSide(color: COLOR_ACCENT, width: 2),
-                    highlightedBorderColor: Colors.red,
-                    child: Transform.rotate(angle: 3.14 / 4, child: Icon(Icons.add, color: Colors.red)),
+                    //highlightedBorderColor: Colors.red,
+                    child: Transform.rotate(
+                        angle: 3.14 / 4,
+                        child: Icon(Icons.add, color: Colors.red)),
                     onPressed: () => Navigator.of(context).pop()),
                 OutlineButton(
-                    padding: const EdgeInsets.all(0),
+                    padding: EdgeInsets.zero,
                     //borderSide: BorderSide(color: COLOR_ACCENT, width: 2),
                     highlightedBorderColor: Colors.green,
                     child: Icon(Icons.done, color: Colors.green),

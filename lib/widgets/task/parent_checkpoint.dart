@@ -43,7 +43,7 @@ class ParentCheckpoint extends StatelessWidget {
             //   controller: TextEditingController(text: widget.task.parentCheckpoint.description),
             //   width: MediaQuery.of(context).size.width - 16,
             //   decoration: TEXT_FIELD_DECORATION_2.copyWith(
-            //       contentPadding: const EdgeInsets.all(0), border: InputBorder.none),
+            //       contentPadding: EdgeInsets.zero, border: InputBorder.none),
             // )
             //Text(widget.task.parentCheckpoint.description, style: TextStyle(fontSize: 15, height: 1.3)),
           ),

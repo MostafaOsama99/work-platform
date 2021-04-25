@@ -1,8 +1,8 @@
-import 'package:circular_check_box/circular_check_box.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_duration_picker/flutter_duration_picker.dart';
 
-import 'package:project/model/task.dart';
-
+import '../model/task.dart';
+import '../widgets/circular_checkBox.dart';
 import '../constants.dart';
 
 class EndTaskDialog extends StatefulWidget {
@@ -97,7 +97,7 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
             Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: OutlineButton(
-                  padding: const EdgeInsets.all(0),
+                  padding: EdgeInsets.zero,
                   highlightedBorderColor: Colors.greenAccent.shade700,
                   splashColor: COLOR_BACKGROUND,
                   color: COLOR_SCAFFOLD,
@@ -161,8 +161,6 @@ class _CheckPointWidgetState extends State<CheckPointWidget> {
                   value: _value,
                   checkColor: Colors.white,
                   activeColor: Colors.green.shade600,
-                  inactiveColor: Theme.of(context).appBarTheme.color,
-                  materialTapTargetSize: MaterialTapTargetSize.padded,
                   onChanged: (_) {},
                 ),
               ),
@@ -243,23 +241,25 @@ class _DurationDialogState extends State<DurationDialog> {
               style: const TextStyle(fontSize: 18),
             ),
           ),
-          // Center(
-          //     child: DurationPicker(
-          //   duration: _duration,
-          //   onChange: (Duration value) => setState(() => _duration = value),
-          // )),
+          Center(
+              child: DurationPicker(
+            duration: _duration,
+            onChange: (Duration value) => setState(() => _duration = value),
+          )),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 OutlineButton(
-                    padding: const EdgeInsets.all(0),
+                    padding: EdgeInsets.zero,
                     highlightedBorderColor: Colors.red,
-                    child: Transform.rotate(angle: 3.14 / 4, child: Icon(Icons.add, color: Colors.red)),
+                    child: Transform.rotate(
+                        angle: 3.14 / 4,
+                        child: Icon(Icons.add, color: Colors.red)),
                     onPressed: () => Navigator.of(context).pop()),
                 OutlineButton(
-                    padding: const EdgeInsets.all(0),
+                    padding: EdgeInsets.zero,
                     highlightedBorderColor: Colors.green,
                     child: Icon(Icons.done, color: Colors.green),
                     onPressed: () {

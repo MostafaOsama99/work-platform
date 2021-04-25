@@ -73,10 +73,13 @@ class _CreateTaskState extends State<CreateTask> {
 
   Widget _snackBar(String title) {
     return SnackBar(
-      content: SizedBox(height: 18, child: Center(child: Text(title, style: const TextStyle(color: Colors.white)))),
+      content: SizedBox(
+          height: 18,
+          child: Center(
+              child: Text(title, style: const TextStyle(color: Colors.white)))),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      padding: const EdgeInsets.all(0),
+      padding: EdgeInsets.zero,
       behavior: SnackBarBehavior.floating,
       backgroundColor: taskTypes[newTask.type].accentColor.withAlpha(150),
     );
@@ -196,7 +199,7 @@ class _CreateTaskState extends State<CreateTask> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: IconButton(
-                          padding: const EdgeInsets.all(0),
+                          padding: EdgeInsets.zero,
                           splashRadius: 20,
                           onPressed: () => Navigator.pop(context),
                           icon: Icon(Icons.arrow_back)),
@@ -205,7 +208,7 @@ class _CreateTaskState extends State<CreateTask> {
                         style: const TextStyle(fontSize: 16)),
                     Spacer(),
                     IconButton(
-                        padding: const EdgeInsets.all(0),
+                        padding: EdgeInsets.zero,
                         icon: Icon(
                           Icons.check,
                         ),
@@ -348,18 +351,19 @@ class _CreateTaskState extends State<CreateTask> {
                   ),
                   ListView.builder(
                     shrinkWrap: true,
-                    padding: const EdgeInsets.all(0),
+                    padding: EdgeInsets.zero,
                     physics: ScrollPhysics(),
                     itemCount: checkpoints.length,
-                    itemBuilder: (BuildContext context, int index) => CustomCheckpointWidget(
-                        key: UniqueKey(),
-                        onRemove: (_) => _removeCheckpoint(index),
-                        onChanged: (title, description) {
-                          checkpoints[index]['title'] = title;
-                          checkpoints[index]['description'] = description;
-                        },
-                        title: checkpoints[index]['title'],
-                        taskAccentColor: taskTypes[newTask.type].accentColor,
+                    itemBuilder: (BuildContext context, int index) =>
+                        CustomCheckpointWidget(
+                            key: UniqueKey(),
+                            onRemove: (_) => _removeCheckpoint(index),
+                            onChanged: (title, description) {
+                              checkpoints[index]['title'] = title;
+                              checkpoints[index]['description'] = description;
+                            },
+                            title: checkpoints[index]['title'],
+                            taskAccentColor: taskTypes[newTask.type].accentColor,
                         description: checkpoints[index]['description']),
                   ),
                   AddCheckpointWidget(onSubmit: _addCheckpoint),
@@ -382,7 +386,7 @@ class _CreateTaskState extends State<CreateTask> {
                           height: 22,
                           child: IconButton(
                               icon: Icon(Icons.add_circle_outline_rounded),
-                              padding: const EdgeInsets.all(0),
+                              padding: EdgeInsets.zero,
                               tooltip: 'add member',
                               color: Colors.white,
                               splashRadius: 20,
@@ -393,11 +397,12 @@ class _CreateTaskState extends State<CreateTask> {
 
                   _selectedUsers.length > 0
                       ? ListView.builder(
-                          padding: const EdgeInsets.all(0),
+                    padding: EdgeInsets.zero,
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemCount: _selectedUsers.length,
-                          itemBuilder: (BuildContext context, int index) => UserTile(_selectedUsers[index]),
+                          itemBuilder: (BuildContext context, int index) =>
+                              UserTile(_selectedUsers[index]),
                         )
                       : _selectedTeam != null
                           ? Padding(
@@ -494,7 +499,7 @@ class _CustomCheckpointWidgetState extends State<CustomCheckpointWidget> {
                   autofocus: false,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.all(0),
+                    contentPadding: EdgeInsets.zero,
                   ),
                 ),
               ),
@@ -521,7 +526,7 @@ class _CustomCheckpointWidgetState extends State<CustomCheckpointWidget> {
                   onPressed: () => widget.onRemove(widget.key),
                   splashRadius: 20,
                   iconSize: 28,
-                  padding: const EdgeInsets.all(0),
+                  padding: EdgeInsets.zero,
                   disabledColor: Colors.grey[800],
                   tooltip: 'Delete Checkpoint',
                   color: Colors.red,

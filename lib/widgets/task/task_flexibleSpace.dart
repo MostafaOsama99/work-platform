@@ -103,13 +103,14 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
     return FlexibleSpaceBar(
       // collapseMode: CollapseMode.pin,
       centerTitle: false,
-      titlePadding: const EdgeInsets.all(0),
+      titlePadding: EdgeInsets.zero,
       stretchModes: [StretchMode.zoomBackground],
       //collapseMode: CollapseMode.pin,
       background: Opacity(
         opacity: opacity <= 0.5 ? opacity / 2 : opacity,
         child: Container(
-          padding: EdgeInsets.only(top: notificationHeight, right: 16, left: 16),
+          padding:
+              EdgeInsets.only(top: notificationHeight, right: 16, left: 16),
           //height: 150 - notificationHeight,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -205,9 +206,10 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                     color: COLOR_SCAFFOLD,
                     iconSize: 20,
                     splashRadius: 13,
-                    padding: const EdgeInsets.all(0),
-                    onPressed: () => Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (BuildContext context) => Activity()))),
+                    padding: EdgeInsets.zero,
+                    onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => Activity()))),
               ),
             ),
             SizedBox(width: 8),

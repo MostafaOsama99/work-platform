@@ -1,7 +1,7 @@
-import 'package:circular_check_box/circular_check_box.dart';
 import 'package:flutter/material.dart';
 import 'package:project/model/task.dart';
 
+import '../circular_checkBox.dart';
 import 'checkpoint_description.dart';
 
 //TODO: IMPORTANT save new data !!
@@ -72,7 +72,7 @@ class _CheckpointWidgetState extends State<CheckpointWidget> {
                   autofocus: false,
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.all(0),
+                    contentPadding: EdgeInsets.zero,
                   ),
                 ),
               ),
@@ -81,11 +81,7 @@ class _CheckpointWidgetState extends State<CheckpointWidget> {
               widget.checkPoint.percentage <= 0
                   ? CircularCheckBox(
                       value: _value,
-                      checkColor: Colors.white,
-                      //Theme.of(context).accentIconTheme.color,
                       activeColor: widget.taskAccentColor.withOpacity(0.8),
-                      inactiveColor: Theme.of(context).appBarTheme.color,
-                      materialTapTargetSize: MaterialTapTargetSize.padded,
                       onChanged: (value) => setState(() => _value = value))
                   : Padding(
                       padding: const EdgeInsets.only(right: 10.0),

@@ -39,12 +39,14 @@ class CustomAlertDialog extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               OutlineButton(
-                  padding: const EdgeInsets.all(0),
+                  padding: EdgeInsets.zero,
                   highlightedBorderColor: Colors.red,
-                  child: Transform.rotate(angle: 3.14 / 4, child: Icon(Icons.add, color: Colors.red)),
+                  child: Transform.rotate(
+                      angle: 3.14 / 4,
+                      child: Icon(Icons.add, color: Colors.red)),
                   onPressed: () => Navigator.of(context).pop()),
               OutlineButton(
-                  padding: const EdgeInsets.all(0),
+                  padding: EdgeInsets.zero,
                   highlightedBorderColor: Colors.green,
                   child: Icon(Icons.done, color: Colors.green),
                   onPressed: () {

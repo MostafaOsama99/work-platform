@@ -50,7 +50,7 @@ class _AddCheckpointWidgetState extends State<AddCheckpointWidget> {
                     hintText: 'add checkpoint',
                     hintStyle: TextStyle(color: Colors.grey),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.all(0),
+                    contentPadding: EdgeInsets.zero,
                   ),
                 ),
               ),
