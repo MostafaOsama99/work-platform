@@ -11,7 +11,33 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  bool _isLogin = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  //show login first
+  bool _isLogin = true;
+  bool _isLoading = false;
+
+  bool _showSignUp1;
+  SignUp1 _signUp1;
+  SignUp2 _signUp2;
+
+  loading(bool loading) => setState(() => _isLoading = loading);
+
+  @override
+  void initState() {
+    _showSignUp1 = true;
+    _signUp1 = SignUp1(
+      onNext: () => setState(() => _showSignUp1 = false),
+      key: UniqueKey(),
+    );
+    _signUp2 = SignUp2(
+      key: UniqueKey(),
+      scaffoldKey: _scaffoldKey,
+      onPrev: () => setState(() => _showSignUp1 = true),
+      whenLoading: loading,
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +47,7 @@ class _AuthScreenState extends State<AuthScreen> {
     //final GlobalKey<SignUpState> _signUp = GlobalKey<SignUpState>();
 
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: COLOR_BACKGROUND,
       // resizeToAvoidBottomInset: false,
       // floatingActionButtonLocation:
@@ -53,99 +80,86 @@ class _AuthScreenState extends State<AuthScreen> {
         child: SizedBox(
           height: MediaQuery.of(context).size.height -
               MediaQuery.of(context).padding.top,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).padding.top,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  //  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 30),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _isLogin ? 'Welcome\nBack' : 'Create\nAccount',
-                                style: TextStyle(
-                                    fontFamily: 'pt_sans',
-                                    fontSize: 28,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              MaterialButton(
-                                  minWidth: 100,
-                                  height: 35,
-                                  color: Colors.white,
-                                  splashColor: Colors.grey.withOpacity(0.5),
-                                  child: Text(
-                                    _isLogin ? 'Sign up' : 'Log in',
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height -
+                        MediaQuery.of(context).padding.top,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      //  mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 30),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _isLogin
+                                        ? 'Welcome\nBack'
+                                        : 'Create\nAccount',
                                     style: TextStyle(
-                                        fontSize: 18, fontFamily: 'pt_sans'),
+                                        fontFamily: 'pt_sans',
+                                        fontSize: 28,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isLogin = !_isLogin;
-                                    });
-                                  }),
-                            ],
+                                  MaterialButton(
+                                      minWidth: 100,
+                                      height: 35,
+                                      color: Colors.white,
+                                      splashColor: Colors.grey.withOpacity(0.5),
+                                      child: Text(
+                                        _isLogin ? 'Sign up' : 'Log in',
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontFamily: 'pt_sans'),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isLogin = !_isLogin;
+                                        });
+                                      }),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ),
+                        Expanded(
+                          child: _isLogin
+                              ? Login(
+                                  key: _loginForm,
+                                  whenLoading: loading,
+                                  scaffoldKey: _scaffoldKey,
+                                )
+                              : _showSignUp1
+                                  ? _signUp1
+                                  : _signUp2,
+                        ),
+                      ],
                     ),
-                    Expanded(
-                      child: _isLogin
-                          ? Login(key: _loginForm)
-                          : SignUp(UniqueKey()),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              if (_isLoading)
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Colors.grey.withOpacity(0.1),
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+            ],
           ),
         ),
       ),
     );
-  }
-}
-
-class SignUp extends StatefulWidget {
-  SignUp(Key key) : super(key: key);
-
-  @override
-  _SignUpState createState() => _SignUpState();
-}
-
-class _SignUpState extends State<SignUp> {
-  bool _showSignUp1;
-
-  SignUp1 _signUp1;
-
-  SignUp2 _signUp2;
-
-  @override
-  void initState() {
-    _showSignUp1 = true;
-    _signUp1 = SignUp1(
-      onNext: () => setState(() => _showSignUp1 = false),
-      key: UniqueKey(),
-    );
-    _signUp2 = SignUp2(
-      key: UniqueKey(),
-      onPrev: () => setState(() => _showSignUp1 = true),
-    );
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _showSignUp1 ? _signUp1 : _signUp2;
   }
 }

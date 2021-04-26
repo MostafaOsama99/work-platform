@@ -1,11 +1,21 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:io';
+
+import 'package:provider/provider.dart';
 
 import 'signUp1.dart';
+import '../../model/http_exception.dart';
+import '../../provider/UserData.dart';
+import '../../widgets/snackBar.dart';
 import '../../constants.dart';
 
 class Login extends StatefulWidget {
-  Login({Key key}) : super(key: key);
+  Login({Key key, @required this.whenLoading, @required this.scaffoldKey})
+      : super(key: key);
+
+  final Function(bool loading) whenLoading;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   LoginState createState() => LoginState();
@@ -20,6 +30,14 @@ class LoginState extends State<Login> {
   String passwordValidation = '';
 
   bool hidePassword = true;
+  bool _isLoading = false;
+
+  _showSnackBar(String message) {
+    ScaffoldMessenger.of(widget.scaffoldKey.currentContext).clearSnackBars();
+    ScaffoldMessenger.of(widget.scaffoldKey.currentContext).showSnackBar(
+        snackBar(
+            message, Theme.of(widget.scaffoldKey.currentContext).accentColor));
+  }
 
   @override
   void dispose() {
@@ -27,29 +45,36 @@ class LoginState extends State<Login> {
     super.dispose();
   }
 
-  submit() {
-    FocusScope.of(context).unfocus();
-    _formKey.currentState.validate();
-    // if (!_formKey.currentState.validate()) {
-    //   // Invalid!
-    //   return;
-    // }
-    // _formKey.currentState.save();
-    // setState(() {
-    //   _isLoading = true;
-    // });
-    // if (_authMode == AuthMode.Login) {
-    //   // Log user in
-    // } else {
-    //   // Sign user up
-    // }
-    // setState(() {
-    //   _isLoading = false;
-    // });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserData>(context, listen: false);
+
+    submit() async {
+      FocusScope.of(context).unfocus();
+      if (!_formKey.currentState.validate()) return;
+
+      //show loading indicator
+      widget.whenLoading(true);
+
+      _formKey.currentState.save();
+      try {
+        await user.signIn();
+      } on HttpException catch (e) {
+        print('HttpException: $e');
+        _showSnackBar(e.message);
+      } on TimeoutException catch (e) {
+        // A timeout occurred.
+        print('timeout exception: $e');
+        _showSnackBar('connection lost');
+      } on SocketException catch (_) {
+        print('SocketException: $_');
+        _showSnackBar('connection lost');
+      } catch (e) {
+        print('*** unhandled exception! ***: $e');
+      }
+      widget.whenLoading(false);
+    }
+
     return Form(
       key: _formKey,
       child: Column(
@@ -65,7 +90,7 @@ class LoginState extends State<Login> {
               onFieldSubmitted: (_) {
                 FocusScope.of(context).requestFocus(_passwordFocusScope);
               },
-              autofocus: false,
+              onSaved: (value) => user.setMail = value,
               validator: (value) {
                 if (value.trim().length < 3) {
                   setState(() => emailValidation = 'please enter your e-mail');
@@ -93,6 +118,7 @@ class LoginState extends State<Login> {
               obscureText: hidePassword,
               textInputAction: TextInputAction.done,
               focusNode: _passwordFocusScope,
+              onSaved: (value) => user.setPassword = value,
               validator: (value) {
                 if (value.length < 6) {
                   setState(() => passwordValidation = 'too short password');
@@ -196,6 +222,7 @@ class LoginState extends State<Login> {
                 minWidth: 230,
                 height: 45,
                 color: Color.fromRGBO(40, 49, 230, 1),
+                splashColor: Colors.grey.withOpacity(0.5),
                 child: Text(
                   'Log in',
                   style: TextStyle(

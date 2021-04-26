@@ -9,6 +9,7 @@ import '../widgets/task/descriptionTextField.dart';
 import '../widgets/task/parent_checkpoint.dart';
 import '../widgets/team_tile.dart';
 import '../widgets/user_tile.dart';
+import '../widgets/snackBar.dart';
 
 import '../constants.dart';
 import '../dialogs/assign_team_dialog.dart';
@@ -26,7 +27,12 @@ class CreateTask extends StatefulWidget {
 
   final List<User> teamMembers;
 
-  const CreateTask({Key key, @required this.teamMembers, this.parentCheckpoint, this.cpStart, this.cpEnd})
+  const CreateTask(
+      {Key key,
+      @required this.teamMembers,
+      this.parentCheckpoint,
+      this.cpStart,
+      this.cpEnd})
       : super(key: key);
 
   @override
@@ -71,29 +77,20 @@ class _CreateTaskState extends State<CreateTask> {
 
   _removeCheckpoint(int index) => setState(() => checkpoints.removeAt(index));
 
-  Widget _snackBar(String title) {
-    return SnackBar(
-      content: SizedBox(
-          height: 18,
-          child: Center(
-              child: Text(title, style: const TextStyle(color: Colors.white)))),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      padding: EdgeInsets.zero,
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: taskTypes[newTask.type].accentColor.withAlpha(150),
-    );
-  }
-
   _validate(BuildContext context) {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState.validate()) return;
 
+    //when user clicks the same button many times, there's only snackBar shown
+    ScaffoldMessenger.of(context).clearSnackBars();
     if (checkpoints.length == 0) {
-      Scaffold.of(context).showSnackBar(_snackBar('Add a checkpoint at least'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar(
+          'Add a checkpoint at least',
+          taskTypes[newTask.type].accentColor.withAlpha(150)));
       return;
     } else if (_selectedUsers.length == 0 && _selectedTeam == null) {
-      Scaffold.of(context).showSnackBar(_snackBar('Assigned to ?'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar(
+          'Assigned to ?', taskTypes[newTask.type].accentColor.withAlpha(150)));
       return;
     }
     _submit();
@@ -119,9 +116,12 @@ class _CreateTaskState extends State<CreateTask> {
         0,
         Task(
             name: _titleController.value.text.trim(),
-            taskCreator: User(name: 'Current User!', id: 4564, jobTitle: 'Current User'),
-            checkPoints:
-                checkpoints.map((e) => CheckPoint(id: null, name: e['title'], description: e['description'])).toList(),
+            taskCreator:
+                User(name: 'Current User!', id: 4564, jobTitle: 'Current User'),
+            checkPoints: checkpoints
+                .map((e) => CheckPoint(
+                    id: null, name: e['title'], description: e['description']))
+                .toList(),
             datePlannedStart: newTask.datePlannedStart,
             datePlannedEnd: newTask.datePlannedEnd,
             parentCheckpoint: widget.parentCheckpoint,
@@ -135,15 +135,18 @@ class _CreateTaskState extends State<CreateTask> {
   _addMemberOrTeam() async {
     var result;
     //witch kind user want (team, members)
-    result = await showDialog(context: context, builder: (_) => AssignTypeDialog());
+    result =
+        await showDialog(context: context, builder: (_) => AssignTypeDialog());
 
     if (result == 'members') {
       result = await showDialog(
           context: context,
-          builder: (_) => AssignMembersDialog(allUsers: widget.teamMembers, selectedUsers: _selectedUsers));
+          builder: (_) => AssignMembersDialog(
+              allUsers: widget.teamMembers, selectedUsers: _selectedUsers));
       if (result != null) setState(() => _selectedUsers = result);
     } else if (result == 'team') {
-      result = await showDialog(context: context, builder: (_) => AssignTeamDialog(teams: teams));
+      result = await showDialog(
+          context: context, builder: (_) => AssignTeamDialog(teams: teams));
       setState(() {
         if (_selectedTeam != null && result == null)
           return; // if there's a team selected & users canceled team selection => keep previous selection
@@ -183,11 +186,13 @@ class _CreateTaskState extends State<CreateTask> {
           height: 450,
           // padding: const EdgeInsets.only(top: 8, bottom: 12),
           decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [taskTypes[newTask.type].accentColor.withOpacity(0.95), Colors.transparent],
-                  stops: [0, 1],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter)),
+              gradient: LinearGradient(colors: [
+            taskTypes[newTask.type].accentColor.withOpacity(0.95),
+            Colors.transparent
+          ], stops: [
+            0,
+            1
+          ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
           child: Padding(
             padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
             child: Align(
@@ -204,7 +209,10 @@ class _CreateTaskState extends State<CreateTask> {
                           onPressed: () => Navigator.pop(context),
                           icon: Icon(Icons.arrow_back)),
                     ),
-                    Text(newTask.type == taskType.task ? 'Create new Task' : 'Create SubTask',
+                    Text(
+                        newTask.type == taskType.task
+                            ? 'Create new Task'
+                            : 'Create SubTask',
                         style: const TextStyle(fontSize: 16)),
                     Spacer(),
                     IconButton(
@@ -223,15 +231,19 @@ class _CreateTaskState extends State<CreateTask> {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 45, left: 6, right: 6),
+          margin: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + 45, left: 6, right: 6),
           decoration: BoxDecoration(
               color: COLOR_SCAFFOLD,
-              borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(20), topLeft: Radius.circular(20))),
           child: ClipRRect(
-            borderRadius: BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20), topLeft: Radius.circular(20)),
             child: ListView(
                 clipBehavior: Clip.antiAlias,
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                 children: [
                   // SizedBox(height: 18),
                   Padding(
@@ -250,15 +262,19 @@ class _CreateTaskState extends State<CreateTask> {
                                 maxLength: titleLength,
                                 onChanged: (value) {
                                   ///update counter
-                                  setState(() => _titleCounter = titleLength - value.length);
+                                  setState(() => _titleCounter =
+                                      titleLength - value.length);
                                 },
                                 onFieldSubmitted: (value) {
                                   if (value.length > titleLength) {
-                                    _titleController.text = value.substring(0, titleLength);
-                                    setState(() => _titleCounter = titleLength - _titleController.value.text.length);
+                                    _titleController.text =
+                                        value.substring(0, titleLength);
+                                    setState(() => _titleCounter = titleLength -
+                                        _titleController.value.text.length);
                                   }
                                 },
-                                validator: (value) => (value.length < 3) ? '' : null,
+                                validator: (value) =>
+                                    (value.length < 3) ? '' : null,
                                 textInputAction: TextInputAction.next,
                                 decoration: TEXT_FIELD_DECORATION_2.copyWith(
                                     counterStyle: TextStyle(height: 1),
@@ -266,13 +282,16 @@ class _CreateTaskState extends State<CreateTask> {
                                     errorMaxLines: null,
                                     counter: SizedBox(),
                                     hintText: 'Task title',
-                                    contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12))),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 12))),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(right: 12, bottom: 8),
+                            padding:
+                                const EdgeInsets.only(right: 12, bottom: 8),
                             child: Text(
                               '$_titleCounter',
-                              style: const TextStyle(color: Colors.grey, fontSize: 14),
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 14),
                             ),
                           ),
                         ],
@@ -285,7 +304,8 @@ class _CreateTaskState extends State<CreateTask> {
                       SizedBox(width: 6),
                       Icon(Icons.calendar_today_rounded, size: KIconSize),
                       Spacer(),
-                      Text('from: ', style: TextStyle(color: Colors.grey, fontSize: 15)),
+                      Text('from: ',
+                          style: TextStyle(color: Colors.grey, fontSize: 15)),
                       DateField(
                         key: UniqueKey(),
                         firstDate: widget.cpStart ?? DateTime.now(),
@@ -295,14 +315,16 @@ class _CreateTaskState extends State<CreateTask> {
                         onChanged: (newDate) => _updateStartDate(newDate),
                       ),
                       Spacer(flex: 3),
-                      Text('duo: ', style: TextStyle(fontSize: 15, color: Colors.grey)),
+                      Text('duo: ',
+                          style: TextStyle(fontSize: 15, color: Colors.grey)),
                       DateField(
                           key: UniqueKey(),
                           firstDate: newTask.datePlannedStart,
                           initialDate: newTask.datePlannedEnd,
                           lastDate: widget.cpEnd,
                           isEditing: true,
-                          onChanged: (newDate) => newTask.datePlannedEnd = newDate),
+                          onChanged: (newDate) =>
+                              newTask.datePlannedEnd = newDate),
                       Spacer(),
                       SizedBox(
                         width: 25,
@@ -315,7 +337,9 @@ class _CreateTaskState extends State<CreateTask> {
                             Icons.more_vert,
                             size: 18,
                           ),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
                           itemBuilder: (BuildContext context) => [
                             PopupMenuItem<int>(
                               child: Text(
@@ -335,7 +359,8 @@ class _CreateTaskState extends State<CreateTask> {
 
                   if (widget.parentCheckpoint != null)
                     Padding(
-                        padding: const EdgeInsets.only(right: 4, left: 4, bottom: 16),
+                        padding: const EdgeInsets.only(
+                            right: 4, left: 4, bottom: 16),
                         child: ParentCheckpoint(
                           newTask.parentCheckpoint,
                           taskAccentColor: taskTypes[newTask.type].accentColor,
@@ -347,7 +372,8 @@ class _CreateTaskState extends State<CreateTask> {
                     readOnly: false,
                     decoration: TEXT_FIELD_DECORATION_2.copyWith(
                         hintText: 'Description',
-                        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14)),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 14)),
                   ),
                   ListView.builder(
                     shrinkWrap: true,
@@ -363,8 +389,9 @@ class _CreateTaskState extends State<CreateTask> {
                               checkpoints[index]['description'] = description;
                             },
                             title: checkpoints[index]['title'],
-                            taskAccentColor: taskTypes[newTask.type].accentColor,
-                        description: checkpoints[index]['description']),
+                            taskAccentColor:
+                                taskTypes[newTask.type].accentColor,
+                            description: checkpoints[index]['description']),
                   ),
                   AddCheckpointWidget(onSubmit: _addCheckpoint),
 
@@ -381,7 +408,10 @@ class _CreateTaskState extends State<CreateTask> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Assigned to:', style: TextStyle(fontSize: 16, color: taskTypes[newTask.type].accentColor)),
+                      Text('Assigned to:',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: taskTypes[newTask.type].accentColor)),
                       SizedBox(
                           height: 22,
                           child: IconButton(
@@ -406,7 +436,8 @@ class _CreateTaskState extends State<CreateTask> {
                         )
                       : _selectedTeam != null
                           ? Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 8),
                               child: SizedBox(child: TeamTile(_selectedTeam)),
                             )
                           : SizedBox(
@@ -414,7 +445,9 @@ class _CreateTaskState extends State<CreateTask> {
                               child: Center(
                                 child: Text(
                                   'Add members or a team!',
-                                  style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.white70),
+                                  style: const TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.white70),
                                 ),
                               ),
                             )
@@ -433,7 +466,8 @@ class CustomCheckpointWidget extends StatefulWidget {
 
   final ValueChanged<Key> onRemove;
 
-  submit() => onChanged(state.titleController.value.text, state.descriptionController.value.text);
+  submit() => onChanged(
+      state.titleController.value.text, state.descriptionController.value.text);
 
   CustomCheckpointWidget({
     Key key,
@@ -467,7 +501,8 @@ class _CustomCheckpointWidgetState extends State<CustomCheckpointWidget> {
   }
 
   saveCheckpoint() {
-    widget.onChanged(titleController.value.text, descriptionController.value.text);
+    widget.onChanged(
+        titleController.value.text, descriptionController.value.text);
   }
 
   get getTitle => titleController.value.text;

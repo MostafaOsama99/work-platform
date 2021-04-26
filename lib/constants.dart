@@ -33,6 +33,8 @@ const KMobileLength = 11;
 
 const server = 'http://10.0.2.2:5000/api/v1';
 
+const KTimeOutDuration = Duration(seconds: 10);
+
 // default TextFormField decoration
 // ignore: non_constant_identifier_names
 final TEXT_FIELD_DECORATION = InputDecoration(
@@ -139,9 +141,6 @@ class BuildDateTime extends StatefulWidget {
   @override
   _BuildDateTimeState createState() => _BuildDateTimeState(selectedDate);
 }
-
-
-
 class _BuildDateTimeState extends State<BuildDateTime> {
  DateTime date;
 

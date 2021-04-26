@@ -1,11 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:project/model/http_exception.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:dio/dio.dart';
 
 import '../constants.dart';
+
+const KSignIn = '/auth/signin';
+const KSignUp = '/auth/signup';
 
 class UserData extends ChangeNotifier {
   String _name = '';
@@ -64,56 +70,33 @@ class UserData extends ChangeNotifier {
   String _token;
 
   ///check if the useName available or not
-  Future<bool> checkUserName() async {
+  Future<bool> checkUserName(String calledValue) async {
     bool isUsernameAvailable;
 
-    final url = server + '/users/$_userName/exists';
-    try {
-      final response = await http.get(Uri.parse(url));
-
-      // print('statusCode: ${response.statusCode}');
-      // print(json.decode(response.body));
-
-      if (response.statusCode == 200)
-        isUsernameAvailable = !json.decode(response.body);
-    } catch (e) {
-      print(e);
+    //wait for a second, is the user finished typing ?
+    //if the given value != [_username] this means another instance of this method is called and he will finish the mission
+    await Future.delayed(Duration(seconds: 1));
+    if (calledValue != _userName) {
+      print('scape');
+      return false;
     }
+
+    final url = server + '/users/$_userName/exists';
+    //try {
+    final response = await http.get(Uri.parse(url)).timeout(KTimeOutDuration);
+    if (response.statusCode == 200)
+      isUsernameAvailable = !json.decode(response.body);
+    else
+      throw HttpException('connection lost');
+    // } catch (e) {
+    //   print('checkUserName function error: $e');
+    // }
     return isUsernameAvailable;
   }
 
-  signUp() async {
-    print('signUp called');
-    const url = server + '/api/v1/auth/signup';
-    String message;
-
-    var temp = {
-      "username": _userName,
-      "email": _mail,
-      "name": _name,
-      "password": _password,
-      "confirmPassword": _password,
-      "phoneNumber": _mobile,
-      "jobTitle": _jobTitle,
-      "birthDate": '${_birthDate.day}/${_birthDate.month}/${_birthDate.year}'
-    };
-    print(temp);
-
-    try {
-      // final response = await Dio().post(url,
-      //     data: FormData.fromMap({
-      //       "username": _userName,
-      //       "email": _mail,
-      //       "name": _name,
-      //       "password": _password,
-      //       "confirmPassword": _password,
-      //       "phoneNumber": _mobile,
-      //       "jobTitle": _jobTitle,
-      //       "birthDate":
-      //           '${_birthDate.day}/${_birthDate.month}/${_birthDate.year}'
-      //     }));
-
-      final response = await http.post(Uri.parse(url), body: {
+  Future<void> signUp() => auth(
+      KSignUp,
+      json.encode({
         "username": _userName,
         "email": _mail,
         "name": _name,
@@ -122,30 +105,35 @@ class UserData extends ChangeNotifier {
         "phoneNumber": _mobile,
         "jobTitle": _jobTitle,
         "birthDate": '${_birthDate.day}/${_birthDate.month}/${_birthDate.year}'
-      });
+      }),
+      (responseData) => null);
 
-      print('status code: ${response.statusCode}');
-      if (response.statusCode == 200) {
-        return 'user created successfully';
-      }
+  Future<void> signIn() => auth(
+      KSignIn,
+      json.encode({"email": _mail, "password": _password}),
+      (responseData) => _token = responseData['token']);
 
-      // print('response data: ${response.data}');
+  Future<void> auth(String endpoint, String body,
+      Function(Map<String, dynamic> responseData) onSuccess) async {
+    final url = server + endpoint;
 
-      print(response.request);
-      print(response.contentLength);
+    //try {
+    final response = await http
+        .post(
+          Uri.parse(url),
+          headers: {"Content-Type": "application/json"},
+          body: body,
+        )
+        .timeout(KTimeOutDuration);
 
-      //Mm1010?
-      print('body:  ${json.decode(response.body)}');
-      print(response.body);
+    print('status code: ${response.statusCode}');
 
-      final responseData = json.decode(response.body);
-      if (responseData['errors'] != null) print(responseData['errors']);
-      if (responseData['message'] != null) print(responseData['message']);
-      // else {
-      // }
-
-    } catch (e) {
-      print('exception ***** $e');
-    }
+    final responseData = json.decode(response.body) as Map<String, dynamic>;
+    if (response.statusCode == 200) {
+      onSuccess(responseData);
+      return 'user created successfully';
+    } else
+      throw HttpException(responseData['errors'][0]);
+    //} catch (e) {throw e;}
   }
 }

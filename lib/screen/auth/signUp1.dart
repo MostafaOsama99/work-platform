@@ -47,7 +47,7 @@ class _SignUp1State extends State<SignUp1> {
   static const double padding = 20;
 
   submit() {
-    //if (!_formKey.currentState.validate()) return;
+    if (!_formKey.currentState.validate()) return;
     _formKey.currentState.save();
     widget.onNext();
 
@@ -55,7 +55,7 @@ class _SignUp1State extends State<SignUp1> {
   }
 
   String validateMobile(String value) {
-    String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    String pattern = r'(^(?:[+0]9)?[0-9]{11,12}$)';
     RegExp regExp = new RegExp(pattern);
     if (value.length == 0) {
       setState(() => mobileValidation = 'Please enter mobile number');
@@ -191,9 +191,6 @@ class _SignUp1State extends State<SignUp1> {
               },
               format: DateFormat("dd/MM/yyyy"),
               resetIcon: null,
-              onChanged: (date) {
-                print(date);
-              },
               onShowPicker: (context, currentValue) {
                 return showDatePicker(
                     context: context,

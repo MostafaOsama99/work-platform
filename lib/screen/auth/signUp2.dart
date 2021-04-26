@@ -1,15 +1,26 @@
+import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:project/widgets/snackBar.dart';
 
 import 'package:provider/provider.dart';
 
 import 'signUp1.dart';
+import '../../model/http_exception.dart';
 import '../../constants.dart';
 import '../../provider/UserData.dart';
 
 class SignUp2 extends StatefulWidget {
   final Function() onPrev;
+  final Function(bool loading) whenLoading;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
-  SignUp2({Key key, this.onPrev}) : super(key: key);
+  SignUp2(
+      {Key key,
+      this.onPrev,
+      @required this.whenLoading,
+      @required this.scaffoldKey})
+      : super(key: key);
 
   @override
   SignUp2State createState() => SignUp2State();
@@ -18,7 +29,7 @@ class SignUp2 extends StatefulWidget {
 class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String nameValidation = "";
+  String usernameValidation = "";
   String emailValidation = "";
   String passwordValidation = "";
   String confirmPasswordValidation = "";
@@ -39,13 +50,31 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
 
   final _passwordController = TextEditingController();
 
-  bool _invalidMail = false;
+  bool _checkingForUsername = false;
 
   bool validatePassword(String value) {
-    String pattern =
+    const String pattern =
         r'''^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~\:;\,=+\-\(\)"%\'/_.\?]).{6,}$''';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
+  }
+
+  String validateUsername(String value) {
+    const String pattern = r"^[^a-zA-Z]";
+    RegExp regExp = new RegExp(pattern);
+
+    if (value.length < 3)
+      setState(() => usernameValidation = 'too short username');
+    else if (value.contains(' '))
+      setState(() => usernameValidation = 'white spaces not allowed');
+    else if (regExp.hasMatch(value))
+      setState(() => usernameValidation = 'must start with a letter');
+    else {
+      setState(() => usernameValidation = '');
+      return null;
+    }
+    setState(() => userNameAvailable = null);
+    return '';
   }
 
   showPasswordCredentials() {
@@ -53,6 +82,13 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
       _animationController.forward();
     else
       _animationController.reverse();
+  }
+
+  _showSnackBar(String message) {
+    ScaffoldMessenger.of(widget.scaffoldKey.currentContext).clearSnackBars();
+    ScaffoldMessenger.of(widget.scaffoldKey.currentContext).showSnackBar(
+        snackBar(
+            message, Theme.of(widget.scaffoldKey.currentContext).accentColor));
   }
 
   @override
@@ -89,11 +125,49 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final user = Provider.of<UserData>(context, listen: false);
 
-    submit() {
+    Future<void> availableUsername(String username) async {
+      //exit if the username is not valid
+      if (validateUsername(username) != null) return;
+      _formKey.currentState.save();
+      setState(() => _checkingForUsername = true);
+
+      userNameAvailable = await user.checkUserName(username).catchError((e) {
+        _showSnackBar(e.message);
+      }, test: (e) => e is HttpException).catchError((_) {
+        _showSnackBar('connection lost');
+        print('*** unhandled username error *** $_');
+      });
+
+      setState(() => _checkingForUsername = false);
+      return;
+    }
+
+    submit() async {
+      //if the is not valid
       if (!_formKey.currentState.validate()) return;
+
+      //show loading indicator
+      widget.whenLoading(true);
       _formKey.currentState.save();
       user.setPassword = _passwordController.value.text;
-      user.signUp();
+
+      try {
+        await user.signUp();
+      } on HttpException catch (e) {
+        print('HttpException: $e');
+        _showSnackBar(e.message);
+      } on TimeoutException catch (e) {
+        // A timeout occurred.
+        print('timeout exception: $e');
+        _showSnackBar('connection lost');
+      } on SocketException catch (_) {
+        print('SocketException: $_');
+        _showSnackBar('connection lost');
+      } catch (e) {
+        print('*** unhandled exception! ***: $e');
+      }
+
+      widget.whenLoading(false);
     }
 
     return Form(
@@ -124,39 +198,33 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
                 FocusScope.of(context).requestFocus(_mailFocusNode);
               },
               onSaved: (value) => user.setUserName = value,
-              validator: (value) {
-                if (value.trim().length < 3) {
-                  setState(() => nameValidation = 'too short name');
-                  return '';
-                } else if (!userNameAvailable) {
-                  setState(() => nameValidation = 'username is already taken');
-                  return '';
-                }
-                setState(() => nameValidation = '');
-                return null;
-              },
-              onEditingComplete: () async {
-                _formKey.currentState.save();
-                userNameAvailable = await user.checkUserName();
-                setState(() {
-                  userNameAvailable = userNameAvailable;
-                });
-              },
+              validator: validateUsername,
+              onChanged: availableUsername,
               decoration: TEXT_FIELD_DECORATION.copyWith(
                   prefixIcon: Icon(
                     Icons.person,
                     color: COLOR_BACKGROUND,
                   ),
                   hintText: '@username',
-                  suffixIcon: userNameAvailable != null
-                      ? (userNameAvailable
-                          ? Icon(Icons.check_sharp, color: Colors.green)
-                          : _emailCheckIcon =
-                              Icon(Icons.cancel, color: Colors.red))
-                      : null),
+                  suffixIcon: _checkingForUsername
+                      ? AspectRatio(
+                          aspectRatio: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        )
+                      : userNameAvailable != null
+                          ? (userNameAvailable
+                              ? Icon(Icons.check_sharp, color: Colors.green)
+                              : _emailCheckIcon =
+                                  Icon(Icons.cancel, color: Colors.red))
+                          : null),
             ),
           ),
-          if (nameValidation.isNotEmpty) errorMessage(nameValidation),
+          if (usernameValidation.isNotEmpty) errorMessage(usernameValidation),
           Spacer(),
           SizedBox(
             height: KTextFieldHeight,
@@ -170,18 +238,6 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
                 FocusScope.of(context).unfocus();
               },
               onSaved: (value) => user.setMail = value,
-              onFieldSubmitted: (value) {
-                if (isEmail(value)) {
-                  setState(() => _emailCheckIcon =
-                      Icon(Icons.check_sharp, color: Colors.green));
-                  return '';
-                } else
-                  setState(() {
-                    //TODO: _invalidMail = true;
-                    _emailCheckIcon = Icon(Icons.cancel, color: Colors.red);
-                  });
-                FocusScope.of(context).requestFocus(_passwordFocusNode);
-              },
               validator: (value) {
                 if (value.trim().length < 3) {
                   setState(() => emailValidation = 'please enter your e-mail');
