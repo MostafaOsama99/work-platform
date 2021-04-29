@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:project/provider/data_constants.dart';
 import 'package:project/widgets/snackBar.dart';
 
 import 'package:provider/provider.dart';
@@ -84,13 +85,6 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
       _animationController.reverse();
   }
 
-  _showSnackBar(String message) {
-    ScaffoldMessenger.of(widget.scaffoldKey.currentContext).clearSnackBars();
-    ScaffoldMessenger.of(widget.scaffoldKey.currentContext).showSnackBar(
-        snackBar(
-            message, Theme.of(widget.scaffoldKey.currentContext).accentColor));
-  }
-
   @override
   void initState() {
     _passwordFocusNode.addListener(showPasswordCredentials);
@@ -131,12 +125,9 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
       _formKey.currentState.save();
       setState(() => _checkingForUsername = true);
 
-      userNameAvailable = await user.checkUserName(username).catchError((e) {
-        _showSnackBar(e.message);
-      }, test: (e) => e is HttpException).catchError((_) {
-        _showSnackBar('connection lost');
-        print('*** unhandled username error *** $_');
-      });
+      userNameAvailable = await handleRequest(
+          () async => await user.checkUserName(username),
+          widget.scaffoldKey.currentContext);
 
       setState(() => _checkingForUsername = false);
       return;
@@ -151,21 +142,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
       _formKey.currentState.save();
       user.setPassword = _passwordController.value.text;
 
-      try {
-        await user.signUp();
-      } on HttpException catch (e) {
-        print('HttpException: $e');
-        _showSnackBar(e.message);
-      } on TimeoutException catch (e) {
-        // A timeout occurred.
-        print('timeout exception: $e');
-        _showSnackBar('connection lost');
-      } on SocketException catch (_) {
-        print('SocketException: $_');
-        _showSnackBar('connection lost');
-      } catch (e) {
-        print('*** unhandled exception! ***: $e');
-      }
+      handleRequest(user.signUp, widget.scaffoldKey.currentContext);
 
       widget.whenLoading(false);
     }

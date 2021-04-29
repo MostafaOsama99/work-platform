@@ -1,22 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:project/model/http_exception.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-import 'package:dio/dio.dart';
+import 'package:project/provider/data_constants.dart';
 
 import '../constants.dart';
-
-const KSignIn = '/auth/signin';
-const KSignUp = '/auth/signup';
 
 class UserData extends ChangeNotifier {
   String _name = '';
   String _jobTitle = '';
   String _mobile = '';
+
+  //TODO: remove the id
+  String _id = '';
 
   /// nullable
   DateTime _birthDate;
@@ -67,7 +65,35 @@ class UserData extends ChangeNotifier {
 
   String get name => _name;
 
-  String _token;
+  // String _token;
+  //
+  // String get token => _token;
+
+  updateCurrentUser(Map<String, dynamic> json) {
+    _userName = json['userName'];
+    _mail = json['email'];
+    _birthDate = json['birthDate'];
+    _jobTitle = json['jobTitle'];
+    _mobile = json['phoneNumber'];
+  }
+
+  Future<void> getCurrentUser() async {
+    final url = server + '/users/current';
+
+    final response = await http
+        .get(Uri.parse(url), headers: header)
+        .timeout(KTimeOutDuration);
+
+    print('status code: ${response.statusCode}');
+    print(response.headers);
+
+    final responseData = json.decode(response.body) as Map<String, dynamic>;
+    if (response.statusCode == 200) {
+      print('body: $responseData');
+      updateCurrentUser(responseData);
+    } else
+      throw ServerException(responseData['errors'][0]);
+  }
 
   ///check if the useName available or not
   Future<bool> checkUserName(String calledValue) async {
@@ -81,13 +107,13 @@ class UserData extends ChangeNotifier {
       return false;
     }
 
-    final url = server + '/users/$_userName/exists';
+    final url = server + '/users/username/$_userName/exists';
     //try {
     final response = await http.get(Uri.parse(url)).timeout(KTimeOutDuration);
     if (response.statusCode == 200)
       isUsernameAvailable = !json.decode(response.body);
     else
-      throw HttpException('connection lost');
+      throw ServerException('connection lost');
     // } catch (e) {
     //   print('checkUserName function error: $e');
     // }
@@ -111,7 +137,7 @@ class UserData extends ChangeNotifier {
   Future<void> signIn() => auth(
       KSignIn,
       json.encode({"email": _mail, "password": _password}),
-      (responseData) => _token = responseData['token']);
+      (responseData) => token = responseData['token']);
 
   Future<void> auth(String endpoint, String body,
       Function(Map<String, dynamic> responseData) onSuccess) async {
@@ -121,19 +147,22 @@ class UserData extends ChangeNotifier {
     final response = await http
         .post(
           Uri.parse(url),
-          headers: {"Content-Type": "application/json"},
+          headers: header,
           body: body,
         )
         .timeout(KTimeOutDuration);
 
-    print('status code: ${response.statusCode}');
+    print(response.body);
+    print(response.headers);
 
     final responseData = json.decode(response.body) as Map<String, dynamic>;
+    print('body: $responseData');
+
     if (response.statusCode == 200) {
       onSuccess(responseData);
       return 'user created successfully';
     } else
-      throw HttpException(responseData['errors'][0]);
+      throw ServerException(responseData['errors'][0]);
     //} catch (e) {throw e;}
   }
 }

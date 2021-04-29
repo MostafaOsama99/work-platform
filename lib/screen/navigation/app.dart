@@ -106,8 +106,8 @@ class AppState extends State<App> {
             child: Navigator(
               key: _navigatorKeys[TabItem.chats],
               //initialRoute: '/home',
-              onGenerateRoute: (routeSettings) =>
-                  MaterialPageRoute(builder: (context) => AuthScreen()),
+              onGenerateRoute: (routeSettings) => MaterialPageRoute(
+                  builder: (context) => ChatsScreen()), // AuthScreen()),
             ),
           ),
         ]),

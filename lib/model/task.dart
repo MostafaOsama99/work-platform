@@ -80,14 +80,29 @@ class CheckPoint {
 }
 
 class User {
-  final int id;
+  //TODO make id String
+  final id;
   final String userName;
-  final name;
+  final String name;
   final String jobTitle;
   final String imageUrl;
 
   //TODO:check if the userName is required
-  const User({this.userName, @required this.id, this.imageUrl, @required this.name, @required this.jobTitle});
+  const User(
+      {this.userName,
+      @required this.id,
+      this.imageUrl,
+      @required this.name,
+      @required this.jobTitle});
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+        id: json['id'],
+        userName: json['userName'],
+        name: json['name'],
+        imageUrl: json['imageUrl'],
+        jobTitle: json['jobTitle']);
+  }
 }
 
 // class Project {

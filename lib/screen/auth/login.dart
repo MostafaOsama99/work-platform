@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project/provider/data_constants.dart';
+import 'package:project/provider/room_provider.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -49,7 +51,14 @@ class LoginState extends State<Login> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserData>(context, listen: false);
 
+    final roomProvider = Provider.of<RoomProvider>(context, listen: false);
     submit() async {
+      //await user.getCurrentUser();
+      await handleRequest(
+          roomProvider.createRoom, widget.scaffoldKey.currentContext);
+      await handleRequest(
+          roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
+
       FocusScope.of(context).unfocus();
       if (!_formKey.currentState.validate()) return;
 
@@ -57,21 +66,9 @@ class LoginState extends State<Login> {
       widget.whenLoading(true);
 
       _formKey.currentState.save();
-      try {
-        await user.signIn();
-      } on HttpException catch (e) {
-        print('HttpException: $e');
-        _showSnackBar(e.message);
-      } on TimeoutException catch (e) {
-        // A timeout occurred.
-        print('timeout exception: $e');
-        _showSnackBar('connection lost');
-      } on SocketException catch (_) {
-        print('SocketException: $_');
-        _showSnackBar('connection lost');
-      } catch (e) {
-        print('*** unhandled exception! ***: $e');
-      }
+
+      await handleRequest(user.signIn, widget.scaffoldKey.currentContext);
+
       widget.whenLoading(false);
     }
 

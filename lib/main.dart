@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/provider/room_provider.dart';
 import 'provider/UserData.dart';
 import 'provider/navbar.dart';
 import 'package:project/screen/chat_screen.dart';
@@ -13,7 +14,8 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: NavBar()),
-        ChangeNotifierProvider.value(value: UserData())
+        ChangeNotifierProvider.value(value: UserData()),
+        ChangeNotifierProvider.value(value: RoomProvider()),
       ],
       child: MyApp(),
     ),
