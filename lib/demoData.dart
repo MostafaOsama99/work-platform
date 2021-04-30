@@ -1,7 +1,7 @@
 import 'package:project/widgets/chat/message_bubble.dart';
 
 import 'model/message.dart';
-import 'model/task.dart';
+import 'model/models.dart';
 import 'model/project.dart';
 
 const longDescription =

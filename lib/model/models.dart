@@ -129,17 +129,29 @@ class Team {
   final int id;
   final String name, description, code;
   final DateTime dateCreated;
+
+  //TODO: remove these
   final User leader;
   final List<User> members;
   List<Task> tasks;
 
-  Team(
-      {this.id,
-      @required this.name,
-      this.description,
-      this.leader,
-      this.members,
-      this.code,
-      this.dateCreated,
-      this.tasks = const []});
+  Team({
+    this.id,
+    @required this.name,
+    this.description,
+    this.code,
+    this.dateCreated,
+    this.leader,
+    this.members,
+    this.tasks = const [],
+  });
+
+  factory Team.fromJson(Map<String, dynamic> json) {
+    return Team(
+        id: json['id'],
+        name: json['name'],
+        description: json['description'],
+        code: json['teamCode'],
+        dateCreated: json['createdAt']);
+  }
 }

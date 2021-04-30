@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_duration_picker/flutter_duration_picker.dart';
 
-import '../model/task.dart';
+import '../model/models.dart';
 import '../widgets/circular_checkBox.dart';
 import '../constants.dart';
 

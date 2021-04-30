@@ -1,13 +1,29 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
+
+import '../provider/data_constants.dart';
+import '../provider/room_provider.dart';
 import '../constants.dart';
 import '../widgets/custom_expansion_title.dart';
-import 'package:project/widgets/task/add_teams_button.dart';
+import '../widgets/task/add_teams_button.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
 
-const TS_TITLE = TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
+const TS_TITLE =
+    TextStyle(color: Colors.white, fontSize: 16, letterSpacing: 1.2);
 
 const HEIGHT_PADDING = 16.0;
+
+Widget errorMessage(String message) {
+  return Padding(
+    padding: EdgeInsets.only(left: 30, top: 8, bottom: 15),
+    child: Text(
+      message,
+      style: TextStyle(color: Colors.red, height: 0),
+      textAlign: TextAlign.start,
+    ),
+  );
+}
 
 class CreateRoomScreen extends StatefulWidget {
   ///managed by child class state [ExpansionTileState]
@@ -19,9 +35,12 @@ class CreateRoomScreen extends StatefulWidget {
 
 class _CreateRoomScreenState extends State<CreateRoomScreen> {
   static final _formKey = GlobalKey<FormState>();
-  String nameError;
+  String nameError = '';
+  String descriptionError = '';
+  String _name;
+  String _description;
 
-  String descriptionError;
+  bool _isLoading = false;
 
   //key for each ExpansionTile
   // final _joinTeamKey =
@@ -55,151 +74,164 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
   Widget build(BuildContext context) {
     //TODO: device width may be added to provider & calculate only once
     final width = MediaQuery.of(context).size.width * 0.85;
-    String hintText = 'Description';
+    final roomProvider = Provider.of<RoomProvider>(context, listen: false);
+
+    createTeam() async {
+      if (!_formKey.currentState.validate()) return;
+
+      //check that room name is unique for current user
+      //TODO: get room creator to make this work
+      // if (roomProvider.rooms.length > 0)
+      //   roomProvider.rooms.forEach((room) {
+      //     if (room.creator.userName ==
+      //         roomProvider.roomCreator.userName)
+      //       if (room.name == _name) {
+      //       setState(() => nameError = 'this name is already taken');
+      //       return;
+      //     }
+      //   });
+
+      setState(() => _isLoading = true);
+      _formKey.currentState.save();
+
+      bool _isSuccess = await handleRequest(
+          () => roomProvider.createRoom(_name, _description), context);
+
+      //if success update user rooms
+      if (_isSuccess) await roomProvider.getUserRooms();
+
+      setState(() => _isLoading = false);
+      print('is room created : $_isSuccess');
+      //TODO: show alert dialog : room created successfully , on tap 'ok', pop twice
+    }
 
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(KAppBarHeight),
         child: ClipRRect(
-          borderRadius:
-              BorderRadius.only(bottomRight: Radius.circular(KAppBarRound), bottomLeft: Radius.circular(KAppBarRound)),
+          borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(KAppBarRound),
+              bottomLeft: Radius.circular(KAppBarRound)),
           child: AppBar(
-            title: Text("create room - join team"),
+            title: Text(
+              "Create room / Join team",
+              style: TS_TITLE,
+            ),
             centerTitle: true,
           ),
         ),
       ),
       body: Form(
         key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        child: Stack(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               children: [
-                SizedBox(height: HEIGHT_PADDING),
-                Expanded(
-                  child: SizedBox(
-                    height: 40,
-                    child: TextFormField(
-                      textInputAction: TextInputAction.done,
-                      onFieldSubmitted: (_) {},
-                      autofocus: false,
-                      decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                        hintText: '#TeamCode',
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(height: HEIGHT_PADDING),
+                    Expanded(
+                      child: SizedBox(
+                        height: 40,
+                        child: TextFormField(
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) {},
+                          autofocus: false,
+                          decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                            hintText: '#TeamCode',
+                          ),
+                        ),
                       ),
                     ),
+                    //SizedBox(width: 20),
+                    Padding(
+                        padding: EdgeInsets.only(left: 15),
+                        child:
+                            addTeamsButton(hintText: "Join", onPressed: () {}))
+                  ],
+                ),
+                Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 18),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(KAppBarRound),
+                            topRight: Radius.circular(KAppBarRound),
+                            bottomRight: Radius.circular(5),
+                            bottomLeft: Radius.circular(5)),
+                        gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              COLOR_BACKGROUND,
+                              COLOR_BACKGROUND.withOpacity(0.4)
+                            ],
+                            stops: [
+                              0,
+                              1
+                            ])),
+                    child: Text('Create Room', style: TS_TITLE)),
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: SizedBox(
+                    height: 40,
+                    width: width,
+                    child: TextFormField(
+                      onSaved: (value) => _name = value,
+                      validator: (value) {
+                        if (value.trim().length < 3)
+                          setState(() => nameError = 'too short name');
+                        else
+                          setState(() => nameError = '');
+                        return null;
+                      },
+                      textInputAction: TextInputAction.next,
+                      decoration:
+                          TEXT_FIELD_DECORATION_2.copyWith(hintText: 'name'),
+                    ),
                   ),
                 ),
-                //SizedBox(width: 20),
-                Padding(padding: EdgeInsets.only(left: 15), child: addTeamsButton(hintText: "Join", onPressed: () {}))
+                if (nameError.isNotEmpty) errorMessage(nameError),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    maxLines: null,
+                    onSaved: (value) => _description = value,
+                    validator: (value) {
+                      if (value.trim().length < 3) {
+                        setState(() =>
+                            descriptionError = 'Description field is required');
+                        return '';
+                      }
+                      setState(() => descriptionError = "");
+                      return null;
+                    },
+                    textInputAction: TextInputAction.newline,
+                    autofocus: false,
+                    decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                        hintText: 'Description'),
+                  ),
+                ),
+                if (descriptionError.isNotEmpty) errorMessage(descriptionError),
+                SizedBox(
+                  height: 50,
+                  child: FittedBox(
+                    child: addTeamsButton(
+                        hintText: "Create Room", onPressed: createTeam),
+                  ),
+                ),
               ],
             ),
-            Container(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(KAppBarRound),
-                        topRight: Radius.circular(KAppBarRound),
-                        bottomRight: Radius.circular(5),
-                        bottomLeft: Radius.circular(5)),
-                    gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [COLOR_BACKGROUND, COLOR_BACKGROUND.withOpacity(0.4)],
-                        stops: [0, 1])),
-                child: Text('Create Room', style: TS_TITLE)),
-
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: SizedBox(
-                height: 40,
-                width: width,
-                child: TextFormField(
-                  validator: (value) {
-                    if (value.trim().length < 3)
-                      setState(() => nameError = 'too short name');
-                    else
-                      setState(() => nameError = null);
-                    return null;
-                  },
-                  textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (_) {
-                    //TODO: join team
-                  },
-                  decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                    hintText: 'name',
-                  ),
-                ),
-              ),
-            ),
-
-            if (nameError != null)
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 40, top: 7, bottom: 2),
-                    child: Text(
-                      nameError,
-                      style: TextStyle(color: Colors.red, height: 0),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                ],
-              ),
-            //SizedBox(height: HEIGHT_PADDING),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                maxLines: null,
-                validator: (value) {
-                  if (value.trim().length < 3) {
-                    setState(() {
-                      descriptionError = 'Description field is required';
-                    });
-
-                    print(descriptionError);
-                  } else {
-                    setState(() {
-                      descriptionError = "";
-                    });
-                  }
-                  return null;
-                },
-                textInputAction: TextInputAction.newline,
-                onFieldSubmitted: (_) {},
-                autofocus: false,
-                decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                  hintText: hintText,
-                  // errorStyle: TextStyle(height: 1),
-                ),
-              ),
-            ),
-            if (descriptionError != null)
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 40, top: 7, bottom: 10),
-                    child: Text(
-                      descriptionError,
-                      style: TextStyle(color: Colors.red, height: 0),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                ],
-              ),
-            SizedBox(
-              height: 50,
-              child: FittedBox(
-                child: addTeamsButton(
-                    hintText: "Create Room",
-                    onPressed: () {
-                      _formKey.currentState.save();
-                      _formKey.currentState.validate();
-                    }),
-              ),
-            ),
+            if (_isLoading)
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.grey.withOpacity(0.1),
+                child: Center(child: CircularProgressIndicator()),
+              )
           ],
         ),
       ),

@@ -13,7 +13,7 @@ import '../widgets/snackBar.dart';
 
 import '../constants.dart';
 import '../dialogs/assign_team_dialog.dart';
-import '../model/task.dart';
+import '../model/models.dart';
 
 class CreateTask extends StatefulWidget {
   ///checkpoint used as parent of new subTask

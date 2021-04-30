@@ -65,7 +65,7 @@ class _ActivityState extends State<Activity> {
             title: InkWell(
                 onTap: () {
 
-                  changeTeam(context, MediaQuery.of(context).size.height, []);
+                  changeRoom(context, MediaQuery.of(context).size.height, []);
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

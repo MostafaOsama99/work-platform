@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:project/constants.dart';
+import 'package:project/provider/room_provider.dart';
 import 'package:project/widgets/project_card_widget.dart';
+import 'package:provider/provider.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
 import 'package:project/screen/project_screen.dart';
 import 'join_or_create_team.dart';
@@ -32,17 +34,20 @@ class _RoomScreenState extends State<RoomScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final roomProvider = Provider.of<RoomProvider>(context, listen: false);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(45),
         child: ClipRRect(
-          borderRadius:
-              BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(KAppBarRound),
+              bottomRight: Radius.circular(KAppBarRound)),
           child: AppBar(
             centerTitle: true,
             title: InkWell(
                 onTap: () {
-                  changeTeam(context, MediaQuery.of(context).size.height, widget.teams);
+                  changeRoom(context, MediaQuery.of(context).size.height,
+                      roomProvider.rooms);
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

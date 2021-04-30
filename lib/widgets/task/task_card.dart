@@ -7,7 +7,7 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../screen/task_screen.dart';
 import '../../constants.dart';
-import '../../model/task.dart' as model;
+import '../../model/models.dart' as model;
 import '../circular_checkBox.dart';
 
 class TaskCard extends StatelessWidget {

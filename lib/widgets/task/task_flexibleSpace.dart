@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/model/task.dart';
+import 'package:project/model/models.dart';
 import 'package:project/screen/main_screen/activity_screen.dart';
 
 import '../../constants.dart';

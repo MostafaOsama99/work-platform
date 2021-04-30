@@ -13,7 +13,7 @@ import '../widgets/task/checkpoint_widget.dart';
 import '../widgets/task/description_widget.dart';
 import '../widgets/task/task_flexibleSpace.dart';
 
-import '../model/task.dart';
+import '../model/models.dart';
 import '../model/taskType.dart';
 
 class TaskScreen extends StatefulWidget {

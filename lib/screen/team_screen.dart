@@ -5,7 +5,7 @@ import 'package:project/provider/navbar.dart';
 import 'create_task_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../model/task.dart';
+import '../model/models.dart';
 import '../widgets/task/task_card.dart' show TaskCard;
 
 import '../constants.dart';

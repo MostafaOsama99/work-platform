@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
+import 'package:project/model/room.dart';
+import 'package:project/provider/room_provider.dart';
 import 'package:project/screen/join_or_create_team.dart';
+import 'package:provider/provider.dart';
 
-changeTeam(context, height, teams) {
+changeRoom(context, height, List<Room> rooms) {
   showGeneralDialog(
     context: context,
     barrierDismissible: true,
-    transitionDuration: Duration(milliseconds: 500),
+    transitionDuration: Duration(milliseconds: 450),
     barrierLabel: MaterialLocalizations.of(context).dialogLabel,
     barrierColor: Colors.black.withOpacity(0.4),
     pageBuilder: (context, _, __) {
@@ -14,7 +17,8 @@ changeTeam(context, height, teams) {
         //so important to use column !!
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            //width
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3),
             //so important to use Card !!
             child: Card(
               color: Theme.of(context).backgroundColor,
@@ -29,23 +33,34 @@ changeTeam(context, height, teams) {
                 child: LimitedBox(
                   maxHeight: height * 0.35,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(25), bottomLeft: Radius.circular(25)),
+                    borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(25),
+                        bottomLeft: Radius.circular(25)),
                     child: ListView(
-                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
                       shrinkWrap: true,
                       // crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        ...teams
-                            .map((e) => _teamTile(
-                                // teamName: e[0],
-                                roomName: e[0],
-                                leaderName: e[1]))
+                        ...rooms
+                            .map((room) => _roomTile(
+                                roomName: room.name,
+                                //TODO: change room id to room creator
+                                creator: room.id.toString(),
+                                onPressed: () {
+                                  Provider.of<RoomProvider>(context,
+                                          listen: false)
+                                      .changeRoom(room.id);
+                                  Navigator.of(context).pop();
+                                }))
                             .toList(),
                         SizedBox(
                           height: 40,
-                          child: FlatButton(
+                          child: TextButton(
                             onPressed: () => Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (BuildContext context) => CreateRoomScreen())),
+                                .pushReplacement(MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        CreateRoomScreen())),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,7 +89,7 @@ changeTeam(context, height, teams) {
       return SlideTransition(
         position: CurvedAnimation(
           parent: animation,
-          curve: Curves.easeOut,
+          curve: Curves.fastOutSlowIn,
         ).drive(Tween<Offset>(
           begin: Offset(0, -1),
           end: Offset(0, (KAppBarHeight * 1.4) / height),
@@ -85,7 +100,8 @@ changeTeam(context, height, teams) {
   );
 }
 
-Widget _teamTile({@required roomName, @required leaderName}) {
+Widget _roomTile(
+    {@required roomName, @required creator, @required VoidCallback onPressed}) {
   return ClipRRect(
     //  borderRadius: BorderRadius.circular(15),
     child: Padding(
@@ -93,41 +109,20 @@ Widget _teamTile({@required roomName, @required leaderName}) {
       child: Column(
         children: [
           SizedBox(
-            height: 40,
-            child: FlatButton(
-              onPressed: () {},
+            height: 30,
+            child: TextButton(
+              onPressed: onPressed,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(roomName,
-                          style: TextStyle(
-                            color: Colors.white,
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12),
-                        child: Text(
-                          '-----',
-                          style: TextStyle(color: Colors.white70),
-                        ),
-                      )
-                    ],
-                  ),
+                  Text(roomName, style: TextStyle(color: Colors.white)),
                   Spacer(),
-                  Text(
-                    leaderName,
-                  )
+                  Text(creator)
                 ],
               ),
             ),
           ),
-          Divider(
-            thickness: 1,
-            indent: 16,
-            endIndent: 16,
-          ),
+          Divider(thickness: 1, indent: 16, endIndent: 16),
         ],
       ),
     ),

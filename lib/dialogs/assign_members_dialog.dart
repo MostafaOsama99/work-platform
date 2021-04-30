@@ -5,7 +5,7 @@ import 'package:project/widgets/circular_checkBox.dart';
 
 import '../widgets/user_tile.dart';
 import '../constants.dart';
-import '../model/task.dart';
+import '../model/models.dart';
 
 /// [_User] is a class contains user and a bool [selected] holds the value for each dialog item if it's selected or not
 class _User {

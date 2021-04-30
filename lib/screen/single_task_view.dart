@@ -5,7 +5,7 @@ import 'package:project/constants.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import 'package:project/widgets/task/add_teams_button.dart';
-import 'package:project/model/task.dart';
+import 'package:project/model/models.dart';
 import 'package:project/widgets/task/task_card.dart';
 import 'package:flutter_filereader/flutter_filereader.dart';
 

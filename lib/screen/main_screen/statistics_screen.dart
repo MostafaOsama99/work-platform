@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import '../../model/task.dart';
+import '../../model/models.dart';
 import '../../model/taskType.dart';
 import '../../constants.dart';
 import '../../demoData.dart';

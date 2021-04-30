@@ -72,7 +72,7 @@ class UserData extends ChangeNotifier {
   updateCurrentUser(Map<String, dynamic> json) {
     _userName = json['userName'];
     _mail = json['email'];
-    _birthDate = json['birthDate'];
+    _birthDate = DateTime.parse(json['birthDate']);
     _jobTitle = json['jobTitle'];
     _mobile = json['phoneNumber'];
   }
@@ -134,35 +134,33 @@ class UserData extends ChangeNotifier {
       }),
       (responseData) => null);
 
-  Future<void> signIn() => auth(
-      KSignIn,
-      json.encode({"email": _mail, "password": _password}),
-      (responseData) => token = responseData['token']);
+  Future<void> signIn() =>
+      auth(KSignIn, json.encode({"email": _mail, "password": _password}),
+          (responseData) {
+        token = responseData['token'];
+      });
 
   Future<void> auth(String endpoint, String body,
       Function(Map<String, dynamic> responseData) onSuccess) async {
     final url = server + endpoint;
 
-    //try {
     final response = await http
         .post(
           Uri.parse(url),
-          headers: header,
+          headers: {"Content-Type": "application/json"},
           body: body,
         )
         .timeout(KTimeOutDuration);
 
-    print(response.body);
     print(response.headers);
+    print(response.body);
 
     final responseData = json.decode(response.body) as Map<String, dynamic>;
-    print('body: $responseData');
 
     if (response.statusCode == 200) {
-      onSuccess(responseData);
-      return 'user created successfully';
+      await onSuccess(responseData);
+      return;
     } else
       throw ServerException(responseData['errors'][0]);
-    //} catch (e) {throw e;}
   }
 }

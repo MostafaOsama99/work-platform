@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/provider/data_constants.dart';
 import 'package:project/provider/room_provider.dart';
-import 'dart:async';
-import 'dart:io';
 
 import 'package:provider/provider.dart';
 
@@ -32,14 +30,6 @@ class LoginState extends State<Login> {
   String passwordValidation = '';
 
   bool hidePassword = true;
-  bool _isLoading = false;
-
-  _showSnackBar(String message) {
-    ScaffoldMessenger.of(widget.scaffoldKey.currentContext).clearSnackBars();
-    ScaffoldMessenger.of(widget.scaffoldKey.currentContext).showSnackBar(
-        snackBar(
-            message, Theme.of(widget.scaffoldKey.currentContext).accentColor));
-  }
 
   @override
   void dispose() {
@@ -54,10 +44,14 @@ class LoginState extends State<Login> {
     final roomProvider = Provider.of<RoomProvider>(context, listen: false);
     submit() async {
       //await user.getCurrentUser();
-      await handleRequest(
-          roomProvider.createRoom, widget.scaffoldKey.currentContext);
-      await handleRequest(
-          roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
+      //await handleRequest(()=>roomProvider.createRoom('room 2','description'), widget.scaffoldKey.currentContext);
+      //await handleRequest(roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
+
+      //await handleRequest(()=> roomProvider.createTeam('team 2', 'description'), widget.scaffoldKey.currentContext);
+      //await handleRequest(()=> roomProvider.getRoomTeams(2), widget.scaffoldKey.currentContext);
+      // await handleRequest(()=> roomProvider.getRoom(2), widget.scaffoldKey.currentContext);
+
+      //await handleRequest(() => roomProvider.getUserTeams(), widget.scaffoldKey.currentContext);
 
       FocusScope.of(context).unfocus();
       if (!_formKey.currentState.validate()) return;
@@ -68,6 +62,14 @@ class LoginState extends State<Login> {
       _formKey.currentState.save();
 
       await handleRequest(user.signIn, widget.scaffoldKey.currentContext);
+
+      print('getting current user ...');
+      await handleRequest(
+          user.getCurrentUser, widget.scaffoldKey.currentContext);
+
+      print('getting user rooms ...');
+      await handleRequest(
+          roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
 
       widget.whenLoading(false);
     }
