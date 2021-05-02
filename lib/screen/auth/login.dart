@@ -51,7 +51,9 @@ class LoginState extends State<Login> {
       //await handleRequest(()=> roomProvider.getRoomTeams(2), widget.scaffoldKey.currentContext);
       // await handleRequest(()=> roomProvider.getRoom(2), widget.scaffoldKey.currentContext);
 
-      //await handleRequest(() => roomProvider.getUserTeams(), widget.scaffoldKey.currentContext);
+      // handleRequest(() => roomProvider.changeRoom(roomProvider.rooms.first.id), widget.scaffoldKey.currentContext);
+      // print(roomProvider.rooms.first.id);
+      // await handleRequest(() => roomProvider.getUserTeams(), widget.scaffoldKey.currentContext);
 
       FocusScope.of(context).unfocus();
       if (!_formKey.currentState.validate()) return;
@@ -71,6 +73,7 @@ class LoginState extends State<Login> {
       await handleRequest(
           roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
 
+      roomProvider.changeRoom(roomProvider.rooms.first.id);
       widget.whenLoading(false);
     }
 

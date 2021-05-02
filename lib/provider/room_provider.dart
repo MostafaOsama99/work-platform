@@ -17,11 +17,11 @@ class RoomProvider extends ChangeNotifier {
   ///user rooms
   List<Room> _rooms = [];
 
+  List<Team> _roomTeams = [];
+
   get roomDescription => _room.description;
 
   List<Room> get rooms => [..._rooms];
-
-  List<Team> _roomTeams = [];
 
   List<Team> get roomTeams => _roomTeams;
 
@@ -35,36 +35,39 @@ class RoomProvider extends ChangeNotifier {
 
   void changeRoom(int roomId) {
     _room = _rooms.firstWhere((room) => room.id == roomId);
+    //getUserTeams();
     notifyListeners();
   }
 
-  Future<void> createTeam(String name, String description) => _post(
+  Future<bool> createTeam(String name, String description) => _post(
       '/teams/rooms/${_room.id}/parentteam/$_parentTeamId',
       json.encode({
         'name': name,
         'description': description,
-      }),
-      (responseData) => null);
+      })
+      //, (responseData) => null
+      );
 
   // Future<void> getRoom([int roomId]) =>
   //     _get('/rooms/${roomId?? _roomId}', (responseData) {
   //       (responseData as Map<String,dynamic>)
   //     });
 
-  Future<void> createRoom(String name, String description) => _post(
-      KCreateRoom,
-      json.encode({"name": name, "description": description}),
-      (responseData) => null);
+  Future<bool> createRoom(String name, String description) =>
+      _post(KCreateRoom, json.encode({"name": name, "description": description})
+          //, (_) => true
+          );
 
   ///get all user team in current room
-  Future<void> getUserTeams([int roomId]) =>
+  Future<dynamic> getUserTeams([int roomId]) =>
       _get('/users/rooms/${roomId ?? _room.id}/teams', (responseData) {
-        (responseData as List<Map<String, dynamic>>)
+        _roomTeams = [];
+        (responseData as List<dynamic>)
             .forEach((element) => _roomTeams.add(Team.fromJson(element)));
       });
 
   /// get all current user rooms
-  Future<void> getUserRooms() => _get(KGetUserRoomsEndpoint,
+  Future<dynamic> getUserRooms() => _get(KGetUserRoomsEndpoint,
           //save user rooms in _rooms
           (rooms) {
         (rooms as List)
@@ -72,7 +75,7 @@ class RoomProvider extends ChangeNotifier {
       });
 
   ///generic get method
-  Future<void> _get(
+  Future<dynamic> _get(
       String endpoint, Function(dynamic responseData) onSuccess) async {
     final url = server + endpoint;
 
@@ -86,15 +89,15 @@ class RoomProvider extends ChangeNotifier {
     print('${response.request}');
 
     if (response.statusCode == 200) {
-      onSuccess(json.decode(response.body));
-      return;
+      return onSuccess(json.decode(response.body));
     } else
       throw ServerException(json.decode(response.body));
   }
 
   ///generic post method
-  Future<void> _post(String endpoint, String body,
-      Function(String responseData) onSuccess) async {
+  Future<bool> _post(String endpoint, String body
+      //, Function(String responseData) onSuccess
+      ) async {
     final url = server + endpoint;
 
     final response = await http
@@ -110,8 +113,8 @@ class RoomProvider extends ChangeNotifier {
     print('body: ${response.body}');
 
     if (response.statusCode == 200) {
-      onSuccess(response.body);
-      return;
+      //onSuccess(response.body);
+      return true;
     } else
       throw ServerException(response.body);
   }

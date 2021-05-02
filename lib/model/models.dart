@@ -152,6 +152,6 @@ class Team {
         name: json['name'],
         description: json['description'],
         code: json['teamCode'],
-        dateCreated: json['createdAt']);
+        dateCreated: DateTime.parse(json['createdAt']));
   }
 }

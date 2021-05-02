@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+
 import 'package:project/constants.dart';
+import 'package:project/model/models.dart';
 import 'package:project/provider/room_provider.dart';
 import 'package:project/widgets/project_card_widget.dart';
 import 'package:provider/provider.dart';
-import '../widgets/custom_expansion_title.dart' as custom;
-import 'package:project/screen/project_screen.dart';
-import 'join_or_create_team.dart';
+
 import 'package:project/demoData.dart';
 import 'package:project/widgets/home/dropDownMenu.dart';
 
@@ -63,46 +62,73 @@ class _RoomScreenState extends State<RoomScreen> {
                   splashRadius: 20,
                   iconSize: 19,
                   icon: Image.asset(
-                    switchProjects ? 'assets/icons/projects.png' : 'assets/icons/team-2.png',
+                    switchProjects
+                        ? 'assets/icons/projects.png'
+                        : 'assets/icons/team-2.png',
                     color: Colors.white,
                   ),
-                  onPressed: () => setState(() => switchProjects = !switchProjects),
+                  onPressed: () =>
+                      setState(() => switchProjects = !switchProjects),
                 ),
               )
             ],
           ),
         ),
       ),
-      body: switchProjects ? projectWidget(names, context) : roomWidget(context),
+      body: switchProjects ? projectWidget(names, context) : Teams(),
     );
   }
 }
 
-Widget roomWidget(context) {
-  return Column(
-    children: [
-      Padding(
-        padding: EdgeInsets.only(top: 16, left: 16),
-        child: Row(
-          children: [
-            Text(
-              "Teams",
-              style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-          ],
+class Teams extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final roomProvider = Provider.of<RoomProvider>(context);
+
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 16, left: 16),
+          child: Row(
+            children: [
+              Text(
+                "Teams",
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
         ),
-      ),
-      Expanded(
-        child: ListView.builder(
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            itemCount: myTeams.length,
-            itemBuilder: (context, i) {
-              return teamCard(context, myTeams[i].teamName, myTeams[i].tasks);
-            }),
-      )
-    ],
-  );
+        FutureBuilder(
+          future: roomProvider.getUserTeams(),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Expanded(
+                  child: Center(child: CircularProgressIndicator()));
+            else if (snapshot.error != null)
+              return Expanded(
+                  child: Center(
+                      child: Text(
+                'cannot reach the server !',
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              )));
+
+            return Expanded(
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  itemCount: roomProvider.roomTeams.length,
+                  itemBuilder: (context, i) {
+                    return teamCard(roomProvider.roomTeams[i]);
+                  }),
+            );
+          },
+        )
+      ],
+    );
+  }
 }
 
 Widget projectWidget(names, context) {
@@ -139,5 +165,32 @@ Widget projectWidget(names, context) {
                 })),
       )
     ],
+  );
+}
+
+Widget teamCard(Team team) {
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: ListTile(
+      contentPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
+      focusColor: Colors.green.withOpacity(0.5),
+      onTap: () {},
+      tileColor: Colors.blue.shade800.withOpacity(0.2),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+          side: BorderSide(color: COLOR_ACCENT)),
+      title: Text(
+        team.name,
+        style: TextStyle(color: Colors.white, fontSize: 16),
+      ),
+      subtitle: Text(
+        team.description,
+        style: TextStyle(color: Colors.white, fontSize: 15),
+        maxLines: 3,
+        softWrap: true,
+        overflow: TextOverflow.ellipsis,
+      ),
+      trailing: Icon(Icons.double_arrow_rounded),
+    ),
   );
 }

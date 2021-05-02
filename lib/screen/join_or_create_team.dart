@@ -199,7 +199,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     maxLines: null,
-                    onSaved: (value) => _description = value,
+                    onSaved: (value) => _description = value.trim(),
                     validator: (value) {
                       if (value.trim().length < 3) {
                         setState(() =>

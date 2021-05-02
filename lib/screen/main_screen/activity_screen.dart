@@ -174,8 +174,7 @@ Widget commentsViewer(context,String text,String names) {
                     fontWeight: FontWeight.bold),
               ),
               Spacer(
-                flex: 5,
-              ),
+                flex: 5),
               Text(
                 "by ",
                 style: TextStyle(
