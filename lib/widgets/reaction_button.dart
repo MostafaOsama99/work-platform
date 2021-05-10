@@ -329,7 +329,7 @@ class FbReactionState extends State<FbReaction> with TickerProviderStateMixin {
     return GestureDetector(
       child: Column(
         children: <Widget>[
-// main content
+                  // main content
           Container(
             margin: EdgeInsets.only(left: 20.0, right: 20.0),
             // Area of the content can drag
@@ -690,8 +690,8 @@ class FbReactionState extends State<FbReaction> with TickerProviderStateMixin {
           return Color(0xff3b5998);
         case 2:
           return Color(0xffED5167);
-        case 3:
-        case 4:
+        // case 3:
+        // case 4:
         case 5:
           return Color(0xffFFD96A);
         case 6:

@@ -74,6 +74,10 @@ class LoginState extends State<Login> {
           roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
 
       roomProvider.changeRoom(roomProvider.rooms.first.id);
+
+      //initial loading
+      roomProvider.getUserTeams(reload: true);
+      // await handleRequest(, widget.scaffoldKey.currentContext);
       widget.whenLoading(false);
     }
 

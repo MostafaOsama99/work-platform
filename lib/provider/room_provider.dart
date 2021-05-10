@@ -35,7 +35,7 @@ class RoomProvider extends ChangeNotifier {
 
   void changeRoom(int roomId) {
     _room = _rooms.firstWhere((room) => room.id == roomId);
-    //getUserTeams();
+    getUserTeams(reload: true);
     notifyListeners();
   }
 
@@ -58,13 +58,21 @@ class RoomProvider extends ChangeNotifier {
           //, (_) => true
           );
 
-  ///get all user team in current room
-  Future<dynamic> getUserTeams([int roomId]) =>
-      _get('/users/rooms/${roomId ?? _room.id}/teams', (responseData) {
-        _roomTeams = [];
-        (responseData as List<dynamic>)
-            .forEach((element) => _roomTeams.add(Team.fromJson(element)));
-      });
+  ///get all user team in current room from the database
+  /// it does not load the data unless u set [reload] to true, or if uou send another [roomId] it will load the new room teams
+  getUserTeams({bool reload = false, int roomId}) {
+    if (!reload && roomId == null) {
+      print('Exit');
+      return null;
+    }
+
+    print('getting teams');
+    return _get('/users/rooms/${roomId ?? _room.id}/teams', (responseData) {
+      _roomTeams = [];
+      (responseData as List<dynamic>)
+          .forEach((element) => _roomTeams.add(Team.fromJson(element)));
+    });
+  }
 
   /// get all current user rooms
   Future<dynamic> getUserRooms() => _get(KGetUserRoomsEndpoint,

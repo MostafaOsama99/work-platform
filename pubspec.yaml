@@ -87,7 +87,9 @@ flutter:
     - assets/icons/task_empty.png
     - assets/icons/announce.png
     - assets/icons/issue.png
-    - assets/send_icon.png
+    - assets/icons/send_icon.png
+    - assets/icons/bell.png
+    - assets/icons/bell_rotate.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

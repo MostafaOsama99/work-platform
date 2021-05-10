@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../auth/auth_screen.dart';
 import '../../screen/team_screen.dart';
 import '../../screen/main_screen/statistics_screen.dart';
+import '../notification_screen.dart';
 import 'tab_item.dart';
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart' as bottom;
@@ -25,17 +26,27 @@ class App extends StatefulWidget {
   State<StatefulWidget> createState() => AppState();
 }
 
-class AppState extends State<App> {
-  var _currentTab = TabItem.home;
+class AppState extends State<App> with TickerProviderStateMixin {
+  TabItem _currentTab = TabItem.home;
+  TabController _tabController;
+
+  @override
+  void initState() {
+    _tabController = TabController(initialIndex: 0, length: 4, vsync: this);
+    _tabController.addListener(_selectTab);
+    super.initState();
+  }
 
   //to save each tapView state
   final _navigatorKeys = {
     TabItem.home: GlobalKey<NavigatorState>(),
     TabItem.statistics: GlobalKey<NavigatorState>(),
+    TabItem.notifications: GlobalKey<NavigatorState>(),
     TabItem.chats: GlobalKey<NavigatorState>(),
   };
 
-  void _selectTab(TabItem tabItem) {
+  void _selectTab() {
+    TabItem tabItem = TabItem.values[_tabController.index];
     if (tabItem == _currentTab) {
       // pop to first route
       _navigatorKeys[tabItem].currentState.popUntil((route) => route.isFirst);
@@ -55,7 +66,7 @@ class AppState extends State<App> {
           // if not on the 'main' tab
           if (_currentTab != TabItem.home) {
             // select 'main' tab
-            _selectTab(TabItem.home);
+            _tabController.index = 0;
 
             // back button handled by app
             return false;
@@ -102,6 +113,14 @@ class AppState extends State<App> {
             ),
           ),
           Offstage(
+            offstage: _currentTab != TabItem.notifications,
+            child: Navigator(
+              key: _navigatorKeys[TabItem.notifications],
+              onGenerateRoute: (routeSettings) =>
+                  MaterialPageRoute(builder: (context) => NotificationScreen()),
+            ),
+          ),
+          Offstage(
             offstage: _currentTab != TabItem.chats,
             child: Navigator(
               key: _navigatorKeys[TabItem.chats],
@@ -131,12 +150,19 @@ class AppState extends State<App> {
                 backgroundColor: COLOR_SCAFFOLD,
                 activeColor: Color.fromRGBO(34, 28, 38, 1),
                 color: Colors.grey,
-                initialActiveIndex: 0,
-                onTap: (int index) => _selectTab(TabItem.values[index]),
+                //initialActiveIndex: 0,
+
+                disableDefaultTabController: true,
+                onTap: (int index) => _tabController.index = index,
+                controller: _tabController,
+
                 items: [
                   bottom.TabItem(
-                      icon: Icon(Icons.home_filled,
-                          color: Colors.white60, size: KIconSize),
+                      icon: Padding(
+                        padding: const EdgeInsets.only(top: 3),
+                        child: Icon(Icons.home_filled,
+                            color: Colors.white60, size: KIconSize),
+                      ),
                       activeIcon: Icon(Icons.home_filled,
                           color: COLOR_ACCENT, size: KActiveIconSize + 2),
                       title: 'Home'),
@@ -146,6 +172,18 @@ class AppState extends State<App> {
                       activeIcon: Icon(Icons.assessment,
                           color: COLOR_ACCENT, size: KActiveIconSize),
                       title: 'Statistics'),
+                  bottom.TabItem(
+                      icon: Padding(
+                        padding: const EdgeInsets.only(top: 3),
+                        child: Image.asset('assets/icons/bell.png',
+                            color: Colors.white60, height: KIconSize),
+                      ),
+                      activeIcon: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Image.asset('assets/icons/bell_rotate.png',
+                            color: COLOR_ACCENT, height: KActiveIconSize - 7),
+                      ),
+                      title: 'Notifications'),
                   bottom.TabItem(
                       icon: Icon(Icons.chat_outlined,
                           color: Colors.white60, size: KIconSize),

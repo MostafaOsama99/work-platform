@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:project/demoData.dart';
-import 'package:project/provider/navbar.dart';
-import 'create_task_screen.dart';
+
 import 'package:provider/provider.dart';
 
+import '../demoData.dart';
+import '../provider/navbar.dart';
 import '../model/models.dart';
 import '../widgets/task/task_card.dart' show TaskCard;
-
 import '../constants.dart';
+import 'create_task_screen.dart';
 import 'edit_team_screen.dart';
 
 class TeamScreen extends StatefulWidget {

@@ -1,7 +1,5 @@
-
-import 'package:date_time_picker/date_time_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project/demoData.dart';
 import 'package:project/widgets/notification_widgets.dart';
 
 import '../constants.dart';
@@ -28,21 +26,53 @@ class NotificationScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: ListView.separated(
-
-          itemCount: 10,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) => Padding(
-            padding: const EdgeInsets.only(top: 20,bottom: 10),
-            child: NotificationWidget(context),
-          ),
-          separatorBuilder: (__, _) => Divider(indent: 25, endIndent: 25),
-        ),
+      body: ListView.separated(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        itemCount: notifications.length,
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context, int index) => notifications[index],
+        separatorBuilder: (__, _) => Divider(indent: 25, endIndent: 25),
       ),
     );
   }
 }
 
+List<EventButton> buttons = [
+  EventButton(
+    onTap: () {},
+    text: 'allow',
+    key: UniqueKey(),
+  ),
+  EventButton(
+    onTap: () {},
+    text: 'deny',
+    key: UniqueKey(),
+  )
+];
 
+List<NotificationWidget> notifications = [
+  NotificationWidget(
+      text: longDescription,
+      date: DateTime.now().subtract(Duration(minutes: 5)),
+      buttons: buttons),
+  NotificationWidget(
+      text: longDescription,
+      date: DateTime.now().subtract(Duration(minutes: 70)),
+      buttons: buttons),
+  NotificationWidget(
+    text: longDescription,
+    date: DateTime.now().subtract(Duration(days: 5)),
+  ),
+  NotificationWidget(
+      text: 'this is an example of a short description',
+      date: DateTime.now().subtract(Duration(days: 17)),
+      buttons: buttons),
+  NotificationWidget(
+    text: 'youssef announced message: l;kl l l;k   hejwhiun ',
+    date: DateTime.now().subtract(Duration(days: 40)),
+  ),
+  NotificationWidget(
+      text: 'go to sleep',
+      date: DateTime.now().subtract(Duration(days: 366)),
+      buttons: buttons),
+];

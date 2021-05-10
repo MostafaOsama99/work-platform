@@ -31,6 +31,12 @@ class _RoomScreenState extends State<RoomScreen> {
 
   bool switchProjects = false;
 
+  /*TODO:
+  - fix change room lag
+  - fix scroll & refresh gesture lag
+  - reload user rooms when refresh
+  * */
+
   @override
   Widget build(BuildContext context) {
     final roomProvider = Provider.of<RoomProvider>(context, listen: false);
@@ -101,30 +107,31 @@ class Teams extends StatelessWidget {
             ],
           ),
         ),
-        FutureBuilder(
-          future: roomProvider.getUserTeams(),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Expanded(
-                  child: Center(child: CircularProgressIndicator()));
-            else if (snapshot.error != null)
-              return Expanded(
-                  child: Center(
-                      child: Text(
-                'cannot reach the server !',
-                style: TextStyle(color: Colors.grey, fontSize: 15),
-              )));
+        RefreshIndicator(
+          onRefresh: () => roomProvider.getUserTeams(reload: true),
+          child: FutureBuilder(
+            future: roomProvider.getUserTeams(),
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Expanded(
+                    child: Center(child: CircularProgressIndicator()));
+              else if (snapshot.error != null)
+                return Expanded(
+                    child: Center(
+                        child: Text(
+                  'cannot reach the server !',
+                  style: TextStyle(color: Colors.grey, fontSize: 15),
+                )));
 
-            return Expanded(
-              child: ListView.builder(
+              return ListView.builder(
                   shrinkWrap: true,
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   itemCount: roomProvider.roomTeams.length,
                   itemBuilder: (context, i) {
                     return teamCard(roomProvider.roomTeams[i]);
-                  }),
-            );
-          },
+                  });
+            },
+          ),
         )
       ],
     );
