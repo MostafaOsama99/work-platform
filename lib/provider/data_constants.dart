@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:project/widgets/snackBar.dart';
 
+import 'package:http/http.dart' as http;
+
+import '../constants.dart';
 import '../model/http_exception.dart';
 
 Map<String, String> header = {
@@ -48,4 +52,48 @@ showSnackBar(String message, BuildContext context) {
   ScaffoldMessenger.of(context).clearSnackBars();
   ScaffoldMessenger.of(context)
       .showSnackBar(snackBar(message, Theme.of(context).accentColor));
+}
+
+///generic get method
+Future<dynamic> get(
+    String endpoint, Function(dynamic responseData) onSuccess) async {
+  final url = server + endpoint;
+
+  final response =
+      await http.get(Uri.parse(url), headers: header).timeout(KTimeOutDuration);
+
+  print(response.body);
+  print(response.headers);
+  print(response.statusCode);
+  print('${response.request}');
+
+  if (response.statusCode == 200) {
+    return onSuccess(json.decode(response.body));
+  } else
+    throw ServerException(json.decode(response.body));
+}
+
+///generic post method
+Future<bool> post(String endpoint, String body
+    //, Function(String responseData) onSuccess
+    ) async {
+  final url = server + endpoint;
+
+  final response = await http
+      .post(Uri.parse(url), headers: header, body: body)
+      .timeout(KTimeOutDuration);
+
+  print(response.body);
+  print(response.headers);
+  print(response.statusCode);
+  print('${response.request}');
+
+  //final responseData = json.decode(response.body);
+  print('body: ${response.body}');
+
+  if (response.statusCode == 200) {
+    //onSuccess(response.body);
+    return true;
+  } else
+    throw ServerException(response.body);
 }

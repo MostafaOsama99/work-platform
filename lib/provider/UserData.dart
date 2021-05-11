@@ -8,6 +8,16 @@ import 'package:project/provider/data_constants.dart';
 
 import '../constants.dart';
 
+/*
+*  1. splash screen
+*   2. save user data into local storage (mail, password) shared preferences
+*   3. check for local storage user (auto login) called into splash screen,
+*         then if user is available,
+*               a- save user data into provider
+*               b- call [signIn] function
+*
+* */
+
 class UserData extends ChangeNotifier {
   String _name = '';
   String _jobTitle = '';
@@ -138,6 +148,7 @@ class UserData extends ChangeNotifier {
       auth(KSignIn, json.encode({"email": _mail, "password": _password}),
           (responseData) {
         token = responseData['token'];
+            //TODO: call save user to local db
       });
 
   Future<void> auth(String endpoint, String body,

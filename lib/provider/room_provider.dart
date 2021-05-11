@@ -23,7 +23,7 @@ class RoomProvider extends ChangeNotifier {
 
   List<Room> get rooms => [..._rooms];
 
-  List<Team> get roomTeams => _roomTeams;
+  List<Team> get roomTeams => [..._roomTeams];
 
   User get roomCreator => _room.creator;
 
@@ -39,7 +39,7 @@ class RoomProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> createTeam(String name, String description) => _post(
+  Future<bool> createTeam(String name, String description) => post(
       '/teams/rooms/${_room.id}/parentteam/$_parentTeamId',
       json.encode({
         'name': name,
@@ -54,7 +54,7 @@ class RoomProvider extends ChangeNotifier {
   //     });
 
   Future<bool> createRoom(String name, String description) =>
-      _post(KCreateRoom, json.encode({"name": name, "description": description})
+      post(KCreateRoom, json.encode({"name": name, "description": description})
           //, (_) => true
           );
 
@@ -67,7 +67,7 @@ class RoomProvider extends ChangeNotifier {
     }
 
     print('getting teams');
-    return _get('/users/rooms/${roomId ?? _room.id}/teams', (responseData) {
+    return get('/users/rooms/${roomId ?? _room.id}/teams', (responseData) {
       _roomTeams = [];
       (responseData as List<dynamic>)
           .forEach((element) => _roomTeams.add(Team.fromJson(element)));
@@ -75,55 +75,10 @@ class RoomProvider extends ChangeNotifier {
   }
 
   /// get all current user rooms
-  Future<dynamic> getUserRooms() => _get(KGetUserRoomsEndpoint,
+  Future<dynamic> getUserRooms() => get(KGetUserRoomsEndpoint,
           //save user rooms in _rooms
           (rooms) {
         (rooms as List)
             .forEach((element) => _rooms.add(Room.formJson(element)));
       });
-
-  ///generic get method
-  Future<dynamic> _get(
-      String endpoint, Function(dynamic responseData) onSuccess) async {
-    final url = server + endpoint;
-
-    final response = await http
-        .get(Uri.parse(url), headers: header)
-        .timeout(KTimeOutDuration);
-
-    print(response.body);
-    print(response.headers);
-    print(response.statusCode);
-    print('${response.request}');
-
-    if (response.statusCode == 200) {
-      return onSuccess(json.decode(response.body));
-    } else
-      throw ServerException(json.decode(response.body));
-  }
-
-  ///generic post method
-  Future<bool> _post(String endpoint, String body
-      //, Function(String responseData) onSuccess
-      ) async {
-    final url = server + endpoint;
-
-    final response = await http
-        .post(Uri.parse(url), headers: header, body: body)
-        .timeout(KTimeOutDuration);
-
-    print(response.body);
-    print(response.headers);
-    print(response.statusCode);
-    print('${response.request}');
-
-    //final responseData = json.decode(response.body);
-    print('body: ${response.body}');
-
-    if (response.statusCode == 200) {
-      //onSuccess(response.body);
-      return true;
-    } else
-      throw ServerException(response.body);
-  }
 }
