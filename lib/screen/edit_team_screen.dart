@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:project/model/models.dart';
+import 'package:project/provider/team_provider.dart';
 import 'package:project/widgets/task/add_teams_button.dart';
 import 'package:project/widgets/task/description_widget.dart';
 import 'package:project/widgets/task/editTextField_method.dart';
+import 'package:provider/provider.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
 import 'package:share/share.dart';
 import '../constants.dart';
 import 'package:project/model/share_package.dart';
+
 class EditTeamScreen extends StatefulWidget {
   @override
   _EditTeamScreenState createState() => _EditTeamScreenState();
@@ -35,20 +39,20 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
   @override
   void initState() {
     super.initState();
-    users = List.generate(names.length, (index) => _userTile(names[index]));
     //names.forEach((name) => users.add(_userTile(name)));
     _nameController.text = 'Team Name';
   }
 
   @override
   Widget build(BuildContext context) {
+    final teamProvider = Provider.of<TeamProvider>(context, listen: false);
+    users = List.generate(teamProvider.team.members.length, (index) => _userTile(teamProvider.team.members[index]));
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(KAppBarHeight),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(KAppBarRound),
-              bottomRight: Radius.circular(KAppBarRound)),
+          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
           child: AppBar(
             leading: IconButton(
                 padding: EdgeInsets.all(0),
@@ -182,10 +186,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                 ),
               ),
               SizedBox(
-                  height: 48,
-                  child: FittedBox(
-                      child: addTeamsButton(
-                          hintText: "Create Team", onPressed: () {}))),
+                  height: 48, child: FittedBox(child: addTeamsButton(hintText: "Create Team", onPressed: () {}))),
             ],
           ),
         ],
@@ -193,8 +194,8 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
     );
   }
 
-  Widget _userTile(String name) {
-    var lastLitter = name.indexOf(' ') + 1;
+  Widget _userTile(User user) {
+    var lastLitter = user.name.indexOf(' ') + 1;
     return GestureDetector(
       onLongPress: () {
         //TODO: show popup menu
@@ -216,22 +217,17 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
           children: [
             CircleAvatar(
               radius: 22,
-              child: Text(name[0] + name[lastLitter],
-                  style: TextStyle(fontSize: 16)),
+              child: Text(user.name[0] + user.name[lastLitter], style: TextStyle(fontSize: 16)),
               backgroundColor: COLOR_ACCENT,
             ),
             SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(name, style: TextStyle(fontSize: 15)),
-                Text('@UserName',
-                    style: TextStyle(fontSize: 13, color: Colors.grey))
-              ],
+              children: [Text(user.name, style: TextStyle(fontSize: 15)), Text('@${user.userName}', style: TextStyle(fontSize: 13, color: Colors.grey))],
             ),
             Spacer(),
-            Text('job title'),
+            Text(user.jobTitle),
             SizedBox(width: 8),
           ],
         ),

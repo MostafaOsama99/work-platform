@@ -36,7 +36,7 @@ class UserTile extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 22,
-              child: Text(name[0][0] +  name[1][0], style: TextStyle(fontSize: 16)),
+              child: Text(name[0][0] + (name.length > 1 ? name[1][0] : ''), style: TextStyle(fontSize: 16)),
               backgroundColor: COLOR_ACCENT,
             ),
             SizedBox(width: 10),
@@ -47,15 +47,16 @@ class UserTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(name[0] + ' ' + name[1], style: TextStyle(fontSize: 15)),
-                     Row(
-                       mainAxisSize: MainAxisSize.min,
+                    Text(name[0] + ' ' + (name.length > 1 ? name[1] : ''), style: TextStyle(fontSize: 15)),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(' ${user.userName}', style: TextStyle(fontSize: 12.5, color: Colors.grey)),
                         Spacer(),
                         Text(user.jobTitle, style: TextStyle(fontSize: 13.5)),
                       ],
-                      )],
+                    )
+                  ],
                 ),
               ),
             ),

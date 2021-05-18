@@ -133,15 +133,15 @@ class _AssignMembersDialogState extends State<AssignMembersDialog> {
                     itemBuilder: (BuildContext context, int index) => _UserTile(
                       key: UniqueKey(),
                       user: _loadedUsers[index],
-                      onSelected: (id) => setState(() {
+                      onSelected: (userName) => setState(() {
                         _selectCount++;
                         if (_selectCount == _selectedUsers.length) _selectAll = true;
-                        _loadedUsers.firstWhere((element) => element.user.id == id).selected = true;
+                        _loadedUsers.firstWhere((element) => element.user.userName == userName).selected = true;
                       }),
-                      onDeselect: (id) => setState(() {
+                      onDeselect: (userName) => setState(() {
                         _selectCount--;
                         if (_selectAll) _selectAll = false;
-                        _loadedUsers.firstWhere((element) => element.user.id == id).selected = false;
+                        _loadedUsers.firstWhere((element) => element.user.userName == userName).selected = false;
                       }),
                     ),
                     itemCount: _loadedUsers.length,
@@ -188,8 +188,8 @@ class _AssignMembersDialogState extends State<AssignMembersDialog> {
 /// custom UserTile that has selection mood, overall similar to [UserTile]
 class _UserTile extends StatelessWidget {
   final _User user;
-  final Function(int id) onSelected;
-  final Function(int id) onDeselect;
+  final Function(String userName) onSelected;
+  final Function(String userName) onDeselect;
 
   const _UserTile({Key key, this.user, this.onSelected, this.onDeselect}) : super(key: key);
 
@@ -200,9 +200,9 @@ class _UserTile extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (!user.selected)
-          onSelected(user.user.id);
+          onSelected(user.user.userName);
         else
-          onDeselect(user.user.id);
+          onDeselect(user.user.userName);
       },
       child: Container(
         height: 52,
@@ -218,9 +218,7 @@ class _UserTile extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 22,
-              child: user.selected
-                  ? Icon(Icons.check, color: COLOR_ACCENT)
-                  : Text(name[0][0] + name[1][0], style: TextStyle(fontSize: 16)),
+              child: user.selected ? Icon(Icons.check, color: COLOR_ACCENT) : Text(name[0][0] + (name.length > 1 ? name[1][0] : ''), style: TextStyle(fontSize: 16)),
               backgroundColor: user.selected ? COLOR_SCAFFOLD : COLOR_ACCENT,
             ),
             SizedBox(width: 10),
@@ -231,7 +229,7 @@ class _UserTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(name[0] + ' ' + name[1], style: TextStyle(fontSize: 15)),
+                    Text(name[0] + ' ' + (name.length > 1 ? name[1] : ''), style: TextStyle(fontSize: 15)),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

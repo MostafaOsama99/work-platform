@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:project/constants.dart';
 import 'package:project/model/models.dart';
+import 'package:project/provider/navbar.dart';
 import 'package:project/provider/room_provider.dart';
+import 'package:project/provider/team_provider.dart';
+import 'package:project/screen/team_screen.dart';
 import 'package:project/widgets/project_card_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -51,8 +54,7 @@ class _RoomScreenState extends State<RoomScreen> {
             centerTitle: true,
             title: InkWell(
                 onTap: () {
-                  changeRoom(context, MediaQuery.of(context).size.height,
-                      roomProvider.rooms);
+                  changeRoom(context, MediaQuery.of(context).size.height, roomProvider.rooms);
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -90,6 +92,40 @@ class Teams extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final roomProvider = Provider.of<RoomProvider>(context);
+    final teamProvider = Provider.of<TeamProvider>(context);
+
+    Widget teamCard(Team team) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
+          focusColor: Colors.green.withOpacity(0.5),
+          onTap: () {
+            teamProvider.changeTeam = team;
+            //teamProvider.createTask();
+            //teamProvider.fetchMembers();
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => TeamScreen())).then((value) {
+              // Provider.of<NavBar>(context, listen: false).showNavBar();
+              // Provider.of<NavBar>(context, listen: false).removeController();
+            });
+          },
+          tileColor: Colors.blue.shade800.withOpacity(0.2),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15), side: BorderSide(color: COLOR_ACCENT)),
+          title: Text(
+            team.name,
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          subtitle: Text(
+            team.description,
+            style: TextStyle(color: Colors.white, fontSize: 15),
+            maxLines: 3,
+            softWrap: true,
+            overflow: TextOverflow.ellipsis,
+          ),
+          trailing: Icon(Icons.double_arrow_rounded),
+        ),
+      );
+    }
 
     return Column(
       children: [
@@ -99,8 +135,7 @@ class Teams extends StatelessWidget {
             children: [
               Text(
                 "Teams",
-                style: TextStyle(
-                    fontSize: 20,
+                style: TextStyle(fontSize: 20,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),
               ),
@@ -172,32 +207,5 @@ Widget projectWidget(names, context) {
                 })),
       )
     ],
-  );
-}
-
-Widget teamCard(Team team) {
-  return Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: ListTile(
-      contentPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
-      focusColor: Colors.green.withOpacity(0.5),
-      onTap: () {},
-      tileColor: Colors.blue.shade800.withOpacity(0.2),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-          side: BorderSide(color: COLOR_ACCENT)),
-      title: Text(
-        team.name,
-        style: TextStyle(color: Colors.white, fontSize: 16),
-      ),
-      subtitle: Text(
-        team.description,
-        style: TextStyle(color: Colors.white, fontSize: 15),
-        maxLines: 3,
-        softWrap: true,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: Icon(Icons.double_arrow_rounded),
-    ),
   );
 }
