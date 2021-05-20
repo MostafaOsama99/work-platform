@@ -74,14 +74,33 @@ Future<dynamic> get(
 }
 
 ///generic post method
-Future<bool> post(String endpoint, String body
+Future<bool> post(String endpoint, String body, [Function(String responseData) onSuccess]) async {
+  final url = server + endpoint;
+
+  final response = await http.post(Uri.parse(url), headers: header, body: body).timeout(KTimeOutDuration);
+
+  print(response.body);
+  print(response.headers);
+  print(response.statusCode);
+  print('${response.request}');
+
+  //final responseData = json.decode(response.body);
+  print('body: ${response.body}');
+
+  if (response.statusCode == 200) {
+    if (onSuccess != null) onSuccess(response.body);
+    return true;
+  } else
+    throw ServerException(response.body);
+}
+
+///generic put method
+Future<bool> put(String endpoint, String body
     //, Function(String responseData) onSuccess
     ) async {
   final url = server + endpoint;
 
-  final response = await http
-      .post(Uri.parse(url), headers: header, body: body)
-      .timeout(KTimeOutDuration);
+  final response = await http.put(Uri.parse(url), headers: header, body: body).timeout(KTimeOutDuration);
 
   print(response.body);
   print(response.headers);

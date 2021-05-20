@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../../constants.dart';
 
-editTextField(BuildContext context, TextEditingController controller,
-    {int maxLines = 1}) {
+editTextField(BuildContext context, String oldValue, {int maxLines = 1}) {
   final _formKey = GlobalKey<FormState>();
+  String newValue;
 
   String _validate(String value) {
     if (value.length <= 3) return 'too short name !';
@@ -14,7 +14,7 @@ editTextField(BuildContext context, TextEditingController controller,
   _submit() {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(newValue);
     }
   }
 
@@ -47,20 +47,16 @@ editTextField(BuildContext context, TextEditingController controller,
                     child: TextFormField(
                       autofocus: true,
                       maxLines: maxLines,
-                      textInputAction: maxLines == 1
-                          ? TextInputAction.done
-                          : TextInputAction.newline,
+                      textInputAction: maxLines == 1 ? TextInputAction.done : TextInputAction.newline,
                       onSaved: (value) {
-                        controller.text = value.trim();
+                        newValue = value.trim();
                       },
-                      initialValue: controller.value.text,
+                      initialValue: oldValue,
                       decoration: TEXT_FIELD_DECORATION.copyWith(
                           fillColor: COLOR_BACKGROUND,
                           errorStyle: TextStyle(height: 1),
                           contentPadding: const EdgeInsets.all(12),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(color: COLOR_ACCENT))),
+                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: COLOR_ACCENT))),
                       validator: _validate,
                       onFieldSubmitted: (_) => _submit(),
                     ),

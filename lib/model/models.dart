@@ -49,18 +49,21 @@ class Task {
   }
 
   factory Task.formJson(Map<String, dynamic> json) {
+    print(json['assignedUsers']);
     return Task(
-        id: (json["id"]).toString(),
-        name: json["name"],
-        description: json["description"],
-        datePlannedStart: DateTime.parse(json["plannedStartDate"]),
-        datePlannedEnd: DateTime.parse(json["plannedEndDate"]),
-        dateActualStart: DateTime.parse(json["actualStartDate"]),
-        dateActualEnd: DateTime.parse(json["actualEndDate"]),
-        checkPoints: (json['childCheckPoints'] as List)
-            .map((cp) => CheckPoint(id: cp['id'], name: cp['checkpointText'], description: cp['description'], percentage: cp['percentage']))
-            .toList(),
-        taskCreator: User.fromJson(json['creator']));
+      id: (json["id"]).toString(),
+      name: json["name"],
+      description: json["description"],
+      datePlannedStart: DateTime.parse(json["plannedStartDate"]),
+      datePlannedEnd: DateTime.parse(json["plannedEndDate"]),
+      dateActualStart: DateTime.parse(json["actualStartDate"]),
+      dateActualEnd: DateTime.parse(json["actualEndDate"]),
+      checkPoints: (json['childCheckPoints'] as List)
+          .map((cp) => CheckPoint(id: cp['id'], name: cp['checkpointText'], description: cp['description'], percentage: cp['percentage']))
+          .toList(),
+      taskCreator: User.fromJson(json['creator']),
+      members: (json['assignedUsers'] as List).map((user) => User.fromJson(user)).toList(),
+    );
   }
 
   ///holds which task type is
@@ -132,12 +135,13 @@ class User {
 
 class Team {
   final int id;
-  final String name, description, code;
+  final String code;
   final DateTime dateCreated;
+  final User leader;
+  String name, description;
+  List<User> members;
 
   //TODO: remove these
-  final User leader;
-  List<User> members;
   List<Task> tasks;
 
   Team({
@@ -152,6 +156,13 @@ class Team {
   });
 
   factory Team.fromJson(Map<String, dynamic> json) {
-    return Team(id: json['id'], name: json['name'], description: json['description'], code: json['teamCode'], dateCreated: DateTime.parse(json['createdAt']));
+    return Team(
+        id: json['id'],
+        name: json['name'],
+        description: json['description'],
+        code: json['teamCode'],
+        dateCreated: DateTime.parse(json['createdAt']),
+        //TODO; remove null check
+        leader: json['leader'] != null ? User.fromJson(json['leader']) : null);
   }
 }

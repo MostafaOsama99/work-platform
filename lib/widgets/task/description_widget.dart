@@ -33,7 +33,7 @@ class DescriptionWidget extends StatelessWidget {
                     color: Colors.grey,
                   ),
                   onPressed: () {
-                    editTextField(context, _descriptionController, maxLines: 7);
+                    editTextField(context, _descriptionController.value.text, maxLines: 7);
                   }),
             ],
           ),

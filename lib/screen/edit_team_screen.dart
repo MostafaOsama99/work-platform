@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:project/model/models.dart';
-import 'package:project/provider/team_provider.dart';
-import 'package:project/widgets/task/add_teams_button.dart';
-import 'package:project/widgets/task/description_widget.dart';
-import 'package:project/widgets/task/editTextField_method.dart';
+
 import 'package:provider/provider.dart';
+
+import '../model/models.dart';
+import '../model/share_package.dart';
+import '../provider/data_constants.dart';
+import '../provider/room_provider.dart';
+import '../provider/team_provider.dart';
+import '../widgets/task/add_teams_button.dart';
+import '../widgets/task/description_widget.dart';
+import '../widgets/task/editTextField_method.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
-import 'package:share/share.dart';
 import '../constants.dart';
-import 'package:project/model/share_package.dart';
+import 'auth/signUp1.dart';
 
 class EditTeamScreen extends StatefulWidget {
   @override
@@ -17,51 +21,58 @@ class EditTeamScreen extends StatefulWidget {
 
 class _EditTeamScreenState extends State<EditTeamScreen> {
   final _nameController = TextEditingController();
-  final String teamCode="#TeamCode7854";
-
-
-
-  var names = [
-    'Ahmed Mohamed',
-    'Mostafa Osama',
-    'Mohamed Hesham',
-    'Yousef Essam',
-    'Mahmoud Yousef',
-    'Beshoy Wagdy',
-    'Habiba Sayed'
-  ];
-
-  var description = '''Human resources (HR) is the division of a business that is charged with finding, screening, recruiting, and training job applicants, as well as administering employee-benefit programs. HR plays a key role in helping companies deal with a fast-changing business environment and a greater demand for quality employees in the 21st century. example o  f a l
-    ''';
+  final _formKey = GlobalKey<FormState>();
+  String _teamName, _teamNameError = '', _teamDescription, _teamDescriptionError = '';
+  bool _isLoading = false;
 
   List<Widget> users;
 
   @override
-  void initState() {
-    super.initState();
-    //names.forEach((name) => users.add(_userTile(name)));
-    _nameController.text = 'Team Name';
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final teamProvider = Provider.of<TeamProvider>(context, listen: false);
+    final teamProvider = Provider.of<TeamProvider>(context);
+    _nameController.text = teamProvider.team.name;
+    //TODO Performance : this list is generated when ever this screen is re-loaded, move it to initState()
     users = List.generate(teamProvider.team.members.length, (index) => _userTile(teamProvider.team.members[index]));
+
+    addTeam() async {
+      //seems like it takes some time
+      int roomId = Provider.of<RoomProvider>(context, listen: false).roomId;
+      if (!_formKey.currentState.validate()) return;
+
+      _formKey.currentState.save();
+      setState(() => _isLoading = true);
+      await handleRequest(() => teamProvider.createTeam(roomId, _teamName, _teamDescription), context);
+      setState(() => _isLoading = false);
+    }
+
+    updateTeam({String name, String description}) async {
+      setState(() => _isLoading = true);
+      bool _isSuccess = await handleRequest(() => teamProvider.updateTeam(name, description), context);
+      setState(() => _isLoading = false);
+    }
 
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(KAppBarHeight),
         child: ClipRRect(
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
-          child: AppBar(
-            leading: IconButton(
-                padding: EdgeInsets.all(0),
-                onPressed: () => Navigator.pop(context),
-                icon: Icon(
-                  Icons.arrow_back,
-                )),
-            title: Text('Edit Team'),
-            centerTitle: true,
+          child: Container(
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                AppBar(
+                  leading: IconButton(
+                      padding: EdgeInsets.all(0),
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.arrow_back,
+                      )),
+                  title: Text('Edit Team'),
+                  centerTitle: true,
+                ),
+                if (_isLoading) SizedBox(height: 5, child: LinearProgressIndicator())
+              ],
+            ),
           ),
         ),
       ),
@@ -82,22 +93,18 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                         Icons.edit,
                         color: Colors.grey,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          editTextField(context, _nameController);
-                        });
+                      onPressed: () async {
+                        String newValue = await editTextField(context, _nameController.value.text);
+                        if (newValue != null)
+                          //if update successful
+                          //TODO: add changes to provider
+                          updateTeam(name: newValue);
+                        //if(await updateTeam(name: newValue)) setState(() => _nameController.text = newValue);
                       }),
                 )),
           ),
           Divider(height: 16, indent: 30, endIndent: 30),
-          DescriptionWidget(description),
-          Divider(height: 16, indent: 30, endIndent: 30),
-          Padding(
-            padding: const EdgeInsets.only(left: 8, bottom: 6, top: 6),
-            child: Text('Members',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
-          ),
-          ...users,
+          DescriptionWidget(teamProvider.team.description),
           Divider(height: 16, indent: 30, endIndent: 30),
 
           /*
@@ -118,15 +125,11 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Invite Members to this team:',
-                        style: TextStyle(fontSize: 15)),
+                    Text('Invite Members to this team:', style: TextStyle(fontSize: 15)),
                     Padding(
                       padding: const EdgeInsets.only(top: 4, left: 16),
-                      child: Text(teamCode,
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.white70)),
+                      child: Text(teamProvider.team.code.substring(0, 28) + '...',
+                          overflow: TextOverflow.fade, style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic, color: Colors.white70)),
                     ),
                   ],
                 ),
@@ -137,7 +140,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                   icon: Icon(Icons.share),
                   onPressed: () {
                     setState(() {
-                      onShare(context, "This is Code $teamCode");
+                      onShare(context, "Your are invited to join my ${teamProvider.team.name} team \nKindly use this code to join: ${teamProvider.team.code}");
                     });
                   },
                   splashRadius: 18,
@@ -145,49 +148,71 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8, bottom: 6, top: 6),
+            child: Text('Members', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+          ),
+          ...users,
+          Divider(height: 16, indent: 30, endIndent: 30),
 
           /*
           * add team
           */
 
-          custom.ExpansionTile(
-            headerBackgroundColor: COLOR_ACCENT,
-            backgroundColor: COLOR_BACKGROUND.withOpacity(0.8),
-            iconColor: Colors.white,
-            title: Text('Create Team below this', style: TS_TITLE),
-            children: [
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                child: SizedBox(
-                  height: 40,
-                  child: TextFormField(
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (_) {},
-                    decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 8),
-                      hintText: 'Name',
-                      errorStyle: TextStyle(height: 1),
+          Form(
+            key: _formKey,
+            child: custom.ExpansionTile(
+              headerBackgroundColor: COLOR_ACCENT,
+              backgroundColor: COLOR_BACKGROUND.withOpacity(0.8),
+              iconColor: Colors.white,
+              title: Text('Create Team below this', style: TS_TITLE),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                  child: SizedBox(
+                    height: 40,
+                    child: TextFormField(
+                      onSaved: (value) => _teamName = value,
+                      validator: (value) {
+                        if (value.trim().length < 3)
+                          setState(() => _teamNameError = 'too short name');
+                        else
+                          setState(() => _teamNameError = '');
+                        return null;
+                      },
+                      textInputAction: TextInputAction.next,
+                      decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        hintText: 'Name',
+                        errorStyle: TextStyle(height: 1),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                child: TextFormField(
-                  maxLines: null,
-                  textInputAction: TextInputAction.newline,
-                  onFieldSubmitted: (_) {},
-                  decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                    hintText: 'Description',
+                if (_teamNameError.isNotEmpty) errorMessage(_teamNameError),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                  child: TextFormField(
+                    maxLines: null,
+                    textInputAction: TextInputAction.newline,
+                    onSaved: (value) => _teamDescription = value.trim(),
+                    validator: (value) {
+                      if (value.trim().length < 3) {
+                        setState(() => _teamDescriptionError = 'Description field is required');
+                        return '';
+                      }
+                      setState(() => _teamDescriptionError = "");
+                      return null;
+                    },
+                    decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                      hintText: 'Description',
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                  height: 48, child: FittedBox(child: addTeamsButton(hintText: "Create Team", onPressed: () {}))),
-            ],
+                if (_teamDescriptionError.isNotEmpty) errorMessage(_teamDescriptionError),
+                SizedBox(height: 48, child: FittedBox(child: addTeamsButton(hintText: "Create Team", onPressed: addTeam))),
+              ],
+            ),
           ),
         ],
       ),
@@ -234,6 +259,4 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
       ),
     );
   }
-
-
 }

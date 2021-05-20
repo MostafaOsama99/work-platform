@@ -47,6 +47,7 @@ class AppState extends State<App> with TickerProviderStateMixin {
 
   void _selectTab() {
     TabItem tabItem = TabItem.values[_tabController.index];
+
     if (tabItem == _currentTab) {
       // pop to first route
       _navigatorKeys[tabItem].currentState.popUntil((route) => route.isFirst);

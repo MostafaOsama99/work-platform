@@ -12,8 +12,6 @@ import 'data_constants.dart';
 class RoomProvider extends ChangeNotifier {
   Room _room;
 
-  int _parentTeamId = 1;
-
   ///user rooms
   List<Room> _rooms = [];
 
@@ -38,15 +36,6 @@ class RoomProvider extends ChangeNotifier {
     getUserTeams(reload: true);
     notifyListeners();
   }
-
-  Future<bool> createTeam(String name, String description) => post(
-      '/teams/rooms/${_room.id}/parentteam/$_parentTeamId',
-      json.encode({
-        'name': name,
-        'description': description,
-      })
-      //, (responseData) => null
-      );
 
   // Future<void> getRoom([int roomId]) =>
   //     _get('/rooms/${roomId?? _roomId}', (responseData) {
