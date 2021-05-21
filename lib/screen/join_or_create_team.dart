@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/provider/team_provider.dart';
 
 import 'package:provider/provider.dart';
 
@@ -39,6 +40,8 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
   String descriptionError = '';
   String _name;
   String _description;
+  String _codeError;
+  final _codeController = TextEditingController();
 
   bool _isLoading = false;
 
@@ -94,8 +97,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
       setState(() => _isLoading = true);
       _formKey.currentState.save();
 
-      bool _isSuccess = await handleRequest(
-          () => roomProvider.createRoom(_name, _description), context);
+      bool _isSuccess = await handleRequest(() => roomProvider.createRoom(_name, _description), context);
 
       //if success update user rooms
       if (_isSuccess) await roomProvider.getUserRooms();
@@ -105,13 +107,33 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
       //TODO: show alert dialog : room created successfully , on tap 'ok', pop twice
     }
 
+    bool validateCode() {
+      if (_codeController.value.text.isEmpty) {
+        setState(() => _codeError = 'please enter team invitation code');
+        return false;
+      }
+      setState(() => _codeError = '');
+      return true;
+    }
+
+    joinTeam() async {
+      if (!validateCode()) return;
+
+      setState(() => _isLoading = true);
+
+      ///97d59b88-fccc-4419-b88e-d9341eb0ee0c
+
+      var _isSuccess = await handleRequest(() => Provider.of<TeamProvider>(context, listen: false).joinTeam(_codeController.value.text.trim()), context);
+
+      setState(() => _isLoading = false);
+      print('join team : $_isSuccess');
+    }
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(KAppBarHeight),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(KAppBarRound),
-              bottomLeft: Radius.circular(KAppBarRound)),
+          borderRadius: BorderRadius.only(bottomRight: Radius.circular(KAppBarRound), bottomLeft: Radius.circular(KAppBarRound)),
           child: AppBar(
             title: Text(
               "Create room / Join team",
@@ -133,23 +155,25 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                   children: [
                     SizedBox(height: HEIGHT_PADDING),
                     Expanded(
-                      child: SizedBox(
-                        height: 40,
-                        child: TextFormField(
-                          textInputAction: TextInputAction.done,
-                          onFieldSubmitted: (_) {},
-                          autofocus: false,
-                          decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                            hintText: '#TeamCode',
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                            child: TextField(
+                              controller: _codeController,
+                              textInputAction: TextInputAction.done,
+                              autofocus: false,
+                              decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                                hintText: '#TeamCode',
+                              ),
+                            ),
                           ),
-                        ),
+                          if (nameError.isNotEmpty) errorMessage(nameError),
+                        ],
                       ),
                     ),
                     //SizedBox(width: 20),
-                    Padding(
-                        padding: EdgeInsets.only(left: 15),
-                        child:
-                            addTeamsButton(hintText: "Join", onPressed: () {}))
+                    Padding(padding: EdgeInsets.only(left: 15), child: addTeamsButton(hintText: "Join", onPressed: joinTeam))
                   ],
                 ),
                 Container(

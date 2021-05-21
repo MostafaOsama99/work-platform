@@ -10,6 +10,8 @@ import 'package:project/screen/chat_screen.dart';
 import 'package:project/screen/main_screen/activity_screen.dart';
 import 'package:project/screen/main_screen/attachment%20screen.dart';
 import 'package:provider/provider.dart';
+
+import 'provider/team_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screen/navigation/app.dart';
 
@@ -24,6 +26,7 @@ void main() async{
         ChangeNotifierProvider.value(value: NavBar()),
         ChangeNotifierProvider.value(value: UserData()),
         ChangeNotifierProvider.value(value: RoomProvider()),
+        ChangeNotifierProvider.value(value: TeamProvider()),
       ],
       child: MyApp(email: preferences.getString("email"),password: preferences.getString("password"),),
     ),
@@ -87,7 +90,7 @@ class MyApp extends StatelessWidget {
             1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
       ),
       themeMode: ThemeMode.dark,
-      home: Profile(),
+      home: App(),
     );
   }
 }

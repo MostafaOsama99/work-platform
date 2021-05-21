@@ -48,6 +48,21 @@ class Task {
     getType;
   }
 
+  factory Task.formJson(Map<String, dynamic> json) {
+    return Task(
+        id: (json["id"]).toString(),
+        name: json["name"],
+        description: json["description"],
+        datePlannedStart: DateTime.parse(json["plannedStartDate"]),
+        datePlannedEnd: DateTime.parse(json["plannedEndDate"]),
+        dateActualStart: DateTime.parse(json["actualStartDate"]),
+        dateActualEnd: DateTime.parse(json["actualEndDate"]),
+        checkPoints: (json['childCheckPoints'] as List)
+            .map((cp) => CheckPoint(id: cp['id'], name: cp['checkpointText'], description: cp['description'], percentage: cp['percentage']))
+            .toList(),
+        taskCreator: User.fromJson(json['creator']));
+  }
+
   ///holds which task type is
   taskType type;
 
@@ -67,7 +82,7 @@ class CheckPoint {
   final String name, description;
   final bool isFinished;
 
-  /// [percentage] = -1: means that this checkpoint doesn't have any subtask, so use checkbox, otherwise show progress
+  // [percentage] = -1: means that this checkpoint doesn't have any subtask, so use checkbox, otherwise show progress
   final int percentage;
 
   const CheckPoint({
@@ -81,27 +96,17 @@ class CheckPoint {
 
 class User {
   //TODO make id String
-  final id;
+  //final id;
   final String userName;
   final String name;
   final String jobTitle;
   final String imageUrl;
 
   //TODO:check if the userName is required
-  const User(
-      {this.userName,
-      @required this.id,
-      this.imageUrl,
-      @required this.name,
-      @required this.jobTitle});
+  const User({@required this.userName, this.imageUrl, @required this.name, @required this.jobTitle});
 
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-        id: json['id'],
-        userName: json['userName'],
-        name: json['name'],
-        imageUrl: json['imageUrl'],
-        jobTitle: json['jobTitle']);
+    return User(userName: json['userName'], name: json['name'], imageUrl: json['imageUrl'], jobTitle: json['jobTitle']);
   }
 }
 
@@ -132,7 +137,7 @@ class Team {
 
   //TODO: remove these
   final User leader;
-  final List<User> members;
+  List<User> members;
   List<Task> tasks;
 
   Team({
@@ -147,11 +152,6 @@ class Team {
   });
 
   factory Team.fromJson(Map<String, dynamic> json) {
-    return Team(
-        id: json['id'],
-        name: json['name'],
-        description: json['description'],
-        code: json['teamCode'],
-        dateCreated: DateTime.parse(json['createdAt']));
+    return Team(id: json['id'], name: json['name'], description: json['description'], code: json['teamCode'], dateCreated: DateTime.parse(json['createdAt']));
   }
 }

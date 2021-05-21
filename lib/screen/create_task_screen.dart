@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project/provider/data_constants.dart';
+import 'package:project/provider/team_provider.dart';
+import 'package:provider/provider.dart';
 import '../demoData.dart';
 import '../dialogs/assign_members_dialog.dart';
 import '../dialogs/assign_type_dialog.dart';
@@ -49,6 +52,10 @@ class _CreateTaskState extends State<CreateTask> {
   ///counter for remaining charters left
   int _titleCounter;
 
+  bool _isLoading = false;
+
+  TeamProvider teamProvider;
+
   @override
   void initState() {
     newTask = Task(
@@ -58,6 +65,8 @@ class _CreateTaskState extends State<CreateTask> {
         datePlannedEnd: widget.cpEnd ?? DateTime.now().add(Duration(days: 7)),
         parentCheckpoint: widget.parentCheckpoint,
         checkPoints: []);
+
+    Future.delayed(Duration.zero).then((value) => teamProvider = Provider.of<TeamProvider>(context, listen: false));
 
     _titleCounter = titleLength;
     super.initState();
@@ -84,19 +93,16 @@ class _CreateTaskState extends State<CreateTask> {
     //when user clicks the same button many times, there's only snackBar shown
     ScaffoldMessenger.of(context).clearSnackBars();
     if (checkpoints.length == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(snackBar(
-          'Add a checkpoint at least',
-          taskTypes[newTask.type].accentColor.withAlpha(150)));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar('Add a checkpoint at least', taskTypes[newTask.type].accentColor.withAlpha(150)));
       return;
     } else if (_selectedUsers.length == 0 && _selectedTeam == null) {
-      ScaffoldMessenger.of(context).showSnackBar(snackBar(
-          'Assigned to ?', taskTypes[newTask.type].accentColor.withAlpha(150)));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar('Assigned to ?', taskTypes[newTask.type].accentColor.withAlpha(150)));
       return;
     }
-    _submit();
+    _submit(context);
   }
 
-  _submit() {
+  _submit(BuildContext context) async {
     //use current user
     // newTask.taskCreator = User(name: 'Current User!', id: 4564, jobTitle: 'Current User');
     // checkpoints.forEach((element) {
@@ -111,23 +117,44 @@ class _CreateTaskState extends State<CreateTask> {
     // else
     //   newTask.assignedTeam = _selectedTeam;
 
+    Task _task = Task(
+        id: null,
+        name: _titleController.value.text.trim(),
+        checkPoints: checkpoints.map((e) => CheckPoint(id: null, name: e['title'], description: e['description'])).toList(),
+        datePlannedStart: newTask.datePlannedStart,
+        datePlannedEnd: newTask.datePlannedEnd,
+        dateActualStart: newTask.datePlannedStart,
+        parentCheckpoint: widget.parentCheckpoint,
+        members: _selectedUsers.length > 0 ? _selectedUsers : null,
+        //TODO performance check: for assigned team should be a Team object or just teamId
+        //if the task is assigned to a team, it will have the team, other wise : it will have member's team
+        assignedTeam: _selectedUsers.length == 0 ? _selectedTeam : teamProvider.team);
+
+    setState(() => _isLoading = true);
+
+    await Future.delayed(Duration(seconds: 2));
+
+    await handleRequest(() => teamProvider.createTask(_task), context);
+
+    setState(() => _isLoading = false);
+
     //TODO: show progress indicator till the data uploaded
-    demoTasks.insert(
-        0,
-        Task(
-            name: _titleController.value.text.trim(),
-            taskCreator:
-                User(name: 'Current User!', id: 4564, jobTitle: 'Current User'),
-            checkPoints: checkpoints
-                .map((e) => CheckPoint(
-                    id: null, name: e['title'], description: e['description']))
-                .toList(),
-            datePlannedStart: newTask.datePlannedStart,
-            datePlannedEnd: newTask.datePlannedEnd,
-            parentCheckpoint: widget.parentCheckpoint,
-            id: 'new task',
-            members: _selectedUsers.length > 0 ? _selectedUsers : null,
-            assignedTeam: _selectedUsers.length == 0 ? _selectedTeam : null));
+    // demoTasks.insert(
+    //     0,
+    //     Task(
+    //         name: _titleController.value.text.trim(),
+    //         taskCreator:
+    //             User(name: 'Current User!', userName: '', jobTitle: 'Current User'),
+    //         checkPoints: checkpoints
+    //             .map((e) => CheckPoint(
+    //                 id: null, name: e['title'], description: e['description']))
+    //             .toList(),
+    //         datePlannedStart: newTask.datePlannedStart,
+    //         datePlannedEnd: newTask.datePlannedEnd,
+    //         parentCheckpoint: widget.parentCheckpoint,
+    //         id: 'new task',
+    //         members: _selectedUsers.length > 0 ? _selectedUsers : null,
+    //         assignedTeam: _selectedUsers.length == 0 ? _selectedTeam : null));
     Navigator.of(context).pop();
   }
 
@@ -139,10 +166,7 @@ class _CreateTaskState extends State<CreateTask> {
         await showDialog(context: context, builder: (_) => AssignTypeDialog());
 
     if (result == 'members') {
-      result = await showDialog(
-          context: context,
-          builder: (_) => AssignMembersDialog(
-              allUsers: widget.teamMembers, selectedUsers: _selectedUsers));
+      result = await showDialog(context: context, builder: (_) => AssignMembersDialog(allUsers: teamProvider.team.members, selectedUsers: _selectedUsers));
       if (result != null) setState(() => _selectedUsers = result);
     } else if (result == 'team') {
       result = await showDialog(
@@ -413,15 +437,18 @@ class _CreateTaskState extends State<CreateTask> {
                               fontSize: 16,
                               color: taskTypes[newTask.type].accentColor)),
                       SizedBox(
-                          height: 22,
-                          child: IconButton(
-                              icon: Icon(Icons.add_circle_outline_rounded),
-                              padding: EdgeInsets.zero,
-                              tooltip: 'add member',
-                              color: Colors.white,
-                              splashRadius: 20,
-                              onPressed: _addMemberOrTeam))
-                    ],
+                      height: 22,
+                      child: IconButton(
+                          icon: Icon(Icons.add_circle_outline_rounded),
+                          padding: EdgeInsets.zero,
+                          tooltip: 'add member',
+                          color: Colors.white,
+                          splashRadius: 20,
+                          onPressed: () {
+                            FocusScope.of(context).unfocus();
+                            _addMemberOrTeam();
+                          }))
+                ],
                   ),
                   SizedBox(height: 10),
 
@@ -443,17 +470,16 @@ class _CreateTaskState extends State<CreateTask> {
                           : SizedBox(
                               height: 40,
                               child: Center(
-                                child: Text(
-                                  'Add members or a team!',
-                                  style: const TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      color: Colors.white70),
-                                ),
-                              ),
-                            )
-                ]),
+                            child: Text(
+                              'Add members or a team!',
+                              style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.white70),
+                            ),
+                          ),
+                        )
+            ]),
           ),
-        )
+        ),
+        if (_isLoading) Center(child: CircularProgressIndicator()),
       ]),
     );
   }
