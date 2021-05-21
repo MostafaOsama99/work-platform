@@ -43,22 +43,22 @@ class LoginState extends State<Login> {
 
     final roomProvider = Provider.of<RoomProvider>(context, listen: false);
     submit() async {
-      user.setMail = 'test@test.com';
-      user.setPassword = 'Mm1010?';
-      widget.whenLoading(true);
-      await handleRequest(user.signIn, widget.scaffoldKey.currentContext);
-
-      print('getting current user ...');
-      await handleRequest(user.getCurrentUser, widget.scaffoldKey.currentContext);
-
-      print('getting user rooms ...');
-      await handleRequest(roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
-
-      roomProvider.changeRoom(roomProvider.rooms.first.id);
-
-      //initial loading
-      roomProvider.getUserTeams(reload: true);
-      widget.whenLoading(false);
+      // user.setMail = 'test@test.com';
+      // // user.setPassword = 'Mm1010?';
+      // widget.whenLoading(true);
+      // await handleRequest(user.signIn, widget.scaffoldKey.currentContext);
+      //
+      // print('getting current user ...');
+      // await handleRequest(user.getCurrentUser, widget.scaffoldKey.currentContext);
+      //
+      // print('getting user rooms ...');
+      // await handleRequest(roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
+      //
+      // roomProvider.changeRoom(roomProvider.rooms.first.id);
+      //
+      // //initial loading
+      // roomProvider.getUserTeams(reload: true);
+      // widget.whenLoading(false);
 
       //await handleRequest(()=> roomProvider.createTeam('team 2', 'description'), widget.scaffoldKey.currentContext);
 
