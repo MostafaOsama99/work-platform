@@ -72,10 +72,10 @@ class LoginState extends State<Login> {
       print('getting user rooms ...');
       await handleRequest(
           roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
-
+      //
       roomProvider.changeRoom(roomProvider.rooms.first.id);
 
-      //initial loading
+    //  initial loading
       roomProvider.getUserTeams(reload: true);
       // await handleRequest(, widget.scaffoldKey.currentContext);
       widget.whenLoading(false);

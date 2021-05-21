@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "854455426447",
+    "project_id": "workira-fc414",
+    "storage_bucket": "workira-fc414.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854455426447:android:960009685d521faca3bffa",
+        "android_client_info": {
+          "package_name": "com.example.project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854455426447-a97mhg101oc6fq8jhpi2f2e1qubs4q3k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCau1tTds3IRWr0WSd-3OqeEvc443Hi49g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854455426447-a97mhg101oc6fq8jhpi2f2e1qubs4q3k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

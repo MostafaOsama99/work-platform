@@ -126,7 +126,7 @@ class AppState extends State<App> with TickerProviderStateMixin {
               key: _navigatorKeys[TabItem.chats],
               //initialRoute: '/home',
               onGenerateRoute: (routeSettings) => MaterialPageRoute(
-                  builder: (context) => AuthScreen()), //ChatsScreen()),
+                  builder: (context) => ChatsScreen()), //ChatsScreen()),
             ),
           ),
         ]),

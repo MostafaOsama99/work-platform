@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:project/provider/room_provider.dart';
+import 'package:project/screen/auth/auth_screen.dart';
+import 'package:project/screen/auth/login.dart';
+import 'package:project/screen/profile_screen.dart';
+import 'package:project/splash_screen/splash_screen.dart';
 import 'provider/UserData.dart';
 import 'provider/navbar.dart';
 import 'package:project/screen/chat_screen.dart';
 import 'package:project/screen/main_screen/activity_screen.dart';
 import 'package:project/screen/main_screen/attachment%20screen.dart';
 import 'package:provider/provider.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screen/navigation/app.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  //preferences.getString('email'),
+  // preferences.getString('password')
   runApp(
     MultiProvider(
       providers: [
@@ -17,12 +25,14 @@ void main() {
         ChangeNotifierProvider.value(value: UserData()),
         ChangeNotifierProvider.value(value: RoomProvider()),
       ],
-      child: MyApp(),
+      child: MyApp(email: preferences.getString("email"),password: preferences.getString("password"),),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
+  final String email,password;
+  MyApp({this.email,this.password});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -77,7 +87,7 @@ class MyApp extends StatelessWidget {
             1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
       ),
       themeMode: ThemeMode.dark,
-      home: App(),
+      home: Profile(),
     );
   }
 }

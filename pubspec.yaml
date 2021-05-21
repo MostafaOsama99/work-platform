@@ -23,9 +23,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_duration_picker:
-    git:
-      url: https://github.com/cdharris/flutter_duration_picker
   datetime_picker_formfield: ^1.0.0
   date_time_picker: ^1.1.1
   step_progress_indicator: ^0.2.0+3
@@ -36,7 +33,7 @@ dependencies:
   image_picker: ^0.7.4
   full_screen_image: ^1.0.2
   flutter_reaction_button: ^1.0.8
-  dio: ^4.0.0
+  shared_preferences: ^2.0.5
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -46,6 +43,7 @@ dependencies:
   url_launcher: ^6.0.3
   fl_chart: ^0.12.3
   http: ^0.13.1
+  firebase_storage: ^3.0.8
 
 dev_dependencies:
   flutter_test:
@@ -90,6 +88,7 @@ flutter:
     - assets/icons/send_icon.png
     - assets/icons/bell.png
     - assets/icons/bell_rotate.png
+    - assets/icons/workera_logo.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

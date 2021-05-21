@@ -62,6 +62,29 @@ final TEXT_FIELD_DECORATION = InputDecoration(
     borderRadius: BorderRadius.circular(25),
   ),
 );
+final TEXT_FIELD_DECORATION1 = InputDecoration(
+contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+  isDense: true,
+  filled: true,
+  fillColor: Colors.white,
+  hintStyle: TextStyle(color: Colors.grey[700]),
+  focusedBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.white, width: 2),
+    borderRadius: BorderRadius.circular(25),
+  ),
+  enabledBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.white),
+    borderRadius: BorderRadius.circular(25),
+  ),
+  focusedErrorBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.red, width: 1.5),
+    borderRadius: BorderRadius.circular(25),
+  ),
+  errorBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.red, width: 2),
+    borderRadius: BorderRadius.circular(25),
+  ),
+);
 
 // ignore: non_constant_identifier_names
 final InputDecoration TEXT_FIELD_DECORATION_2 = InputDecoration(

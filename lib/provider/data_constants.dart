@@ -71,6 +71,8 @@ Future<dynamic> get(
     return onSuccess(json.decode(response.body));
   } else
     throw ServerException(json.decode(response.body));
+
+
 }
 
 ///generic post method
