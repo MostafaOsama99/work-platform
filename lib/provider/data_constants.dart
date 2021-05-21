@@ -67,6 +67,8 @@ Future<dynamic> get(String endpoint, Function(dynamic responseData) onSuccess) a
     return onSuccess(json.decode(response.body));
   } else
     throw ServerException(json.decode(response.body));
+
+
 }
 
 ///generic post method

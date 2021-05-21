@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:project/model/http_exception.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/provider/data_constants.dart';
+import 'package:project/shared_preferences/user_data.dart';
 
 import '../constants.dart';
 
@@ -148,7 +149,8 @@ class UserData extends ChangeNotifier {
       auth(KSignIn, json.encode({"email": _mail, "password": _password}),
           (responseData) {
         token = responseData['token'];
-            //TODO: call save user to local db
+        setPrefData(_mail, _password);
+
       });
 
   Future<void> auth(String endpoint, String body,

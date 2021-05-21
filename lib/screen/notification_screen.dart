@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/demoData.dart';
+import 'package:project/screen/profile_screen.dart';
 import 'package:project/widgets/notification_widgets.dart';
 
 import '../constants.dart';
@@ -20,7 +21,13 @@ class NotificationScreen extends StatelessWidget {
             title: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text("Notification", style: TextStyle(color: Colors.white)),
+                InkWell(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                        return Profile();
+                      }));
+                    },
+                    child: Text("Notification", style: TextStyle(color: Colors.white))),
               ],
             ),
           ),
@@ -39,7 +46,9 @@ class NotificationScreen extends StatelessWidget {
 
 List<EventButton> buttons = [
   EventButton(
-    onTap: () {},
+    onTap: () {
+
+    },
     text: 'allow',
     key: UniqueKey(),
   ),
