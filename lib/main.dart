@@ -90,7 +90,7 @@ class MyApp extends StatelessWidget {
             1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
       ),
       themeMode: ThemeMode.dark,
-      home: App(),
+      home: SplashScreen(email: email,password: password,),
     );
   }
 }
