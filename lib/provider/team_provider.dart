@@ -16,7 +16,7 @@ class TeamProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Task> get tasks => [..._team.tasks];
+  List<Task> get tasks => [..._team.tasks.reversed];
 
   Future<void> joinTeam(String teamCode) => get('/users/jointeam/$teamCode', (_) {});
 
@@ -44,7 +44,7 @@ class TeamProvider extends ChangeNotifier {
       });
 
   Future<void> createTask(Task task) async {
-    String newTaskId;
+    int newTaskId;
     await post(
         //if the task is assigned to a team, it will have the team, other wise : it will have member's team
         task.parentCheckpoint == null ? '/teams/${task.assignedTeam.id}/tasks' : '/tasks/subtask/${task.parentCheckpoint.id}',
@@ -58,39 +58,17 @@ class TeamProvider extends ChangeNotifier {
           "childCheckpoints":
               List.generate(task.checkPoints.length, (index) => {"checkpointText": task.checkPoints[index].name, "description": task.checkPoints[index].description}),
         }),
-        (response) => newTaskId = response);
+        (response) => newTaskId = response as int);
     //assign team members
-    if (task.assignedTeam.id == _team.id) await post('/tasks/$newTaskId/assignedusers', json.encode(List.generate(task.members.length, (index) => task.members[index].userName)));
+    if (task.assignedTeam.id == _team.id) await assignMembers(newTaskId, task.members);
   }
 
-  // //green task
-  // _createNewTask(Task task) => post(
-  //   //if the task is assigned to a team, it will have the team, other wise : it will have member's team
-  //     '/teams/${task.assignedTeam.id}/tasks',
-  //     json.encode({
-  //       "name": task.name,
-  //       "description": task.description,
-  //       "plannedStartDate": task.datePlannedStart.toIso8601String(),
-  //       "plannedEndDate": task.datePlannedEnd.toIso8601String(),
-  //       "actualStartDate": task.dateActualStart.toIso8601String(),
-  //       "isFinished": false,
-  //       "childCheckpoints":
-  //       List.generate(task.checkPoints.length, (index) => {"checkpointText": task.checkPoints[index].name, "description": task.checkPoints[index].description}),
-  //     }));
-  //
-  // _createSubTask (Task task) => post(
-  //   //if the task is assigned to a team, it will have the team, other wise : it will have member's team
-  //     '/teams/${task.assignedTeam.id}/tasks',
-  //     json.encode({
-  //       "name": task.name,
-  //       "description": task.description,
-  //       "plannedStartDate": task.datePlannedStart.toIso8601String(),
-  //       "plannedEndDate": task.datePlannedEnd.toIso8601String(),
-  //       "actualStartDate": task.dateActualStart.toIso8601String(),
-  //       "isFinished": false,
-  //       "childCheckpoints":
-  //       List.generate(task.checkPoints.length, (index) => {"checkpointText": task.checkPoints[index].name, "description": task.checkPoints[index].description}),
-  //     }));
+  //assign members to the task
+  //updates data locally, should i re-fetch it instead ??
+  assignMembers(int taskId, List<User> assignedMembers) =>
+      post('/tasks/$taskId/assignedusers', json.encode(List.generate(assignedMembers.length, (index) => assignedMembers[index].userName)), (_) {
+        _team.tasks.firstWhere((task) => task.id == taskId).members.addAll(assignedMembers);
+      });
 
   getTasks() async {
     fetchMembers();
@@ -99,9 +77,13 @@ class TeamProvider extends ChangeNotifier {
       _team.tasks = [];
       (response as List).forEach((task) => _team.tasks.add(Task.formJson(task)));
     });
-
-    // _team.tasks.forEach((task) async {
-    //   task.members = await get('/tasks/${task.id}/assignedusers', (res)=> );
-    // });
   }
+
+  ///find specific task by id
+  Task findById(int id) => _team.tasks.firstWhere((task) => task.id == id);
+
+  removeAssignedMembers(int taskId, List<String> removedUserNames) => delete('/tasks/$taskId/assignedusers', json.encode(removedUserNames), (_) {
+        team.tasks.firstWhere((task) => task.id == taskId).members.removeWhere((member) => removedUserNames.contains(member.userName));
+        notifyListeners();
+      });
 }

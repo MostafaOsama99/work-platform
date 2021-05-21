@@ -8,9 +8,10 @@ import 'taskType.dart';
 //TODO: add task icon (string) as an attribute & taskAccentColor. to avoid check in each widget for the task type
 
 /// task data model
-class Task {
+class Task with ChangeNotifier {
   //TODO:check if id is string or double => <int>
-  String name, id, description, projectName;
+  String name, description, projectName;
+  int id;
   DateTime datePlannedStart, datePlannedEnd, dateActualStart, dateActualEnd;
   final List<CheckPoint> checkPoints;
   List<User> members;
@@ -51,7 +52,7 @@ class Task {
   factory Task.formJson(Map<String, dynamic> json) {
     print(json['assignedUsers']);
     return Task(
-      id: (json["id"]).toString(),
+      id: (json["id"]),
       name: json["name"],
       description: json["description"],
       datePlannedStart: DateTime.parse(json["plannedStartDate"]),
@@ -111,6 +112,9 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(userName: json['userName'], name: json['name'], imageUrl: json['imageUrl'], jobTitle: json['jobTitle']);
   }
+
+  @override
+  bool operator ==(Object other) => other is User && other.userName == userName;
 }
 
 // class Project {

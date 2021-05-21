@@ -50,7 +50,7 @@ final List<Team> teams = [
   Team(id: 0, name: 'Marketing', tasks: demoTasks),
   Team(id: 1, name: 'Public Relations', tasks: [
     Task(
-        id: '0',
+        id: 0,
         name: 'planning publicity strategies',
         datePlannedStart: DateTime(2020, 12, 1),
         datePlannedEnd: DateTime(2021, 1, 25),
@@ -65,7 +65,7 @@ final List<Team> teams = [
         assignedTeam: team,
         taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Mostafa Osama')),
     Task(
-        id: '1',
+        id: 1,
         name: 'producing presentations',
         datePlannedStart: DateTime(2020, 12, 1),
         datePlannedEnd: DateTime(2021, 1, 25),
@@ -80,7 +80,7 @@ final List<Team> teams = [
         assignedTeam: team,
         taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Mostafa Osama')),
     Task(
-        id: '2',
+        id: 2,
         name: 'dealing with enquiries',
         datePlannedStart: DateTime(2020, 12, 1),
         datePlannedEnd: DateTime(2021, 1, 25),
@@ -95,7 +95,7 @@ final List<Team> teams = [
         assignedTeam: team,
         taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Mostafa Osama')),
     Task(
-        id: '3',
+        id: 3,
         name: 'analysing media coverage',
         datePlannedStart: DateTime(2020, 12, 1),
         datePlannedEnd: DateTime(2021, 1, 25),
@@ -112,7 +112,7 @@ final List<Team> teams = [
   ]),
   Team(id: 2, name: 'Development', tasks: [
     Task(
-        id: '0',
+        id: 0,
         name: 'Develop a website',
         datePlannedStart: DateTime(2020, 12, 1),
         datePlannedEnd: DateTime(2021, 1, 25),
@@ -127,7 +127,7 @@ final List<Team> teams = [
         assignedTeam: team,
         taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Mostafa Osama')),
     Task(
-        id: '1',
+        id: 1,
         name: 'maintain database',
         datePlannedStart: DateTime(2020, 12, 1),
         datePlannedEnd: DateTime(2021, 1, 25),
@@ -144,7 +144,7 @@ final List<Team> teams = [
   ]),
   Team(id: 0, name: 'Security', tasks: [
     Task(
-        id: '0',
+        id: 0,
         name: 'maintain server security',
         datePlannedStart: DateTime(2020, 12, 1),
         datePlannedEnd: DateTime(2021, 1, 25),
@@ -165,7 +165,7 @@ Team team = Team(name: 'Marketing team', id: 0);
 
 List<Task> demoTasks = [
   Task(
-      id: '0',
+      id: 0,
       name: 'Marketing strategy',
       datePlannedStart: DateTime(2020, 12, 1),
       datePlannedEnd: DateTime(2021, 1, 25),
@@ -180,7 +180,7 @@ List<Task> demoTasks = [
       assignedTeam: team,
       taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Mostafa Osama')),
   Task(
-      id: '1',
+      id: 1,
       name: 'Social media ',
       datePlannedStart: DateTime(2021, 1, 18),
       datePlannedEnd: DateTime(2021, 1, 24),
@@ -196,7 +196,7 @@ List<Task> demoTasks = [
       taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Mostafa osama'),
       members: users),
   Task(
-      id: '2',
+      id: 2,
       name: 'Search Engine',
       datePlannedStart: DateTime(2021, 8, 21),
       datePlannedEnd: DateTime(2021, 9, 5),
@@ -209,7 +209,7 @@ List<Task> demoTasks = [
       ],
       members: users,
       dependentTask: Task(
-          id: '0',
+          id: 0,
           name: 'Marketing strategy',
           datePlannedStart: DateTime(2020, 12, 1),
           datePlannedEnd: DateTime(2021, 1, 25),
@@ -225,7 +225,7 @@ List<Task> demoTasks = [
           taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Mostafa Osama')),
       taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Mostafa Osama')),
   Task(
-      id: '4',
+      id: 4,
       name: 'Search Engine',
       datePlannedStart: DateTime(2021, 8, 21),
       datePlannedEnd: DateTime(2021, 9, 5),
@@ -238,7 +238,7 @@ List<Task> demoTasks = [
       ],
       members: users,
       dependentTask: Task(
-          id: '0',
+          id: 0,
           name: 'Marketing strategy',
           datePlannedStart: DateTime(2020, 12, 1),
           datePlannedEnd: DateTime(2021, 1, 25),
@@ -266,7 +266,7 @@ List<Teams> myTeams = [
           "The Marketing Department plays a vital role in promoting the business and mission of an organization. It serves as the face of your company, coordinating and producing all materials representing the business. It is the Marketing Department's job to reach out to prospects, customers, investors and/or the community, while creating an overarching image that represents your company in a positive light."),
   Teams(tasks: [
     Task(
-        id: '0',
+        id: 0,
         name: 'Create front-end long name',
         datePlannedStart: DateTime(2020, 12, 1),
         datePlannedEnd: DateTime(2021, 1, 25),
@@ -282,7 +282,7 @@ List<Teams> myTeams = [
   ], teamName: "Public Relations", leaderName: "Ahmed", description: "this is ui team description "),
   Teams(tasks: [
     Task(
-        id: '0',
+        id: 0,
         name: 'Create front-end long name',
         datePlannedStart: DateTime(2020, 12, 1),
         datePlannedEnd: DateTime(2021, 1, 25),
@@ -296,7 +296,7 @@ List<Teams> myTeams = [
         members: users,
         taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Mostafa Osama')),
     Task(
-        id: '1',
+        id: 1,
         name: 'Create team screen',
         datePlannedStart: DateTime(2021, 1, 18),
         datePlannedEnd: DateTime(2021, 1, 24),
@@ -310,7 +310,7 @@ List<Teams> myTeams = [
         parentCheckpoint: CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10),
         members: users),
     Task(
-        id: '2',
+        id: 2,
         name: 'Dependent Task',
         datePlannedStart: DateTime(2021, 1, 24),
         datePlannedEnd: DateTime(2021, 2, 5),
@@ -323,7 +323,7 @@ List<Teams> myTeams = [
         parentCheckpoint: CheckPoint(id: 0, name: 'team screen', isFinished: false, percentage: 10),
         members: users,
         dependentTask: Task(
-          id: 'null',
+          id: null,
           datePlannedEnd: DateTime(2021, 8, 21),
           name: 'Define team dataModel',
         ))
@@ -352,7 +352,7 @@ List<Project> project = [
       teams: [
         Teams(tasks: [
           Task(
-              id: '0',
+              id: 0,
               name: 'Create front-end long name',
               datePlannedStart: DateTime(2020, 12, 1),
               datePlannedEnd: DateTime(2021, 1, 25),
@@ -369,7 +369,7 @@ List<Project> project = [
         Teams(
             tasks: [
               Task(
-                  id: '0',
+                  id: 0,
                   name: 'Create SmartHome',
                   datePlannedStart: DateTime(2020, 12, 1),
                   datePlannedEnd: DateTime(2021, 1, 25),
@@ -383,7 +383,7 @@ List<Project> project = [
                   members: users,
                   taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Hesham')),
               Task(
-                  id: '1',
+                  id: 1,
                   name: 'screen',
                   datePlannedStart: DateTime(2021, 1, 14),
                   datePlannedEnd: DateTime(2021, 1, 24),

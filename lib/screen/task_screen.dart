@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:project/dialogs/assign_members_dialog.dart';
+import 'package:project/provider/team_provider.dart';
 import 'package:project/screen/main_screen/attachment%20screen.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../demoData.dart';
@@ -17,20 +20,57 @@ import '../model/models.dart';
 import '../model/taskType.dart';
 
 class TaskScreen extends StatefulWidget {
-  final Task task;
-
-  const TaskScreen(this.task);
-
   @override
   _TaskScreenState createState() => _TaskScreenState();
 }
 
 class _TaskScreenState extends State<TaskScreen> {
   bool _isEditing = false;
+  bool _isLoading = false;
   bool _showCheckpointDesc = true;
+
+  List<String> _removedUsernames = [];
+  List<User> _addedUsers = [];
 
   @override
   Widget build(BuildContext context) {
+    TeamProvider teamProvider = Provider.of<TeamProvider>(context);
+
+    //get task id from previous TaskCard
+    final int taskId = ModalRoute.of(context).settings.arguments;
+    //get this task from the provider
+    Task task = teamProvider.findById(taskId);
+
+    updateTask() async {
+      setState(() => _isLoading = true);
+      //await Future.delayed(Duration(seconds: 2));
+
+      if (_removedUsernames.isNotEmpty) {
+        await teamProvider.removeAssignedMembers(task.id, _removedUsernames);
+        _removedUsernames = [];
+      }
+
+      if (_addedUsers.isNotEmpty) {
+        await teamProvider.assignMembers(taskId, _addedUsers);
+        _addedUsers = [];
+      }
+
+      setState(() => _isLoading = false);
+    }
+
+    //used for add members button
+    addUsers() async {
+      //TODO:show add member dialog
+      // users shown on the screen
+      List<User> showedUsers = task.members + _addedUsers;
+      //all team members filted by shown users
+      List<User> otherUsers = teamProvider.team.members;
+      otherUsers.removeWhere((user) => showedUsers.contains(user));
+
+      var result = await showDialog(context: context, builder: (_) => AssignMembersDialog(allUsers: otherUsers, selectedUsers: []));
+      if (result != null) setState(() => _addedUsers = result);
+    }
+
     final notificationHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
@@ -39,11 +79,11 @@ class _TaskScreenState extends State<TaskScreen> {
           SliverAppBar(
             pinned: true,
             floating: false,
-            //forceElevated: false,
             collapsedHeight: 45,
             toolbarHeight: 44.9999,
-            //automaticallyImplyLeading: false,
             expandedHeight: 125,
+            //forceElevated: false,
+            //automaticallyImplyLeading: false,
             //leading: IconButton(icon: Icon(Icons.arrow_back, size: 22),splashRadius: 15, onPressed: () =>Navigator.of(context).pop(),),
             actions: [
               IconButton(
@@ -55,7 +95,10 @@ class _TaskScreenState extends State<TaskScreen> {
                       )
                     : Icon(Icons.edit, color: Colors.white),
                 splashRadius: 20,
-                onPressed: () => setState(() => _isEditing = !_isEditing),
+                onPressed: () {
+                  setState(() => _isEditing = !_isEditing);
+                  if (!_isEditing) updateTask();
+                },
               ),
               IconButton(
                   icon: Transform.rotate(
@@ -67,11 +110,15 @@ class _TaskScreenState extends State<TaskScreen> {
                   splashRadius: 20,
                   onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Attachment())))
             ],
-            flexibleSpace: BuildFlexibleSpace(task: widget.task, isEdit: _isEditing),
+            flexibleSpace: BuildFlexibleSpace(
+              task: task,
+              isEdit: _isEditing,
+              isLoading: _isLoading,
+            ),
           ),
           SliverList(
             delegate: SliverChildListDelegate([
-              if (widget.task.dependentTask != null)
+              if (task.dependentTask != null)
                 Container(
                   //height: 30,
                   decoration: BoxDecoration(
@@ -102,31 +149,36 @@ class _TaskScreenState extends State<TaskScreen> {
                       SizedBox(width: 8),
                       FittedBox(
                           child: Text(
-                        widget.task.dependentTask.name,
+                        task.dependentTask.name,
                         style: TextStyle(fontSize: 15),
                       )),
                       Spacer(),
                       Icon(Icons.pause_circle_outline_rounded, size: 23, color: Colors.redAccent),
                       SizedBox(width: 8),
                       Text('after: ', style: TextStyle(fontSize: 15)),
-                      DateField(initialDate: widget.task.dependentTask.datePlannedEnd),
+                      DateField(initialDate: task.dependentTask.datePlannedEnd),
                     ],
                   ),
                 ),
-              if (widget.task.parentCheckpoint != null)
+              if (task.parentCheckpoint != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 12, right: 8, left: 8, bottom: 8),
                   child: ParentCheckpoint(
-                    widget.task.parentCheckpoint,
-                    taskAccentColor: taskTypes[widget.task.type].accentColor,
+                    task.parentCheckpoint,
+                    taskAccentColor: taskTypes[task.type].accentColor,
                   ),
                 ),
+
+              /*
+              *
+              * description
+              * */
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: DescriptionWidget(
-                  widget.task.description,
-
-                  taskAccentColor: taskTypes[widget.task.type].accentColor,
+                  task.description,
+                  taskAccentColor: taskTypes[task.type].accentColor,
                 ),
               ),
               Divider(endIndent: 25, indent: 25),
@@ -144,14 +196,14 @@ class _TaskScreenState extends State<TaskScreen> {
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
-                        color: taskTypes[widget.task.type].accentColor,
+                        color: taskTypes[task.type].accentColor,
                       ),
                     ),
                     Spacer(),
                     Switch(
                       value: _showCheckpointDesc,
                       onChanged: (_) => setState(() => _showCheckpointDesc = !_showCheckpointDesc),
-                      activeColor: taskTypes[widget.task.type].accentColor,
+                      activeColor: taskTypes[task.type].accentColor,
                     ),
                   ],
                 ),
@@ -160,29 +212,29 @@ class _TaskScreenState extends State<TaskScreen> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+                  (BuildContext context, int index) {
                 return InkWell(
                   onLongPress: () => Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => CreateTask(
-                            teamMembers: users,
-                            parentCheckpoint: widget.task.checkPoints[index],
-                            cpStart: widget.task.datePlannedStart,
-                            cpEnd: widget.task.datePlannedEnd,
+                        teamMembers: users,
+                            parentCheckpoint: task.checkPoints[index],
+                            cpStart: task.datePlannedStart,
+                            cpEnd: task.datePlannedEnd,
                           ))),
                   child: CheckpointWidget(
-                    checkPoint: widget.task.checkPoints[index],
-                    taskAccentColor: taskTypes[widget.task.type].accentColor,
+                    checkPoint: task.checkPoints[index],
+                    taskAccentColor: taskTypes[task.type].accentColor,
                     isEditing: _isEditing,
                     showDescription: _showCheckpointDesc,
                   ),
                 );
               },
-              childCount: widget.task.checkPoints.length,
+              childCount: task.checkPoints.length,
             ),
           ),
           SliverList(
               delegate: SliverChildListDelegate([
-            if (_isEditing) AddCheckpointWidget(taskAccentColor: taskTypes[widget.task.type].accentColor),
+            if (_isEditing) AddCheckpointWidget(taskAccentColor: taskTypes[task.type].accentColor),
 /*
   ///
     ///assigned to:
@@ -194,19 +246,18 @@ class _TaskScreenState extends State<TaskScreen> {
               child: Row(
                 children: [
                   Text(
-                    'Assigned to:',
-                    style: TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.bold, color: taskTypes[widget.task.type].accentColor),
+                        'Assigned to:',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: taskTypes[task.type].accentColor),
                   ),
-                  Spacer(),
-                  widget.task.assignedTeam != null
+                      Spacer(),
+                      task.assignedTeam != null
                       ? InkWell(
                           onTap: _isEditing
-                              ? () {
+                              ? () async {
                                   //TODO:show Teams dialog
                                 }
                               : null,
-                          child: TeamTile(widget.task.assignedTeam))
+                          child: TeamTile(task.assignedTeam))
                       : _isEditing
                           ? SizedBox(
                               height: 22,
@@ -216,42 +267,74 @@ class _TaskScreenState extends State<TaskScreen> {
                                   tooltip: 'add member',
                                   color: Colors.white,
                                   splashRadius: 20,
-                                  onPressed: () {
-                                    //TODO:show add member dialog
-                                  }))
+                                  onPressed: addUsers))
                           : SizedBox()
-                ],
-              ),
-            ),
-          ])),
-          if (widget.task.members != null)
+                    ],
+                  ),
+                ),
+              ])),
+          if (task.members != null)
             SliverList(
                 delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
               return Row(
                 children: [
-                  SizedBox(width: 8),
+                  //SizedBox(width: 8),
                   if (_isEditing)
                     IconButton(
-                      icon: Icon(Icons.delete_outline),
-                      onPressed: widget.task.members.length > 1
-                          ? () {
-                              //TODO: handle remove this specific Member
-                            }
-                          : null,
+                      icon: Icon(Icons.close),
+                      onPressed: () => setState(() => _removedUsernames.add(task.members[index].userName)),
                       splashRadius: 20,
-                      iconSize: 30,
+                      iconSize: 20,
+                      padding: const EdgeInsets.all(0),
                       disabledColor: Colors.grey[800],
                       tooltip: 'remove user',
                       color: Colors.red,
                     ),
                   Expanded(
-                      child: Padding(
-                    padding: const EdgeInsets.only(right: 16, left: 8),
-                    child: UserTile(widget.task.members[index]),
-                  )),
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 16, left: _isEditing ? 0 : 16),
+                      child: _UserTile(
+                        user: task.members[index],
+                        isSelected: (_removedUsernames.contains(task.members[index].userName)),
+                        onDeselect: (user) => setState(() => _removedUsernames.remove(user.userName)),
+                      ),
+                    ),
+                  ),
                 ],
               );
-            }, childCount: widget.task.members.length)),
+            }, childCount: task.members.length)),
+
+          //added users while editing
+          if (_addedUsers.isNotEmpty)
+            SliverList(
+                delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
+              return Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: _isLoading ? null : () => setState(() => _addedUsers.removeAt(index)),
+                    splashRadius: 20,
+                    iconSize: 20,
+                    padding: const EdgeInsets.all(0),
+                    disabledColor: Colors.grey[800],
+                    tooltip: 'remove user',
+                    color: Colors.red,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 16, left: _isEditing ? 0 : 16),
+                      child: _UserTile(
+                        user: _addedUsers[index],
+                        icon: Icons.add_circle,
+                        isSelected: (true),
+                        accentColor: COLOR_ACCENT,
+                        onDeselect: (_) => setState(() => _addedUsers.removeAt(index)),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }, childCount: _addedUsers.length)),
 /*
   ///
     ///Created by:
@@ -263,17 +346,86 @@ class _TaskScreenState extends State<TaskScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Text(
-                'Created by:',
-                style: TextStyle(
-                    fontSize: 17, fontWeight: FontWeight.bold, color: taskTypes[widget.task.type].accentColor),
+                    'Created by:',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: taskTypes[task.type].accentColor),
               ),
-            ),
-            Padding(
+                ),
+                Padding(
               padding: const EdgeInsets.only(right: 16, left: 16, bottom: 12),
-              child: UserTile(widget.task.taskCreator),
+              child: UserTile(task.taskCreator),
             ),
           ])),
         ],
+      ),
+    );
+  }
+}
+
+/// custom UserTile that has selection mood, overall similar to [UserTile]
+class _UserTile extends StatelessWidget {
+  final User user;
+  final bool isSelected;
+
+  final Function(User) onSelected;
+  final Function(User) onDeselect;
+
+  _UserTile({Key key, this.user, this.onSelected, this.onDeselect, this.isSelected, this.accentColor = Colors.red, this.icon = Icons.remove_circle_rounded}) : super(key: key);
+
+  final accentColor;
+
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    var name = user.name.split(' ');
+
+    return GestureDetector(
+      onTap: () {
+        if (isSelected) onDeselect(user);
+      },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        height: 52,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.only(left: 6, right: 14, top: 2, bottom: 2),
+        decoration: BoxDecoration(
+          color: isSelected ? accentColor.withOpacity(0.2) : COLOR_BACKGROUND,
+          borderRadius: BorderRadius.circular(10),
+          border: isSelected ? Border.all(color: accentColor) : null,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 22,
+              child: isSelected ? Icon(icon, color: accentColor) : Text(name[0][0] + (name.length > 1 ? name[1][0] : ''), style: TextStyle(fontSize: 16)),
+              backgroundColor: COLOR_SCAFFOLD,
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(name[0] + ' ' + (name.length > 1 ? name[1] : ''), style: TextStyle(fontSize: 15)),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(' ${user.userName}', style: TextStyle(fontSize: 12.5, color: Colors.grey)),
+                        Spacer(),
+                        Text(user.jobTitle, style: TextStyle(fontSize: 13.5)),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            //SizedBox(width: 8),
+          ],
+        ),
       ),
     );
   }

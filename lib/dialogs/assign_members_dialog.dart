@@ -64,6 +64,7 @@ class _AssignMembersDialogState extends State<AssignMembersDialog> {
     if (!_isInit) {
       _padding = MediaQuery.of(context).padding;
       _size = MediaQuery.of(context).size;
+      _isInit = true;
     }
     super.didChangeDependencies();
   }

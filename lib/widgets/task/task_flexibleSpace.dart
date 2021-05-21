@@ -10,12 +10,14 @@ class BuildFlexibleSpace extends StatefulWidget {
   final Widget child;
   final Task task;
   final bool isEdit;
+  final bool isLoading;
 
   const BuildFlexibleSpace({
     Key key,
     this.child,
     @required this.task,
     this.isEdit = false,
+    @required this.isLoading,
   }) : super(key: key);
 
   @override
@@ -100,6 +102,8 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
   Widget build(BuildContext context) {
     final notificationHeight = MediaQuery.of(context).padding.top;
 
+    double _progressIndicatorHeight = 4 - topPadding / 7;
+
     return FlexibleSpaceBar(
       // collapseMode: CollapseMode.pin,
       centerTitle: false,
@@ -173,52 +177,56 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
           ),
         ),
       ),
-      title: Padding(
-        padding: EdgeInsets.only(bottom: 5 - topPadding / 6),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(width: 6 + titleIconPadding),
-            Container(
-              width: 34 - topPadding / 1.3,
-              height: 34 - topPadding / 1.2,
-              padding: EdgeInsets.all(5 - topPadding / 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
-              ),
-              child: Image.asset(taskIcon, color: taskAccentColor),
+      title: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(bottom: 5 - topPadding / 6),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 6 + titleIconPadding),
+                Container(
+                  width: 34 - topPadding / 1.3,
+                  height: 34 - topPadding / 1.2,
+                  padding: EdgeInsets.all(5 - topPadding / 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Theme.of(context).scaffoldBackgroundColor, //Colors.black38, //COLOR_BACKGROUND,
+                  ),
+                  child: Image.asset(taskIcon, color: taskAccentColor),
+                ),
+                SizedBox(width: 6),
+                Text(
+                  widget.task.name,
+                  style: TextStyle(fontSize: 16 - topPadding / 2, fontWeight: FontWeight.bold),
+                ),
+                Spacer(),
+                Opacity(
+                  opacity: opacity <= 0.5 ? opacity / 2 : opacity,
+                  child: SizedBox(
+                    height: 22,
+                    width: 22,
+                    child: IconButton(
+                        icon: Icon(Icons.chat),
+                        color: COLOR_SCAFFOLD,
+                        iconSize: 20,
+                        splashRadius: 13,
+                        padding: EdgeInsets.zero,
+                        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => Activity()))),
+                  ),
+                ),
+                SizedBox(width: 8),
+                Opacity(
+                  opacity: opacity <= 0.5 ? opacity / 2 : opacity,
+                  child: buildUserAvatar(widget.task.taskCreator.name),
+                ),
+              ],
             ),
-            SizedBox(width: 6),
-            Text(
-              widget.task.name,
-              style: TextStyle(fontSize: 16 - topPadding / 2, fontWeight: FontWeight.bold),
-            ),
-            Spacer(),
-            Opacity(
-              opacity: opacity <= 0.5 ? opacity / 2 : opacity,
-              child: SizedBox(
-                height: 22,
-                width: 22,
-                child: IconButton(
-                    icon: Icon(Icons.chat),
-                    color: COLOR_SCAFFOLD,
-                    iconSize: 20,
-                    splashRadius: 13,
-                    padding: EdgeInsets.zero,
-                    onPressed: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => Activity()))),
-              ),
-            ),
-            SizedBox(width: 8),
-            Opacity(
-              opacity: opacity <= 0.5 ? opacity / 2 : opacity,
-              child: buildUserAvatar(widget.task.taskCreator.name),
-            ),
-          ],
-        ),
+          ),
+          if (widget.isLoading) SizedBox(height: _progressIndicatorHeight, child: LinearProgressIndicator()),
+        ],
       ),
     );
   }

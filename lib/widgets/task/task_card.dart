@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 //import 'package:circular_check_box/circular_check_box.dart';
 import 'package:project/model/taskType.dart';
+import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../screen/task_screen.dart';
@@ -11,12 +12,9 @@ import '../../model/models.dart' as model;
 import '../circular_checkBox.dart';
 
 class TaskCard extends StatelessWidget {
-  final model.Task task;
-
-  const TaskCard(this.task);
-
   @override
   Widget build(BuildContext context) {
+    model.Task task = Provider.of<model.Task>(context, listen: false);
     final size = MediaQuery.of(context).size;
 
     return Container(
@@ -32,7 +30,7 @@ class TaskCard extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.red,
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => TaskScreen(task)));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => TaskScreen(), settings: RouteSettings(arguments: task.id)));
         },
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -70,13 +68,13 @@ class TaskCard extends StatelessWidget {
                         Row(
                           children: task.parentCheckpoint != null
                               ? [
-                                  Icon(Icons.adjust, color: taskTypes[task.type].accentColor, size: 18),
-                                  SizedBox(width: 4),
-                                  Expanded(child: Text(task.parentCheckpoint.name, overflow: TextOverflow.fade, softWrap: false))
-                                ]
+                            Icon(Icons.adjust, color: taskTypes[task.type].accentColor, size: 18),
+                            SizedBox(width: 4),
+                            Expanded(child: Text(task.parentCheckpoint.name, overflow: TextOverflow.fade, softWrap: false))
+                          ]
                               : task.taskCreator != null
-                                  ? [buildUserAvatar(task.taskCreator.name), Text(task.taskCreator.name, overflow: TextOverflow.fade)]
-                                  : [],
+                              ? [buildUserAvatar(task.taskCreator.name), Text(task.taskCreator.name, overflow: TextOverflow.fade)]
+                              : [],
                         ),
                         // if(task.projectName != null)
                         // RichText(
@@ -146,27 +144,27 @@ class TaskCard extends StatelessWidget {
             if (task.checkPoints != null)
               ...task.checkPoints.map((cp) => CheckPoint(
                 key: Key(cp.id.toString()),
-                    checkPoint: cp,
-                    taskAccentColor: taskTypes[task.type].accentColor,
-                  )),
+                checkPoint: cp,
+                taskAccentColor: taskTypes[task.type].accentColor,
+              )),
 
             Padding(
               padding: const EdgeInsets.only(bottom: 4, top: 4),
               child: Row(
                 children:
-                    // task.parentCheckpoint != null
-                    //     ? [
-                    //         Icon(Icons.adjust, color: Colors.amber),
-                    //         SizedBox(width: 4),
-                    //         Text(
-                    //           task.pa  rentCheckpoint.name,
-                    //         ,
-                    //         ),
-                    //         Spacer(),
-                    //         ...task.members.map((m) => _buildUserAvatar(m)),
-                    //       ]
-                    //     :
-                    [
+                // task.parentCheckpoint != null
+                //     ? [
+                //         Icon(Icons.adjust, color: Colors.amber),
+                //         SizedBox(width: 4),
+                //         Text(
+                //           task.pa  rentCheckpoint.name,
+                //         ,
+                //         ),
+                //         Spacer(),
+                //         ...task.members.map((m) => _buildUserAvatar(m)),
+                //       ]
+                //     :
+                [
                   // _buildUserAvatar(task.taskCreator),
                   // Text(task.taskCreator,
                   //     ),

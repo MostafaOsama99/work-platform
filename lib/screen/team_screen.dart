@@ -123,11 +123,12 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
                 return teamProvider.getTasks();
               },
               child: ListView.builder(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  controller: _scrollController,
-                  itemCount: teamProvider.tasks.length,
-                  itemBuilder: (context, i) => TaskCard(teamProvider.tasks[i])),
+                shrinkWrap: true,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                controller: _scrollController,
+                itemCount: teamProvider.tasks.length,
+                itemBuilder: (_, i) => ChangeNotifierProvider.value(value: Provider.of<TeamProvider>(context).tasks[i], child: TaskCard()),
+              ),
             );
           },
         ),
