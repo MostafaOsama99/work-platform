@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/provider/data_constants.dart';
 import 'package:project/provider/room_provider.dart';
+import 'package:project/screen/navigation/app.dart';
 
 import 'package:provider/provider.dart';
 
@@ -253,7 +254,12 @@ class LoginState extends State<Login> {
                   style: TextStyle(
                       fontSize: 20, fontFamily: 'pt_sans', color: Colors.white),
                 ),
-                onPressed: submit),
+                onPressed: (){
+                  submit();
+                  Navigator.push(context, MaterialPageRoute(builder: (context){
+                    return App();
+                  }));
+                }),
           ),
           Spacer(flex: 5),
         ],

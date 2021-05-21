@@ -11,6 +11,9 @@ import 'package:provider/provider.dart';
 
 import 'package:project/demoData.dart';
 import 'package:project/widgets/home/dropDownMenu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'auth/auth_screen.dart';
 
 class RoomScreen extends StatefulWidget {
   final List<List> teams;
@@ -141,6 +144,17 @@ class Teams extends StatelessWidget {
               ),
             ],
           ),
+        ),
+
+        InkWell(
+          onTap: ()async{
+            SharedPreferences preferences = await SharedPreferences.getInstance();
+            preferences.clear();
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                AuthScreen()), (Route<dynamic> route) => false);
+          },
+          child: Text("Sign Out"),
+
         ),
         RefreshIndicator(
           onRefresh: () => roomProvider.getUserTeams(reload: true),
