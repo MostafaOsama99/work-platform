@@ -28,7 +28,7 @@ String token;
 // 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0MUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImM5Mjg4ZGQ2LTNlZjEtNGJlYi1iNjE1LTczZTljNDIwMTIxNCIsImV4cCI6MTYyMDM5NTM1MCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzYvIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzYvIn0.Feyn_-_EY7gH5cmoZRscgannH-75Jvv6r6DYNMHyVrk';
 
 ///this function handles any API request & show snackBar on Exception for Auth now
-Future<dynamic> handleRequest(Function serverRequest, BuildContext context) async {
+Future<dynamic> handleRequest(Function serverRequest, BuildContext context, [VoidCallback onException]) async {
   try {
     return await serverRequest();
   } on ServerException catch (e) {
@@ -44,6 +44,8 @@ Future<dynamic> handleRequest(Function serverRequest, BuildContext context) asyn
   } catch (e) {
     print('*** unhandled exception! ***: $e');
   }
+  if (onException != null) onException();
+  print('returned');
   return false;
 }
 
@@ -93,9 +95,7 @@ Future<bool> post(String endpoint, String body, [Function(String responseData) o
 }
 
 ///generic put method
-Future<bool> put(String endpoint, String body
-    //, Function(String responseData) onSuccess
-    ) async {
+Future<bool> put(String endpoint, String body, [Function(String responseData) onSuccess]) async {
   final url = server + endpoint;
 
   final response = await http.put(Uri.parse(url), headers: header, body: body).timeout(KTimeOutDuration);
@@ -109,7 +109,7 @@ Future<bool> put(String endpoint, String body
   print('body: ${response.body}');
 
   if (response.statusCode == 200) {
-    //onSuccess(response.body);
+    if (onSuccess != null) onSuccess(response.body);
     return true;
   } else
     throw ServerException(response.body);

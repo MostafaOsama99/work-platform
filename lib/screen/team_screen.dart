@@ -92,46 +92,44 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
           ),
         ),
       ),
-      body: SizedBox(
-        child: FutureBuilder(
-          future: teamProvider.getTasks(),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Expanded(child: Center(child: CircularProgressIndicator()));
-            else if (snapshot.error != null) {
-              print(snapshot.error);
-              return Expanded(
-                  child: Center(
-                      child: Text(
-                'cannot reach the server !',
-                style: TextStyle(color: Colors.grey, fontSize: 15),
-              )));
-            }
+      body: FutureBuilder(
+        future: teamProvider.getTasks(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Expanded(child: Center(child: CircularProgressIndicator()));
+          else if (snapshot.error != null) {
+            print(snapshot.error);
+            return Expanded(
+                child: Center(
+                    child: Text(
+              'cannot reach the server !',
+              style: TextStyle(color: Colors.grey, fontSize: 15),
+            )));
+          }
 
-            // _scrollController.addListener(hideButton);
-            //
-            // _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 200), reverseDuration: Duration(milliseconds: 175));
-            // _animation = CurvedAnimation(parent: _animationController, curve: Curves.easeIn, reverseCurve: Curves.easeOutCirc);
-            // _animationController.value = 1;
+          // _scrollController.addListener(hideButton);
+          //
+          // _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 200), reverseDuration: Duration(milliseconds: 175));
+          // _animation = CurvedAnimation(parent: _animationController, curve: Curves.easeIn, reverseCurve: Curves.easeOutCirc);
+          // _animationController.value = 1;
 
-            // _navBarProvider = Provider.of<NavBar>(context, listen: false);
-            // _navBarProvider.scrollController = _scrollController;
+          // _navBarProvider = Provider.of<NavBar>(context, listen: false);
+          // _navBarProvider.scrollController = _scrollController;
 
-            return RefreshIndicator(
-              onRefresh: () async {
-                //setState(() {});
-                return teamProvider.getTasks();
-              },
-              child: ListView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                controller: _scrollController,
-                itemCount: teamProvider.tasks.length,
-                itemBuilder: (_, i) => ChangeNotifierProvider.value(value: Provider.of<TeamProvider>(context).tasks[i], child: TaskCard()),
-              ),
-            );
-          },
-        ),
+          return RefreshIndicator(
+            onRefresh: () async {
+              //setState(() {});
+              return teamProvider.getTasks();
+            },
+            child: ListView.builder(
+              shrinkWrap: true,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              controller: _scrollController,
+              itemCount: teamProvider.tasks.length,
+              itemBuilder: (_, i) => ChangeNotifierProvider.value(value: Provider.of<TeamProvider>(context).tasks[i], child: TaskCard()),
+            ),
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

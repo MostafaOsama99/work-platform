@@ -12,8 +12,7 @@ import '../../widgets/snackBar.dart';
 import '../../constants.dart';
 
 class Login extends StatefulWidget {
-  Login({Key key, @required this.whenLoading, @required this.scaffoldKey})
-      : super(key: key);
+  Login({Key key, @required this.whenLoading, @required this.scaffoldKey}) : super(key: key);
 
   final Function(bool loading) whenLoading;
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -44,36 +43,14 @@ class LoginState extends State<Login> {
 
     final roomProvider = Provider.of<RoomProvider>(context, listen: false);
     submit() async {
-      // user.setMail = 'test@test.com';
-      // // user.setPassword = 'Mm1010?';
-      // widget.whenLoading(true);
-      // await handleRequest(user.signIn, widget.scaffoldKey.currentContext);
+      // await handleRequest(user.signIn, widget.scaffoldKey.currentContext, () => throw (Exception('auth failed')));
       //
       // print('getting current user ...');
-      // await handleRequest(user.getCurrentUser, widget.scaffoldKey.currentContext);
       //
-      // print('getting user rooms ...');
-      // await handleRequest(roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
+      // print(token);
+      // await user.getCurrentUser();
       //
-      // roomProvider.changeRoom(roomProvider.rooms.first.id);
-      //
-      // //initial loading
-      // roomProvider.getUserTeams(reload: true);
-      // widget.whenLoading(false);
-
-      //await handleRequest(()=> roomProvider.createTeam('team 2', 'description'), widget.scaffoldKey.currentContext);
-
-      //await user.getCurrentUser();
-      //await handleRequest(()=>roomProvider.createRoom('room 2','description'), widget.scaffoldKey.currentContext);
-      //await handleRequest(roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
-
-      //await handleRequest(()=> roomProvider.createTeam('team 2', 'description'), widget.scaffoldKey.currentContext);
-      //await handleRequest(()=> roomProvider.getRoomTeams(2), widget.scaffoldKey.currentContext);
-      // await handleRequest(()=> roomProvider.getRoom(2), widget.scaffoldKey.currentContext);
-
-      // handleRequest(() => roomProvider.changeRoom(roomProvider.rooms.first.id), widget.scaffoldKey.currentContext);
-      // print(roomProvider.rooms.first.id);
-      // await handleRequest(() => roomProvider.getUserTeams(), widget.scaffoldKey.currentContext);
+      // return;
 
       FocusScope.of(context).unfocus();
       if (!_formKey.currentState.validate()) return;
@@ -83,20 +60,26 @@ class LoginState extends State<Login> {
 
       _formKey.currentState.save();
 
-      await handleRequest(user.signIn, widget.scaffoldKey.currentContext);
+      try {
+        await handleRequest(user.signIn, widget.scaffoldKey.currentContext, () => throw (Exception('auth failed')));
 
-      print('getting current user ...');
-      await handleRequest(
-          user.getCurrentUser, widget.scaffoldKey.currentContext);
+        print('getting current user ...');
+        await handleRequest(user.getCurrentUser, widget.scaffoldKey.currentContext, () => throw (Exception('auth failed')));
 
-      print('getting user rooms ...');
-      await handleRequest(
-          roomProvider.getUserRooms, widget.scaffoldKey.currentContext);
-      //
-      roomProvider.changeRoom(roomProvider.rooms.first.id);
+        print('getting user rooms ...');
+        await handleRequest(roomProvider.getUserRooms, widget.scaffoldKey.currentContext, () => throw (Exception('auth failed')));
 
-    //  initial loading
-      roomProvider.getUserTeams(reload: true);
+        //if the user has something to show
+        // if (roomProvider.rooms.isNotEmpty) {
+        //   roomProvider.changeRoom(roomProvider.rooms.first.id);
+        //
+        //   //  initial loading
+        //   await roomProvider.getUserTeams(reload: true);
+        // }
+        Navigator.of(widget.scaffoldKey.currentContext).pushReplacement(MaterialPageRoute(builder: (_) => App()));
+      } catch (e) {
+        print('login exception: $e');
+      }
       // await handleRequest(, widget.scaffoldKey.currentContext);
       widget.whenLoading(false);
     }
@@ -161,9 +144,7 @@ class LoginState extends State<Login> {
                 suffixIcon: IconButton(
                   splashRadius: 20,
                   icon: Icon(
-                    hidePassword
-                        ? Icons.remove_red_eye
-                        : Icons.remove_red_eye_outlined,
+                    hidePassword ? Icons.remove_red_eye : Icons.remove_red_eye_outlined,
                     color: COLOR_BACKGROUND,
                   ),
                   onPressed: () {
@@ -181,9 +162,7 @@ class LoginState extends State<Login> {
             child: TextButton(
                 onPressed: () {},
                 style: ButtonStyle(
-                    overlayColor: MaterialStateProperty.all(Colors.white24),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)))),
+                    overlayColor: MaterialStateProperty.all(Colors.white24), shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
                 child: Text(
                   'Forget Password !',
                   style: TextStyle(color: Colors.white, fontFamily: 'pt_sans'),
@@ -251,15 +230,9 @@ class LoginState extends State<Login> {
                 splashColor: Colors.grey.withOpacity(0.5),
                 child: Text(
                   'Log in',
-                  style: TextStyle(
-                      fontSize: 20, fontFamily: 'pt_sans', color: Colors.white),
+                  style: TextStyle(fontSize: 20, fontFamily: 'pt_sans', color: Colors.white),
                 ),
-                onPressed: (){
-                  submit();
-                  Navigator.push(context, MaterialPageRoute(builder: (context){
-                    return App();
-                  }));
-                }),
+                onPressed: submit),
           ),
           Spacer(flex: 5),
         ],

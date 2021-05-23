@@ -54,10 +54,8 @@ class ChatScreen extends StatelessWidget {
                     child: Stack(
                       alignment: Alignment.topRight,
                       children: [
-                        Image.asset('assets/send_icon.png',
-                            color: Colors.grey[600], height: 28.5),
-                        Image.asset('assets/send_icon.png',
-                            color: COLOR_ACCENT, height: 27),
+                        Image.asset('assets/icons/send_icon.png', color: Colors.grey[600], height: 28.5),
+                        Image.asset('assets/icons/send_icon.png', color: COLOR_ACCENT, height: 27),
                       ],
                     ),
                   ),

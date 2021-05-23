@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:project/model/models.dart';
+import 'package:project/provider/data_constants.dart';
+import 'package:project/provider/team_provider.dart';
 import 'package:project/screen/main_screen/activity_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants.dart';
 import '../../widgets/task/task_card.dart';
@@ -8,16 +12,22 @@ import '../dateField_widget.dart';
 
 class BuildFlexibleSpace extends StatefulWidget {
   final Widget child;
-  final Task task;
+  final int taskId;
   final bool isEdit;
   final bool isLoading;
+  final Function(DateTime date) changePSDate;
+  final Function(DateTime date) changePEDate;
+  final Function(String name) changeName;
 
   const BuildFlexibleSpace({
     Key key,
     this.child,
-    @required this.task,
+    @required this.taskId,
     this.isEdit = false,
     @required this.isLoading,
+    @required this.changePSDate,
+    @required this.changePEDate,
+    @required this.changeName,
   }) : super(key: key);
 
   @override
@@ -27,34 +37,47 @@ class BuildFlexibleSpace extends StatefulWidget {
 }
 
 class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
+  TeamProvider teamProvider;
+
+  Task task;
+
+  bool _isInit = false;
+
   ScrollPosition _position;
   Color taskAccentColor;
   String taskIcon;
 
-  @override
-  void initState() {
-    if (widget.task.dependentTask != null) {
-      taskAccentColor = Colors.purple;
-      taskIcon = 'assets/icons/subtask-dependent.png';
-    } else if (widget.task.parentCheckpoint != null) {
-      taskAccentColor = Colors.amber;
-      taskIcon = 'assets/icons/subtask.png';
-    } else {
-      taskAccentColor = Colors.greenAccent.shade400;
-      taskIcon = 'assets/icons/task.png';
-    }
-    super.initState();
-  }
+  final _titleKey = GlobalKey<FormState>();
+  final _focus = FocusNode();
+  int titleLength;
 
   @override
   void dispose() {
     _removeListener();
+    _focus.dispose();
     super.dispose();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (!_isInit) {
+      teamProvider = Provider.of<TeamProvider>(context);
+      task = teamProvider.findById(widget.taskId);
+
+      if (task.dependentTask != null) {
+        taskAccentColor = Colors.purple;
+        taskIcon = 'assets/icons/subtask-dependent.png';
+      } else if (task.parentCheckpoint != null) {
+        taskAccentColor = Colors.amber;
+        taskIcon = 'assets/icons/subtask.png';
+      } else {
+        taskAccentColor = Colors.greenAccent.shade400;
+        taskIcon = 'assets/icons/task.png';
+      }
+      titleLength = task.name.length;
+      _isInit = true;
+    }
     _removeListener();
     _addListener();
   }
@@ -72,19 +95,6 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
   void _positionListener() {
     final FlexibleSpaceBarSettings settings = context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
 
-    // final t =
-    // (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent)
-    //     .clamp(0.0, 1.0) as double;
-    // final fadeStart = max(0.0, 1.0 - kToolbarHeight / deltaExtent);
-    // print('t: $t');
-    // print('fade: $fadeStart');
-
-    //print(sbWidth);
-    //  print('maxExtent: ${settings.maxExtent}');
-    // print('minExtent: ${settings.minExtent}');
-    // print('opacity: ${settings.toolbarOpacity}');
-    //print('current extent: ${settings.currentExtent}');
-
     final deltaExtent = settings.maxExtent - settings.minExtent;
     var openedSpace = (settings.currentExtent - settings.minExtent);
     setState(() {
@@ -101,7 +111,6 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
   @override
   Widget build(BuildContext context) {
     final notificationHeight = MediaQuery.of(context).padding.top;
-
     double _progressIndicatorHeight = 4 - topPadding / 7;
 
     return FlexibleSpaceBar(
@@ -113,8 +122,7 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
       background: Opacity(
         opacity: opacity <= 0.5 ? opacity / 2 : opacity,
         child: Container(
-          padding:
-              EdgeInsets.only(top: notificationHeight, right: 16, left: 16),
+          padding: EdgeInsets.only(top: notificationHeight, right: 16, left: 16),
           //height: 150 - notificationHeight,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -136,11 +144,8 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                           height: 32,
                           child: Image.asset('assets/icons/project.png', color: Colors.white)),
                       SizedBox(width: 8),
-                      Text(widget.task.projectName ?? 'not assigned to project!',
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: widget.task.projectName == null ? Colors.grey : null,
-                              fontStyle: widget.task.projectName == null ? FontStyle.italic : null)),
+                      Text(task.projectName ?? 'not assigned to project!',
+                          style: TextStyle(fontSize: 15, color: task.projectName == null ? Colors.grey : null, fontStyle: task.projectName == null ? FontStyle.italic : null)),
                     ],
                   ),
                 ),
@@ -157,17 +162,26 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                     Icon(Icons.calendar_today_rounded, size: KIconSize),
                     Spacer(),
                     Text('from: ', style: TextStyle(color: Colors.grey, fontSize: 15)),
-                    DateField(
-                        initialDate: widget.task.datePlannedStart,
-                        firstDate:
-                            (widget.task.dependentTask != null ? widget.task.dependentTask.datePlannedEnd : null),
-                        isEditing: widget.isEdit),
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      onTap: task.datePlannedStart.isBefore(DateTime.now().subtract(Duration(hours: 12))) && widget.isEdit
+                          ? () => showSnackBar('this task is already working!', context)
+                          : null,
+                      child: DateField(
+                          initialDate: task.datePlannedStart,
+                          lastDate: task.datePlannedEnd,
+                          firstDate: (task.dependentTask != null ? task.dependentTask.datePlannedEnd : null),
+                          onChanged: widget.changePSDate,
+                          //TODO: check if the task has any sessions
+                          isEditing: task.datePlannedStart.isAfter(DateTime.now().subtract(Duration(hours: 12))) && widget.isEdit),
+                    ),
                     Spacer(flex: 3),
                     Text('duo: ', style: TextStyle(fontSize: 15, color: Colors.grey)),
                     DateField(
-                      initialDate: widget.task.datePlannedEnd,
+                      initialDate: task.datePlannedEnd,
                       isEditing: widget.isEdit,
-                      firstDate: widget.task.datePlannedStart,
+                      onChanged: widget.changePEDate,
+                      firstDate: task.datePlannedStart.isBefore(DateTime.now()) ? DateTime.now() : task.datePlannedStart,
                     ),
                     Spacer(flex: 2),
                   ],
@@ -198,29 +212,72 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                   child: Image.asset(taskIcon, color: taskAccentColor),
                 ),
                 SizedBox(width: 6),
-                Text(
-                  widget.task.name,
-                  style: TextStyle(fontSize: 16 - topPadding / 2, fontWeight: FontWeight.bold),
+                Expanded(
+                  child: Form(
+                    key: _titleKey,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 9),
+                      child: Expanded(
+                        child: TextFormField(
+                          initialValue: task.name,
+                          focusNode: _focus,
+                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          enabled: widget.isEdit,
+                          validator: (value) => (value.length < 3 || value.length == KTaskTitleLength) ? '' : null,
+                          onChanged: (value) {
+                            setState(() => titleLength = value.trim().length);
+                            if (_titleKey.currentState.validate()) widget.changeName(value.trim());
+                          },
+                          maxLength: KTaskTitleLength,
+                          textInputAction: TextInputAction.done,
+                          decoration: InputDecoration(
+                            errorStyle: TextStyle(height: 0),
+                            errorMaxLines: 1,
+                            contentPadding: EdgeInsets.zero,
+                            isDense: true,
+                            filled: false,
+                            counter: SizedBox(),
+                            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
+                            focusedErrorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+                            disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                            enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                            errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                          ),
+                          style: TextStyle(fontSize: 16 - topPadding / 2, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                Spacer(),
-                Opacity(
-                  opacity: opacity <= 0.5 ? opacity / 2 : opacity,
-                  child: SizedBox(
-                    height: 22,
-                    width: 22,
-                    child: IconButton(
-                        icon: Icon(Icons.chat),
-                        color: COLOR_SCAFFOLD,
-                        iconSize: 20,
-                        splashRadius: 13,
-                        padding: EdgeInsets.zero,
-                        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => Activity()))),
+                if (_focus.hasFocus)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, top: 12),
+                    child: Text(
+                      '$titleLength',
+                      style: TextStyle(color: Colors.grey, fontSize: 12 - topPadding / 5),
+                    ),
+                  ),
+                Padding(
+                  padding: EdgeInsets.only(left: 30 - topPadding * 2),
+                  child: Opacity(
+                    opacity: opacity <= 0.5 ? opacity / 2 : opacity,
+                    child: SizedBox(
+                      height: 22,
+                      width: 22,
+                      child: IconButton(
+                          icon: Icon(Icons.chat),
+                          color: COLOR_SCAFFOLD,
+                          iconSize: 20,
+                          splashRadius: 13,
+                          padding: EdgeInsets.zero,
+                          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => Activity()))),
+                    ),
                   ),
                 ),
                 SizedBox(width: 8),
                 Opacity(
                   opacity: opacity <= 0.5 ? opacity / 2 : opacity,
-                  child: buildUserAvatar(widget.task.taskCreator.name),
+                  child: buildUserAvatar(task.taskCreator.name),
                 ),
               ],
             ),

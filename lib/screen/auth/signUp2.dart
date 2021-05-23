@@ -16,12 +16,7 @@ class SignUp2 extends StatefulWidget {
   final Function(bool loading) whenLoading;
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  SignUp2(
-      {Key key,
-      this.onPrev,
-      @required this.whenLoading,
-      @required this.scaffoldKey})
-      : super(key: key);
+  SignUp2({Key key, this.onPrev, @required this.whenLoading, @required this.scaffoldKey}) : super(key: key);
 
   @override
   SignUp2State createState() => SignUp2State();
@@ -54,8 +49,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
   bool _checkingForUsername = false;
 
   bool validatePassword(String value) {
-    const String pattern =
-        r'''^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~\:;\,=+\-\(\)"%\'/_.\?]).{6,}$''';
+    const String pattern = r'''^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~\:;\,=+\-\(\)"%\'/_.\?]).{6,}$''';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }
@@ -89,14 +83,8 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
   void initState() {
     _passwordFocusNode.addListener(showPasswordCredentials);
 
-    _animationController = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 400),
-        reverseDuration: Duration(milliseconds: 250));
-    _animation = CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOutBack,
-        reverseCurve: Curves.easeOutCubic);
+    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 400), reverseDuration: Duration(milliseconds: 250));
+    _animation = CurvedAnimation(parent: _animationController, curve: Curves.easeInOutBack, reverseCurve: Curves.easeOutCubic);
     //_animationController.value = 1;
 
     super.initState();
@@ -125,9 +113,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
       _formKey.currentState.save();
       setState(() => _checkingForUsername = true);
 
-      userNameAvailable = await handleRequest(
-          () async => await user.checkUserName(username),
-          widget.scaffoldKey.currentContext);
+      userNameAvailable = await handleRequest(() => user.checkUserName(username), widget.scaffoldKey.currentContext);
 
       setState(() => _checkingForUsername = false);
       return;
@@ -142,8 +128,14 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
       _formKey.currentState.save();
       user.setPassword = _passwordController.value.text;
 
-      handleRequest(user.signUp, widget.scaffoldKey.currentContext);
-
+      try {
+        await handleRequest(user.signUp, widget.scaffoldKey.currentContext, () => throw Exception('could\'t sign in'));
+      } catch (e) {
+        print(e);
+        widget.whenLoading(false);
+        return;
+      }
+      showSnackBar('account created successfully', widget.scaffoldKey.currentContext);
       widget.whenLoading(false);
     }
 
@@ -194,10 +186,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
                           ),
                         )
                       : userNameAvailable != null
-                          ? (userNameAvailable
-                              ? Icon(Icons.check_sharp, color: Colors.green)
-                              : _emailCheckIcon =
-                                  Icon(Icons.cancel, color: Colors.red))
+                          ? (userNameAvailable ? Icon(Icons.check_sharp, color: Colors.green) : _emailCheckIcon = Icon(Icons.cancel, color: Colors.red))
                           : null),
             ),
           ),
@@ -226,10 +215,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
                 setState(() => emailValidation = '');
                 return null;
               },
-              decoration: TEXT_FIELD_DECORATION.copyWith(
-                  prefixIcon: Icon(Icons.mail, color: COLOR_BACKGROUND),
-                  hintText: 'Email',
-                  suffixIcon: _emailCheckIcon),
+              decoration: TEXT_FIELD_DECORATION.copyWith(prefixIcon: Icon(Icons.mail, color: COLOR_BACKGROUND), hintText: 'Email', suffixIcon: _emailCheckIcon),
             ),
           ),
           if (emailValidation.isNotEmpty) errorMessage(emailValidation),
@@ -239,9 +225,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
             child: Container(
               //duration: Duration(milliseconds: 200),
 
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: Colors.white70),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.white70),
               padding: const EdgeInsets.all(8),
               margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 8),
               child: Center(
@@ -271,9 +255,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
                 suffixIcon: IconButton(
                   splashRadius: 20,
                   icon: Icon(
-                    hidePassword
-                        ? Icons.remove_red_eye
-                        : Icons.remove_red_eye_outlined,
+                    hidePassword ? Icons.remove_red_eye : Icons.remove_red_eye_outlined,
                     color: COLOR_BACKGROUND,
                   ),
                   onPressed: () {
@@ -294,8 +276,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
               },
               onChanged: (value) {
                 if (!validatePassword(value))
-                  setState(() =>
-                      passwordValidation = "password didn't match credentials");
+                  setState(() => passwordValidation = "password didn't match credentials");
                 else
                   setState(() => passwordValidation = '');
               },
@@ -320,8 +301,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
               ),
               validator: (value) {
                 if (value.trim().length < 1) {
-                  setState(
-                      () => confirmPasswordValidation = 'password not match');
+                  setState(() => confirmPasswordValidation = 'password not match');
                   return '';
                 }
                 setState(() => confirmPasswordValidation = '');
@@ -329,8 +309,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
               },
             ),
           ),
-          if (confirmPasswordValidation.isNotEmpty)
-            errorMessage(confirmPasswordValidation),
+          if (confirmPasswordValidation.isNotEmpty) errorMessage(confirmPasswordValidation),
           Spacer(flex: 5),
           Center(
             child: MaterialButton(
@@ -340,8 +319,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
                 splashColor: Colors.grey.withOpacity(0.5),
                 child: Text(
                   'Sign up',
-                  style: TextStyle(
-                      fontSize: 20, fontFamily: 'pt_sans', color: Colors.white),
+                  style: TextStyle(fontSize: 20, fontFamily: 'pt_sans', color: Colors.white),
                 ),
                 onPressed: submit),
           ),

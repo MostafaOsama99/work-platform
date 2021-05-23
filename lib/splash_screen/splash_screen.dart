@@ -18,57 +18,49 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  @override
-  // Navigator.of(context).pushReplacement(MaterialPageRoute(
-  // builder: (BuildContext context) => BottomNavigation()))
-  void initState() {
+  checkCredentials() async {
     print(widget.email);
     print(widget.password);
 
-    super.initState();
     if (widget.email != null) {
-      Timer(Duration(seconds: 2), () async {
-        final user = Provider.of<UserData>(context, listen: false);
-        user.setPassword = widget.password;
-        user.setMail = widget.email;
-        await handleRequest(user.signIn, scaffoldKey.currentContext);
-        print('getting current user ...');
-        await handleRequest(user.getCurrentUser, scaffoldKey.currentContext);
-        //
-        print('getting user rooms ...');
-        await handleRequest(
-            Provider.of<RoomProvider>(context, listen: false).getUserRooms,
-            scaffoldKey.currentContext);
-        //
-        Provider.of<RoomProvider>(context, listen: false).changeRoom(
-            Provider.of<RoomProvider>(context, listen: false).rooms.first.id);
+      final user = Provider.of<UserData>(context, listen: false);
+      user.setPassword = widget.password;
+      user.setMail = widget.email;
 
+      final roomProvider = Provider.of<RoomProvider>(context, listen: false);
+
+      try {
+        await user.signIn();
+        print('getting current user ...');
+        await user.getCurrentUser();
+
+        print('getting user rooms ...');
+        await roomProvider.getUserRooms();
+
+        //roomProvider.changeRoom(roomProvider.rooms.first.id);
         //  initial loading
-        Provider.of<RoomProvider>(context, listen: false)
-            .getUserTeams(reload: true);
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => App()));
-      });
-    } else {
-      Timer(Duration(seconds: 2), () {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (BuildContext context) => AuthScreen()));
-      });
+        //await roomProvider.getUserTeams(reload: true);
+
+        return Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => App()));
+      } catch (e) {
+        print('splash screen exception: $e');
+        showSnackBar(e, context);
+        //TODO: handle exceptions to user
+      }
     }
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => AuthScreen()));
   }
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero).then((value) => checkCredentials());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: scaffoldKey,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Container(
           // decoration: BoxDecoration(
@@ -80,7 +72,11 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-             Image.asset("assets/icons/workera_logo.png",width: 60,height: 60 ,),
+              Image.asset(
+                "assets/icons/workera_logo.png",
+                width: 60,
+                height: 60,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 45, right: 45, top: 30),
                 child: LinearProgressIndicator(

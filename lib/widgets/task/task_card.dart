@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-//import 'package:circular_check_box/circular_check_box.dart';
 import 'package:project/model/taskType.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -246,7 +245,7 @@ class _CheckPointState extends State<CheckPoint> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              widget.checkPoint.name,
+              widget.checkPoint.name ?? 'unknown',
               style: _value ? CheckPoint.TS_DONE : CheckPoint.TS_WORKING,
             ),
             // Spacer(),

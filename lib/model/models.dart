@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +16,7 @@ class Task with ChangeNotifier {
   int id;
   DateTime datePlannedStart, datePlannedEnd, dateActualStart, dateActualEnd;
   final List<CheckPoint> checkPoints;
+
   List<User> members;
 
   int progress;
@@ -50,7 +53,6 @@ class Task with ChangeNotifier {
   }
 
   factory Task.formJson(Map<String, dynamic> json) {
-    print(json['assignedUsers']);
     return Task(
       id: (json["id"]),
       name: json["name"],
@@ -59,11 +61,9 @@ class Task with ChangeNotifier {
       datePlannedEnd: DateTime.parse(json["plannedEndDate"]),
       dateActualStart: DateTime.parse(json["actualStartDate"]),
       dateActualEnd: DateTime.parse(json["actualEndDate"]),
-      checkPoints: (json['childCheckPoints'] as List)
-          .map((cp) => CheckPoint(id: cp['id'], name: cp['checkpointText'], description: cp['description'], percentage: cp['percentage']))
-          .toList(),
       taskCreator: User.fromJson(json['creator']),
-      members: (json['assignedUsers'] as List).map((user) => User.fromJson(user)).toList(),
+      members: ((json['assignedUsers'] ?? []) as List).map((user) => User.fromJson(user)).toList(),
+      checkPoints: (json['childCheckPoints'] as List).map((cp) => CheckPoint.fromJson(cp)).toList(),
     );
   }
 
@@ -89,13 +89,30 @@ class CheckPoint {
   // [percentage] = -1: means that this checkpoint doesn't have any subtask, so use checkbox, otherwise show progress
   final int percentage;
 
+  final List<Task> subtasks;
+
   const CheckPoint({
     @required this.id,
     @required this.name,
+    this.subtasks,
     this.isFinished = false,
     this.percentage = 0,
     this.description,
   });
+
+  factory CheckPoint.fromJson(Map<String, dynamic> json) {
+    return CheckPoint(
+        id: json['id'],
+        name: json['checkpointText'],
+        description: json['description'],
+        percentage: json['percentage'],
+        subtasks: (json['subTasks'] as List).map((subtask) => Task.formJson(subtask)).toList()
+        //subtasks: []
+        );
+  }
+
+  @override
+  bool operator ==(other) => Object is CheckPoint && other.id == id && other.name == name && other.description == description;
 }
 
 class User {

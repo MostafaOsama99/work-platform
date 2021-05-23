@@ -1,5 +1,3 @@
-
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -30,6 +28,9 @@ const KTargetWorkHours = 6;
 
 ///this should be deffer from country to another
 const KMobileLength = 11;
+
+///max task title length
+const int KTaskTitleLength = 30;
 
 const server = 'http://10.0.2.2:5000/api/v1';
 
@@ -155,76 +156,58 @@ String formatDate(DateTime date) {
   return formatDate;
 }
 
-class BuildDateTime extends StatefulWidget {
-  final DateTime selectedDate;
-  final double padding;
-
-  const BuildDateTime({ Key key,this.selectedDate,  this.padding}) : super(key: key);
-
-  @override
-  _BuildDateTimeState createState() => _BuildDateTimeState(selectedDate);
-}
-class _BuildDateTimeState extends State<BuildDateTime> {
- DateTime date;
-
-  _BuildDateTimeState(this.date);
-
-  String dateFormat;
-
-  @override
-  Widget build(BuildContext context) {
-    dateFormat = widget.selectedDate.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy';
-
-    return SizedBox(
-      //height: 10,
-      child: DateTimeField(
-        style: TextStyle(fontSize: 15, color: Colors.white),
-        decoration: InputDecoration(
-            contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
-            border: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            errorBorder: InputBorder.none,
-            disabledBorder: InputBorder.none,
-            //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
-            hintStyle: TextStyle(color: Colors.white)),
-        format: DateFormat('EEEE, d MMM, yyyy'),
-        initialValue: widget.selectedDate,
-        onChanged: (value) {
-          setState(() {
-            date = value;
-            dateFormat = date.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy';
-          });
-        },
-        resetIcon: null,
-        onShowPicker: (context, currentValue) {
-          return showDatePicker(
-            context: context,
-            initialDate: date ?? DateTime.now(),
-            firstDate: DateTime(1900),
-            lastDate: DateTime(2100),
-          );
-        },
-      ),
-    );
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// class BuildDateTime extends StatefulWidget {
+//   final DateTime selectedDate;
+//   final double padding;
+//
+//   const BuildDateTime({ Key key,this.selectedDate,  this.padding}) : super(key: key);
+//
+//   @override
+//   _BuildDateTimeState createState() => _BuildDateTimeState(selectedDate);
+// }
+// class _BuildDateTimeState extends State<BuildDateTime> {
+//  DateTime date;
+//
+//   _BuildDateTimeState(this.date);
+//
+//   String dateFormat;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     dateFormat = widget.selectedDate.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy';
+//
+//     return SizedBox(
+//       //height: 10,
+//       child: DateTimeField(
+//         style: TextStyle(fontSize: 15, color: Colors.white),
+//         decoration: InputDecoration(
+//             contentPadding: const EdgeInsets.only(top: 0, left: 0, bottom: 0),
+//             border: InputBorder.none,
+//             focusedBorder: InputBorder.none,
+//             enabledBorder: InputBorder.none,
+//             errorBorder: InputBorder.none,
+//             disabledBorder: InputBorder.none,
+//             //hintText: DateFormat(dateFormat).format(selectedDate).toString(),
+//             hintStyle: TextStyle(color: Colors.white)),
+//         format: DateFormat('EEEE, d MMM, yyyy'),
+//         initialValue: widget.selectedDate,
+//         onChanged: (value) {
+//           setState(() {
+//             date = value;
+//             dateFormat = date.year == DateTime.now().year ? 'EEE, d MMM' : 'EEE, d MMM, yyyy';
+//           });
+//         },
+//         resetIcon: null,
+//         onShowPicker: (context, currentValue) {
+//           return showDatePicker(
+//             context: context,
+//             initialDate: date ?? DateTime.now(),
+//             firstDate: DateTime(1900),
+//             lastDate: DateTime(2100),
+//           );
+//         },
+//       ),
+//     );
+//   }
+// }
+//

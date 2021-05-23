@@ -6,6 +6,7 @@ import 'package:project/provider/navbar.dart';
 import 'package:project/provider/room_provider.dart';
 import 'package:project/provider/team_provider.dart';
 import 'package:project/screen/team_screen.dart';
+import 'package:project/splash_screen/splash_screen.dart';
 import 'package:project/widgets/project_card_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -150,8 +151,7 @@ class Teams extends StatelessWidget {
           onTap: ()async{
             SharedPreferences preferences = await SharedPreferences.getInstance();
             preferences.clear();
-            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-                AuthScreen()), (Route<dynamic> route) => false);
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SplashScreen()));
           },
           child: Text("Sign Out"),
 

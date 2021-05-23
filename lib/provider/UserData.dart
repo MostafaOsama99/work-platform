@@ -149,8 +149,8 @@ class UserData extends ChangeNotifier {
       auth(KSignIn, json.encode({"email": _mail, "password": _password}),
           (responseData) {
         token = responseData['token'];
+        //TODO: save token
         setPrefData(_mail, _password);
-
       });
 
   Future<void> auth(String endpoint, String body,

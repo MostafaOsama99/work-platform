@@ -44,6 +44,7 @@ class TeamProvider extends ChangeNotifier {
       });
 
   Future<void> createTask(Task task) async {
+    //print(task.parentCheckpoint.id);
     int newTaskId;
     await post(
         //if the task is assigned to a team, it will have the team, other wise : it will have member's team
@@ -66,7 +67,7 @@ class TeamProvider extends ChangeNotifier {
   //assign members to the task
   //updates data locally, should i re-fetch it instead ??
   assignMembers(int taskId, List<User> assignedMembers) =>
-      post('/tasks/$taskId/assignedusers', json.encode(List.generate(assignedMembers.length, (index) => assignedMembers[index].userName)), (_) {
+      post('/tasks/${taskId.toString()}/assignedusers', json.encode(List.generate(assignedMembers.length, (index) => assignedMembers[index].userName)), (_) {
         _team.tasks.firstWhere((task) => task.id == taskId).members.addAll(assignedMembers);
       });
 
@@ -86,4 +87,29 @@ class TeamProvider extends ChangeNotifier {
         team.tasks.firstWhere((task) => task.id == taskId).members.removeWhere((member) => removedUserNames.contains(member.userName));
         notifyListeners();
       });
+
+  updateTask(Task newTask) async {
+    print(newTask.checkPoints);
+    await put(
+        '/tasks/${newTask.id}',
+        json.encode({
+          "name": newTask.name,
+          "description": newTask.description,
+          "plannedStartDate": newTask.datePlannedStart.toIso8601String(),
+          "plannedEndDate": newTask.datePlannedEnd.toIso8601String(),
+          "childCheckpoints": List.generate(newTask.checkPoints.length,
+              (index) => {'id': newTask.checkPoints[index].id, "checkpointText": newTask.checkPoints[index].name, "description": newTask.checkPoints[index].description}),
+        }));
+
+    int taskIndex = _team.tasks.indexOf(findById(newTask.id));
+
+    _team.tasks[taskIndex] = await getTaskById(newTask.id);
+    notifyListeners();
+  }
+
+  Future<Task> getTaskById(int taskId) async {
+    Task _task;
+    await get('/tasks/$taskId', (res) => _task = Task.formJson(res));
+    return _task;
+  }
 }

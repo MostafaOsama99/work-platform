@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import 'package:http/http.dart' as http;
 import 'package:project/model/models.dart';
+import 'package:http/http.dart' as http;
 
 import '/constants.dart';
-import '/model/room.dart';
 import '/model/http_exception.dart';
+import '/model/room.dart';
 import 'data_constants.dart';
 
 class RoomProvider extends ChangeNotifier {
@@ -41,11 +41,12 @@ class RoomProvider extends ChangeNotifier {
   //     _get('/rooms/${roomId?? _roomId}', (responseData) {
   //       (responseData as Map<String,dynamic>)
   //     });
+  //Your are invited to join my  Room 2/main  team
+  // Kindly use this code to join: 48cb2ab3-f3e3-49f8-8198-b78272286c34
 
-  Future<bool> createRoom(String name, String description) =>
-      post(KCreateRoom, json.encode({"name": name, "description": description})
-          //, (_) => true
-          );
+  Future<bool> createRoom(String name, String description) => post(KCreateRoom, json.encode({"name": name, "description": description})
+      //, (_) => true
+      );
 
   ///get all user team in current room from the database
   /// it does not load the data unless u set [reload] to true, or if uou send another [roomId] it will load the new room teams
@@ -64,10 +65,9 @@ class RoomProvider extends ChangeNotifier {
   }
 
   /// get all current user rooms
-  Future<dynamic> getUserRooms() => get(KGetUserRoomsEndpoint,
+  Future<void> getUserRooms() => get(KGetUserRoomsEndpoint,
           //save user rooms in _rooms
           (rooms) {
-        (rooms as List)
-            .forEach((element) => _rooms.add(Room.formJson(element)));
+        (rooms as List).forEach((element) => _rooms.add(Room.formJson(element)));
       });
 }

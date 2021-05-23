@@ -5,7 +5,6 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:project/demoData.dart';
 import 'package:project/provider/navbar.dart';
 import 'package:project/screen/team_screen.dart';
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:project/widgets/dateField_widget.dart';
 import 'package:provider/provider.dart';
 import '../widgets/custom_expansion_title.dart' as custom;
@@ -323,31 +322,5 @@ Widget _userTileName(String name) {
         ),
       ),
     ],
-  );
-}
-
-Widget dateTime({selectedDate, double padding}) {
-  return DateTimePicker(
-    type: DateTimePickerType.dateTimeSeparate,
-    dateMask: "EEEE, d MMM, yyyy",
-    initialValue: DateTime.now().toString(),
-    firstDate: DateTime(2000),
-    lastDate: DateTime(2100),
-    dateLabelText: 'Date',
-    timeLabelText: "Hour",
-    selectableDayPredicate: (date) {
-      // Disable weekend days to select from the calendar
-      if (date.weekday == 6 || date.weekday == 7) {
-        return false;
-      }
-
-      return true;
-    },
-    onChanged: (val) => print(val),
-    validator: (val) {
-      print(val);
-      return null;
-    },
-    onSaved: (val) => print(val),
   );
 }
