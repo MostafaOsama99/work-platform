@@ -59,6 +59,7 @@ class LoginState extends State<Login> {
       widget.whenLoading(true);
 
       _formKey.currentState.save();
+      print(user.mail);
 
       try {
         await handleRequest(user.signIn, widget.scaffoldKey.currentContext, () => throw (Exception('auth failed')));

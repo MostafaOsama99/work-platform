@@ -115,7 +115,6 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
 
           // _navBarProvider = Provider.of<NavBar>(context, listen: false);
           // _navBarProvider.scrollController = _scrollController;
-
           return RefreshIndicator(
             onRefresh: () async {
               //setState(() {});
@@ -126,7 +125,7 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               controller: _scrollController,
               itemCount: teamProvider.tasks.length,
-              itemBuilder: (_, i) => ChangeNotifierProvider.value(value: Provider.of<TeamProvider>(context).tasks[i], child: TaskCard()),
+              itemBuilder: (_, i) => ChangeNotifierProvider.value(key: UniqueKey(), value: Provider.of<TeamProvider>(context).tasks[i], child: TaskCard()),
             ),
           );
         },

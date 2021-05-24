@@ -68,9 +68,7 @@ Future<dynamic> get(String endpoint, Function(dynamic responseData) onSuccess) a
   if (response.statusCode == 200) {
     return onSuccess(json.decode(response.body));
   } else
-    throw ServerException(json.decode(response.body));
-
-
+    throw ServerException(response.body);
 }
 
 ///generic post method

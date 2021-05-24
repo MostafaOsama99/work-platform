@@ -113,6 +113,24 @@ class CheckPoint {
 
   @override
   bool operator ==(other) => Object is CheckPoint && other.id == id && other.name == name && other.description == description;
+
+  CheckPoint copyWith({
+    int id,
+    String name,
+    String description,
+    int percentage,
+    bool isFinished,
+    List<Task> subtasks,
+  }) {
+    return CheckPoint(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      percentage: percentage ?? this.percentage,
+      isFinished: isFinished ?? this.isFinished,
+      subtasks: subtasks ?? this.subtasks,
+    );
+  }
 }
 
 class User {

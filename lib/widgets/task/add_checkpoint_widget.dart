@@ -37,7 +37,7 @@ class _AddCheckpointWidgetState extends State<AddCheckpointWidget> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Icons.adjust, color: widget.taskAccentColor, size: 18),
+              Icon(Icons.adjust, color: widget.taskAccentColor.withOpacity(0.5), size: 18),
               SizedBox(width: 8),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,

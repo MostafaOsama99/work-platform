@@ -15,6 +15,7 @@ class BuildFlexibleSpace extends StatefulWidget {
   final int taskId;
   final bool isEdit;
   final bool isLoading;
+  final GlobalKey<ScaffoldState> scaffoldKey;
   final Function(DateTime date) changePSDate;
   final Function(DateTime date) changePEDate;
   final Function(String name) changeName;
@@ -28,6 +29,7 @@ class BuildFlexibleSpace extends StatefulWidget {
     @required this.changePSDate,
     @required this.changePEDate,
     @required this.changeName,
+    @required this.scaffoldKey,
   }) : super(key: key);
 
   @override
@@ -78,8 +80,8 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
       titleLength = task.name.length;
       _isInit = true;
     }
-    _removeListener();
     _addListener();
+    _removeListener();
   }
 
   void _addListener() {
@@ -164,8 +166,8 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                     Text('from: ', style: TextStyle(color: Colors.grey, fontSize: 15)),
                     InkWell(
                       splashColor: Colors.transparent,
-                      onTap: task.datePlannedStart.isBefore(DateTime.now().subtract(Duration(hours: 12))) && widget.isEdit
-                          ? () => showSnackBar('this task is already working!', context)
+                      onTap: task.datePlannedStart.isBefore(DateTime.now().add(Duration(hours: 12))) && widget.isEdit
+                          ? () => showSnackBar('this task is already working!', widget.scaffoldKey.currentContext)
                           : null,
                       child: DateField(
                           initialDate: task.datePlannedStart,

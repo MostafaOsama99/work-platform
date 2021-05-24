@@ -25,7 +25,7 @@ class RoomProvider extends ChangeNotifier {
 
   User get roomCreator => _room.creator;
 
-  int get roomId => _room.id;
+  int get roomId => _room?.id;
 
   //set changeCurrentRoomId(int value) => _room = value;
 
@@ -33,7 +33,7 @@ class RoomProvider extends ChangeNotifier {
 
   void changeRoom(int roomId) {
     _room = _rooms.firstWhere((room) => room.id == roomId);
-    getUserTeams(reload: true);
+    //getUserTeams(reload: true);
     notifyListeners();
   }
 
@@ -50,17 +50,16 @@ class RoomProvider extends ChangeNotifier {
 
   ///get all user team in current room from the database
   /// it does not load the data unless u set [reload] to true, or if uou send another [roomId] it will load the new room teams
-  getUserTeams({bool reload = false, int roomId}) {
+  Future<void> getUserTeams({bool reload = false, int roomId}) async {
     if (!reload && roomId == null) {
       print('Exit');
       return null;
     }
 
     print('getting teams');
-    return get('/users/rooms/${roomId ?? _room.id}/teams', (responseData) {
+    await get('/users/rooms/${roomId ?? _room.id}/teams', (responseData) {
       _roomTeams = [];
-      (responseData as List<dynamic>)
-          .forEach((element) => _roomTeams.add(Team.fromJson(element)));
+      (responseData as List<dynamic>).forEach((element) => _roomTeams.add(Team.fromJson(element)));
     });
   }
 

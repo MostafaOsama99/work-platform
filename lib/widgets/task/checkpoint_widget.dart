@@ -6,17 +6,19 @@ import '../circular_checkBox.dart';
 import 'checkpoint_description.dart';
 
 //TODO: IMPORTANT save new data !!
-class CheckpointWidget extends StatefulWidget {
+class CheckpointWidget extends StatelessWidget {
   final CheckPoint checkPoint;
   final Color taskAccentColor;
   final bool isEditing;
   final bool showDescription;
-  final Function(CheckPoint) onSave;
+  final Function(CheckPoint) onChanged;
   final Function(CheckPoint) onRemove;
-  final bool save;
+  final bool enableDelete;
+
+  //final bool save;
 
   const CheckpointWidget(
-      {Key key, @required this.checkPoint, this.taskAccentColor, this.isEditing = false, this.showDescription = true, this.onSave, this.onRemove, this.save = false})
+      {Key key, @required this.checkPoint, this.taskAccentColor, this.isEditing = false, this.showDescription = true, this.onChanged, this.onRemove, this.enableDelete = true})
       : super(key: key);
 
   static const TS_DONE = TextStyle(
@@ -31,32 +33,15 @@ class CheckpointWidget extends StatefulWidget {
   static final TS_WORKING = TextStyle(fontSize: 17);
 
   @override
-  _CheckpointWidgetState createState() => _CheckpointWidgetState();
-}
-
-class _CheckpointWidgetState extends State<CheckpointWidget> {
-  bool _value;
-  final nameController = TextEditingController();
-  final descriptionController = TextEditingController();
-
-  @override
-  void initState() {
-    _value = widget.checkPoint.isFinished;
-    nameController.text = widget.checkPoint.name;
-    descriptionController.text = widget.checkPoint.description;
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    nameController.dispose();
-    descriptionController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (widget.save) widget.onSave(CheckPoint(id: widget.checkPoint.id, name: nameController.value.text, description: descriptionController.value.text));
+    final nameController = TextEditingController();
+    final descriptionController = TextEditingController();
+
+    bool _value = checkPoint.isFinished;
+    nameController.text = checkPoint.name;
+    descriptionController.text = checkPoint.description;
+
+    //if (save) onSave(CheckPoint(id: checkPoint.id, name: nameController.value.text, description: descriptionController.value.text));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -66,14 +51,15 @@ class _CheckpointWidgetState extends State<CheckpointWidget> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Icons.adjust, color: widget.taskAccentColor, size: 18),
+              Icon(Icons.adjust, color: taskAccentColor, size: 18),
               SizedBox(width: 8),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: TextField(
                   style: _value ? CheckpointWidget.TS_DONE : CheckpointWidget.TS_WORKING,
-                  readOnly: !widget.isEditing,
-                  enableInteractiveSelection: widget.isEditing,
+                  readOnly: !isEditing,
+                  onChanged: (name) => onChanged(checkPoint.copyWith(name: name)),
+                  enableInteractiveSelection: isEditing,
                   controller: nameController,
                   autofocus: false,
                   decoration: InputDecoration(
@@ -82,41 +68,37 @@ class _CheckpointWidgetState extends State<CheckpointWidget> {
                   ),
                 ),
               ),
-              //Text(widget.checkPoint.name, style: _value ? CheckpointWidget.TS_DONE : CheckpointWidget.TS_WORKING,),
+              //Text(checkPoint.name, style: _value ? CheckpointWidget.TS_DONE : CheckpointWidget.TS_WORKING,),
               Spacer(),
-              widget.checkPoint.percentage <= 0
-                  ? CircularCheckBox(value: _value, activeColor: widget.taskAccentColor.withOpacity(0.8), onChanged: (value) => setState(() => _value = value))
+              checkPoint.percentage <= 0
+                  ? CircularCheckBox(value: _value, activeColor: taskAccentColor.withOpacity(0.8), onChanged: (value) => () => _value = value)
                   : Padding(
                       padding: const EdgeInsets.only(right: 10.0),
                       child: Text(
-                        '${widget.checkPoint.percentage}%',
+                        '${checkPoint.percentage}%',
                         style: TextStyle(color: Colors.white70, fontStyle: FontStyle.italic),
                       ),
                     ),
               SizedBox(width: 8),
-              //Expanded(child: tc.CheckPoint(checkPoint: widget.task.checkPoints[index], taskAccentColor: taskAccentColor))
+              //Expanded(child: tc.CheckPoint(checkPoint: task.checkPoints[index], taskAccentColor: taskAccentColor))
             ],
           ),
         ),
-        //if(widget.showDescription)
+        //if(showDescription)
         Offstage(
-          offstage: !widget.showDescription,
+          offstage: !showDescription,
           child: Padding(
-            padding: EdgeInsets.only(left: widget.isEditing ? 5 : 15, right: 15, bottom: 8),
+            padding: EdgeInsets.only(left: isEditing ? 5 : 15, right: 15, bottom: 8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Row(
                   children: [
-                    if (widget.isEditing)
+                    if (isEditing)
                       IconButton(
                         icon: Icon(Icons.delete_outline),
-                        onPressed: widget.checkPoint.subtasks.isNotEmpty
-                            ? () {
-                                //TODO: handle remove this specific checkpoint, if it's not the last one
-                              }
-                            : null,
+                        onPressed: checkPoint.subtasks.isEmpty && enableDelete ? () => onRemove(checkPoint) : null,
                         splashRadius: 20,
                         iconSize: 30,
                         disabledColor: Colors.grey[800],
@@ -125,27 +107,32 @@ class _CheckpointWidgetState extends State<CheckpointWidget> {
                       ),
                     Expanded(
                       child: Padding(
-                          //padding: const EdgeInsets.only(left: 25, right: 15, top: 0, bottom: 15),
-                          padding: EdgeInsets.only(left: widget.isEditing ? 5 : 25, right: 15),
+                          padding: EdgeInsets.only(left: isEditing ? 5 : 25, right: 15),
                           child: Column(
                             children: [
                               CheckpointDescription(
+                                onChanged: (description) => onChanged(checkPoint.copyWith(description: description)),
                                 controller: descriptionController,
-                                readOnly: !widget.isEditing,
+                                readOnly: !isEditing,
                                 width: MediaQuery.of(context).size.width,
                               ),
-                              if (widget.checkPoint.subtasks.isNotEmpty && widget.showDescription)
+                              //if it has subtasks
+                              if (checkPoint.subtasks.isNotEmpty && showDescription)
                                 Container(
                                   decoration: BoxDecoration(
                                       color: COLOR_BACKGROUND,
                                       borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(2.5), bottomLeft: Radius.circular(25), bottomRight: Radius.circular(25), topRight: Radius.circular(5)),
-                                      boxShadow: [BoxShadow(color: widget.taskAccentColor, offset: Offset(-1, 1))]),
-                                  margin: const EdgeInsets.only(left: 15, top: 2, right: 15),
+                                        topLeft: Radius.circular(25),
+                                        bottomLeft: Radius.circular(25),
+                                        bottomRight: Radius.circular(20),
+                                        topRight: Radius.circular(15),
+                                      ),
+                                      boxShadow: [BoxShadow(color: taskAccentColor, offset: Offset(-1, 1))]),
+                                  margin: const EdgeInsets.only(left: 50, top: 2, right: 10),
                                   padding: const EdgeInsets.only(left: 20, bottom: 3, right: 20, top: 3),
                                   child: Align(
                                       child: Text(
-                                    '${widget.checkPoint.subtasks.length} subtasks created on it',
+                                    '${checkPoint.subtasks.length} subtasks created on it',
                                     style: TextStyle(color: Colors.white70, fontSize: 13),
                                   )),
                                 ),

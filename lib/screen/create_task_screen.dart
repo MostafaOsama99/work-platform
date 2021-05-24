@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:project/provider/UserData.dart';
 import 'package:project/provider/data_constants.dart';
 import 'package:project/provider/team_provider.dart';
 import 'package:provider/provider.dart';
@@ -366,7 +367,10 @@ class _CreateTaskState extends State<CreateTask> {
                   taskAccentColor: taskTypes[newTask.type].accentColor,
                 ),
               ),
-              AddCheckpointWidget(onSubmit: _addCheckpoint),
+              AddCheckpointWidget(
+                onSubmit: _addCheckpoint,
+                taskAccentColor: taskTypes[newTask.type].accentColor,
+              ),
 
               Divider(indent: 25, endIndent: 25),
 

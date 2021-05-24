@@ -8,9 +8,9 @@ class CheckpointDescription extends StatefulWidget {
   final double width;
   final bool readOnly;
   final TextEditingController controller;
+  final Function(String value) onChanged;
 
-  const CheckpointDescription(
-      {this.controller, this.width, this.readOnly = true}); //20 padding
+  const CheckpointDescription({this.controller, this.width, this.readOnly = true, this.onChanged}); //20 padding
 
   @override
   _CheckpointDescriptionState createState() => _CheckpointDescriptionState();
@@ -69,6 +69,7 @@ class _CheckpointDescriptionState extends State<CheckpointDescription> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+        onChanged: widget.onChanged,
         readOnly: widget.readOnly,
         autofocus: false,
         scrollPhysics: NeverScrollableScrollPhysics(),

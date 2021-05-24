@@ -22,6 +22,10 @@ import '../model/models.dart';
 import '../model/taskType.dart';
 
 class TaskScreen extends StatefulWidget {
+  final int taskId;
+
+  const TaskScreen({Key key, @required this.taskId}) : super(key: key);
+
   @override
   _TaskScreenState createState() => _TaskScreenState();
 }
@@ -30,6 +34,8 @@ class _TaskScreenState extends State<TaskScreen> {
   bool _isEditing = false;
   bool _isLoading = false;
   bool _showCheckpointDesc = true;
+
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   List<String> _removedUsernames = [];
   List<User> _addedUsers = [];
@@ -40,7 +46,21 @@ class _TaskScreenState extends State<TaskScreen> {
   //holds checkpoints ID that should be deleted
   List<int> _removeCheckpoint = [];
 
-  Task _taskUpdate = Task(id: null, name: null, datePlannedEnd: null, checkPoints: []);
+  //the real task data
+  Task task;
+
+  /*
+  * a palace holder for edits happens on the task,
+  * this is a copy from real task, to hold any changes
+  * when updateTask runs: it takes all these data to be updated.
+  * when update finish it reloads, and re-assigned with the real one
+   */
+  Task _taskUpdate;
+
+  _reloadTask() {
+    task = teamProvider.findById(widget.taskId);
+    _taskUpdate = task;
+  }
 
   //change data in the required update;
   changePlannedStartDate(DateTime date) => _taskUpdate.datePlannedStart = date;
@@ -49,56 +69,48 @@ class _TaskScreenState extends State<TaskScreen> {
 
   changeTaskName(String name) => _taskUpdate.name = name;
 
-//  TeamProvider teamProvider;
+  TeamProvider teamProvider;
 
-  // bool _isInit = false;
-  // Task task;
-  // @override
-  // void didChangeDependencies() {
-  //   if(!_isInit){
-  //     teamProvider = Provider.of<TeamProvider>(context);
-  //     //get task id from previous TaskCard
-  //     final int taskId = ModalRoute.of(context).settings.arguments;
-  //     //get this task from the provider
-  //     task = teamProvider.findById(taskId);
-  //
-  //     _taskUpdate = task;
-  //     _taskUpdate.checkPoints.clear();
-  //   }
-  //
-  //   super.didChangeDependencies();
-  // }
+  bool _isInit = false;
+
+  @override
+  void didChangeDependencies() {
+    if (!_isInit) {
+      teamProvider = Provider.of<TeamProvider>(context);
+      //get this task from the provider
+
+      _reloadTask();
+    }
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    TeamProvider teamProvider = Provider.of<TeamProvider>(context);
-
-    //get task id from previous TaskCard
-    final int taskId = ModalRoute.of(context).settings.arguments;
-    //get this task from the provider
-    Task task = teamProvider.findById(taskId);
-
-    _taskUpdate.id ??= task.id;
-    _taskUpdate.name ??= task.name;
-    _taskUpdate.description ??= task.description;
-    _taskUpdate.datePlannedStart ??= task.datePlannedStart;
-    _taskUpdate.datePlannedEnd ??= task.datePlannedEnd;
-
-    bool _saveData = false;
+    // TeamProvider teamProvider = Provider.of<TeamProvider>(context);
+    //
+    // //get task id from previous TaskCard
+    // final int taskId = ModalRoute.of(context).settings.arguments;
+    // //get this task from the provider
+    // Task task = teamProvider.findById(taskId);
+    //
+    // _taskUpdate.id ??= task.id;
+    // _taskUpdate.name ??= task.name;
+    // _taskUpdate.description ??= task.description;
+    // _taskUpdate.datePlannedStart ??= task.datePlannedStart;
+    // _taskUpdate.datePlannedEnd ??= task.datePlannedEnd;
 
     updateTask() async {
-      setState(() => _isLoading = true);
+      setState(() {
+        _isLoading = true;
+      });
       //await Future.delayed(Duration(seconds: 2));
 
-      //collect data
+      // merge current checkpoints with added checkpoints
       _addCheckpoint.forEach((element) => _taskUpdate.checkPoints.add(element));
 
-      await teamProvider.updateTask(_taskUpdate);
+      await handleRequest(() => teamProvider.updateTask(_taskUpdate), context);
       //await handleRequest(()=>teamProvider.updateTask(_taskUpdate), context);
-
-      //clear data
-      _addCheckpoint = [];
-      _taskUpdate.checkPoints.clear();
 
       if (_removeCheckpoint.isNotEmpty) {
         //remove checkpoints
@@ -113,8 +125,17 @@ class _TaskScreenState extends State<TaskScreen> {
         await teamProvider.assignMembers(task.id, _addedUsers);
         _addedUsers = [];
       }
+      //clear data
+      _addCheckpoint = [];
+      _removeCheckpoint = [];
+      //_removedUsernames = [];
+      //_addedUsers = [];
 
-      setState(() => _isLoading = false);
+      _reloadTask();
+
+      setState(() {
+        _isLoading = false;
+      });
     }
 
     //used for add members button
@@ -131,8 +152,10 @@ class _TaskScreenState extends State<TaskScreen> {
     }
 
     final notificationHeight = MediaQuery.of(context).padding.top;
+    print(task.members);
 
     return Scaffold(
+      key: _scaffoldKey,
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
@@ -149,15 +172,14 @@ class _TaskScreenState extends State<TaskScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 icon: _isEditing
                     ? Icon(
-                        Icons.check_circle_outline,
-                        color: Colors.green,
-                      )
+                  Icons.check_circle_outline,
+                  color: Colors.green,
+                )
                     : Icon(Icons.edit, color: Colors.white),
                 splashRadius: 20,
                 onPressed: () {
                   setState(() => _isEditing = !_isEditing);
                   if (!_isEditing) {
-                    setState(() => _saveData = true);
                     updateTask();
                   }
                 },
@@ -179,6 +201,7 @@ class _TaskScreenState extends State<TaskScreen> {
               changeName: changeTaskName,
               changePEDate: changePlannedEndDate,
               changePSDate: changePlannedStartDate,
+              scaffoldKey: _scaffoldKey,
             ),
           ),
           SliverList(
@@ -214,9 +237,9 @@ class _TaskScreenState extends State<TaskScreen> {
                       SizedBox(width: 8),
                       FittedBox(
                           child: Text(
-                        task.dependentTask.name,
-                        style: TextStyle(fontSize: 15),
-                      )),
+                            task.dependentTask.name,
+                            style: TextStyle(fontSize: 15),
+                          )),
                       Spacer(),
                       Icon(Icons.pause_circle_outline_rounded, size: 23, color: Colors.redAccent),
                       SizedBox(width: 8),
@@ -279,30 +302,35 @@ class _TaskScreenState extends State<TaskScreen> {
           //current checkpoints
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
+                  (BuildContext context, int index) {
                 return InkWell(
                   onLongPress: () => Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => CreateTask(
-                            teamMembers: users,
-                            parentCheckpoint: task.checkPoints[index],
-                            cpStart: task.datePlannedStart,
-                            cpEnd: task.datePlannedEnd,
+                        teamMembers: users,
+                            parentCheckpoint: _taskUpdate.checkPoints[index],
+                            cpStart: _taskUpdate.datePlannedStart,
+                            cpEnd: _taskUpdate.datePlannedEnd,
                           ))),
                   child: CheckpointWidget(
-                    checkPoint: task.checkPoints[index],
+                    key: UniqueKey(),
+                    checkPoint: _taskUpdate.checkPoints[index],
                     taskAccentColor: taskTypes[task.type].accentColor,
                     isEditing: _isEditing,
-                    save: _saveData,
                     showDescription: _showCheckpointDesc,
-                    onSave: (cp) => _taskUpdate.checkPoints.add(cp),
+                    onChanged: (cp) {
+                      _taskUpdate.checkPoints[index] = cp;
+                      print('after adding cp: ${_taskUpdate.checkPoints}');
+                    },
                     onRemove: (cp) {
-                      task.checkPoints.removeWhere((element) => element.id == cp.id);
+                      setState(() => _taskUpdate.checkPoints.removeWhere((element) => element.id == cp.id));
                       _removeCheckpoint.add(cp.id);
                     },
+                    //make sure that is a checkpoint left at least
+                    enableDelete: (_addCheckpoint.length > 0 || _taskUpdate.checkPoints.length > 0),
                   ),
                 );
               },
-              childCount: task.checkPoints.length,
+              childCount: _taskUpdate.checkPoints.length,
             ),
           ),
 
@@ -310,15 +338,17 @@ class _TaskScreenState extends State<TaskScreen> {
           if (_addCheckpoint.isNotEmpty)
             SliverList(
               delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
+                    (BuildContext context, int index) {
                   return CheckpointWidget(
-                    save: _saveData,
+                    key: UniqueKey(),
                     checkPoint: _addCheckpoint[index],
                     taskAccentColor: taskTypes[task.type].accentColor,
                     isEditing: _isEditing,
                     showDescription: _showCheckpointDesc,
-                    onRemove: (cp) => _addCheckpoint.removeAt(index),
-                    onSave: (cp) => _addCheckpoint[index] = cp,
+                    onChanged: (cp) => _addCheckpoint[index] = cp,
+                    onRemove: (cp) => setState(() => _addCheckpoint.removeAt(index)),
+                    //make sure that is a checkpoint left at least
+                    enableDelete: (_addCheckpoint.length > 0 || _taskUpdate.checkPoints.length > 0),
                   );
                 },
                 childCount: _addCheckpoint.length,
@@ -326,113 +356,113 @@ class _TaskScreenState extends State<TaskScreen> {
             ),
           SliverList(
               delegate: SliverChildListDelegate([
-            if (_isEditing)
-              AddCheckpointWidget(
-                taskAccentColor: taskTypes[task.type].accentColor,
-                onSubmit: (name, desc) {
-                  setState(() => _addCheckpoint.add(CheckPoint(id: null, name: name, description: desc, subtasks: [])));
-                },
-              ),
+                if (_isEditing)
+                  AddCheckpointWidget(
+                    taskAccentColor: taskTypes[task.type].accentColor,
+                    onSubmit: (name, desc) {
+                      setState(() => _addCheckpoint.add(CheckPoint(id: null, name: name, description: desc, subtasks: [])));
+                    },
+                  ),
 /*
   ///
     ///assigned to:
   ///
 */
-            Divider(endIndent: 25, indent: 25),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                children: [
-                  Text(
-                    'Assigned to:',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: taskTypes[task.type].accentColor),
-                  ),
-                  Spacer(),
-                  task.assignedTeam != null
-                      ? InkWell(
+                Divider(endIndent: 25, indent: 25),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Assigned to:',
+                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: taskTypes[task.type].accentColor),
+                      ),
+                      Spacer(),
+                      task.assignedTeam != null
+                          ? InkWell(
                           onTap: _isEditing
                               ? () async {
-                                  //TODO:show Teams dialog
-                                }
+                            //TODO:show Teams dialog
+                          }
                               : null,
                           child: TeamTile(task.assignedTeam))
-                      : _isEditing
+                          : _isEditing
                           ? SizedBox(
-                              height: 22,
-                              child: IconButton(
-                                  icon: Icon(Icons.add_circle_outline_rounded),
-                                  padding: EdgeInsets.zero,
-                                  tooltip: 'add member',
-                                  color: Colors.white,
-                                  splashRadius: 20,
-                                  onPressed: addUsers))
+                          height: 22,
+                          child: IconButton(
+                              icon: Icon(Icons.add_circle_outline_rounded),
+                              padding: EdgeInsets.zero,
+                              tooltip: 'add member',
+                              color: Colors.white,
+                              splashRadius: 20,
+                              onPressed: addUsers))
                           : SizedBox()
-                ],
-              ),
-            ),
-          ])),
+                    ],
+                  ),
+                ),
+              ])),
           if (task.members != null)
             SliverList(
                 delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-              return Row(
-                children: [
-                  //SizedBox(width: 8),
-                  if (_isEditing)
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () => setState(() => _removedUsernames.add(task.members[index].userName)),
-                      splashRadius: 20,
-                      iconSize: 20,
-                      padding: const EdgeInsets.all(0),
-                      disabledColor: Colors.grey[800],
-                      tooltip: 'remove user',
-                      color: Colors.red,
-                    ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 16, left: _isEditing ? 0 : 16),
-                      child: _UserTile(
-                        user: task.members[index],
-                        isSelected: (_removedUsernames.contains(task.members[index].userName)),
-                        onDeselect: (user) => setState(() => _removedUsernames.remove(user.userName)),
+                  return Row(
+                    children: [
+                      //SizedBox(width: 8),
+                      if (_isEditing)
+                        IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () => setState(() => _removedUsernames.add(task.members[index].userName)),
+                          splashRadius: 20,
+                          iconSize: 20,
+                          padding: const EdgeInsets.all(0),
+                          disabledColor: Colors.grey[800],
+                          tooltip: 'remove user',
+                          color: Colors.red,
+                        ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 16, left: _isEditing ? 0 : 16),
+                          child: _UserTile(
+                            user: task.members[index],
+                            isSelected: (_removedUsernames.contains(task.members[index].userName)),
+                            onDeselect: (user) => setState(() => _removedUsernames.remove(user.userName)),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              );
-            }, childCount: task.members.length)),
+                    ],
+                  );
+                }, childCount: task.members.length)),
 
           //added users while editing
           if (_addedUsers.isNotEmpty)
             SliverList(
                 delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-              return Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: _isLoading ? null : () => setState(() => _addedUsers.removeAt(index)),
-                    splashRadius: 20,
-                    iconSize: 20,
-                    padding: const EdgeInsets.all(0),
-                    disabledColor: Colors.grey[800],
-                    tooltip: 'remove user',
-                    color: Colors.red,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 16, left: _isEditing ? 0 : 16),
-                      child: _UserTile(
-                        user: _addedUsers[index],
-                        icon: Icons.add_circle,
-                        isSelected: (true),
-                        accentColor: COLOR_ACCENT,
-                        onDeselect: (_) => setState(() => _addedUsers.removeAt(index)),
+                  return Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: _isLoading ? null : () => setState(() => _addedUsers.removeAt(index)),
+                        splashRadius: 20,
+                        iconSize: 20,
+                        padding: const EdgeInsets.all(0),
+                        disabledColor: Colors.grey[800],
+                        tooltip: 'remove user',
+                        color: Colors.red,
                       ),
-                    ),
-                  ),
-                ],
-              );
-            }, childCount: _addedUsers.length)),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 16, left: _isEditing ? 0 : 16),
+                          child: _UserTile(
+                            user: _addedUsers[index],
+                            icon: Icons.add_circle,
+                            isSelected: (true),
+                            accentColor: COLOR_ACCENT,
+                            onDeselect: (_) => setState(() => _addedUsers.removeAt(index)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }, childCount: _addedUsers.length)),
 /*
   ///
     ///Created by:
@@ -440,19 +470,19 @@ class _TaskScreenState extends State<TaskScreen> {
 */
           SliverList(
               delegate: SliverChildListDelegate([
-            Divider(endIndent: 25, indent: 25),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(
-                'Created by:',
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: taskTypes[task.type].accentColor),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 16, left: 16, bottom: 12),
-              child: UserTile(task.taskCreator),
-            ),
-          ])),
+                Divider(endIndent: 25, indent: 25),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Text(
+                    'Created by:',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: taskTypes[task.type].accentColor),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 16, left: 16, bottom: 12),
+                  child: UserTile(task.taskCreator),
+                ),
+              ])),
         ],
       ),
     );

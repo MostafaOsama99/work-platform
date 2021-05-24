@@ -9,9 +9,6 @@ import 'package:project/screen/navigation/app.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
-  final email, password, language;
-
-  SplashScreen({this.email, this.password, this.language});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -20,32 +17,19 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   checkCredentials() async {
-    print(widget.email);
-    print(widget.password);
+    final user = Provider.of<UserData>(context, listen: false);
+    bool _isLogged = await user.autoLogin();
 
-    if (widget.email != null) {
-      final user = Provider.of<UserData>(context, listen: false);
-      user.setPassword = widget.password;
-      user.setMail = widget.email;
-
+    if (_isLogged) {
       final roomProvider = Provider.of<RoomProvider>(context, listen: false);
 
       try {
-        await user.signIn();
-        print('getting current user ...');
-        await user.getCurrentUser();
-
         print('getting user rooms ...');
         await roomProvider.getUserRooms();
-
-        //roomProvider.changeRoom(roomProvider.rooms.first.id);
-        //  initial loading
-        //await roomProvider.getUserTeams(reload: true);
-
         return Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => App()));
       } catch (e) {
         print('splash screen exception: $e');
-        showSnackBar(e, context);
+        //showSnackBar(e, context);
         //TODO: handle exceptions to user
       }
     }

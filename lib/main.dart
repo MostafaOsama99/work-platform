@@ -17,7 +17,7 @@ import 'screen/navigation/app.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences preferences = await SharedPreferences.getInstance();
+
   //preferences.getString('email'),
   // preferences.getString('password')
   runApp(
@@ -28,14 +28,12 @@ void main() async{
         ChangeNotifierProvider.value(value: RoomProvider()),
         ChangeNotifierProvider.value(value: TeamProvider()),
       ],
-      child: MyApp(email: preferences.getString("email"),password: preferences.getString("password"),),
+      child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  final String email,password;
-  MyApp({this.email,this.password});
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -86,11 +84,10 @@ class MyApp extends StatelessWidget {
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: 'pt_sans',
-        scaffoldBackgroundColor: const Color.fromRGBO(17, 20, 25,
-            1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
+        scaffoldBackgroundColor: const Color.fromRGBO(17, 20, 25, 1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
       ),
       themeMode: ThemeMode.dark,
-      home: SplashScreen(email: email,password: password,),
+      home: SplashScreen(),
     );
   }
 }

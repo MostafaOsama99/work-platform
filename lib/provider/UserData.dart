@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:project/model/http_exception.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/provider/data_constants.dart';
 import 'package:project/shared_preferences/user_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';
 
@@ -23,9 +25,6 @@ class UserData extends ChangeNotifier {
   String _name = '';
   String _jobTitle = '';
   String _mobile = '';
-
-  //TODO: remove the id
-  String _id = '';
 
   /// nullable
   DateTime _birthDate;
@@ -80,6 +79,56 @@ class UserData extends ChangeNotifier {
   //
   // String get token => _token;
 
+  Future<void> clearUserData() async {
+    _name = '';
+    _jobTitle = '';
+    _mobile = '';
+    _userName = '';
+    _mail = '';
+    _password = '';
+    _birthDate = null;
+    header = {"Content-Type": "application/json"};
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.clear();
+    notifyListeners();
+  }
+
+  ///this method tries to login & gets user data, using stored user data on shared preferences
+  Future<bool> autoLogin() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    token = preferences.getString("token");
+    try {
+      //if there's a token, try to use it
+      if (token == null) throw Exception('no stored token');
+      header = {"Content-Type": "application/json", HttpHeaders.authorizationHeader: 'Bearer ' + token};
+      await getCurrentUser();
+    } catch (e) {
+      //if no token, or token not valid
+      print('auto login $e');
+      _mail = preferences.getString("email");
+      _password = preferences.getString("password");
+
+      if (_mail != null)
+        try {
+          await signIn();
+          await getCurrentUser();
+        } catch (e) {
+          print('auto login $e');
+          return false;
+        }
+      else
+        return false;
+    }
+    return true;
+  }
+
+  void _setUserData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("token", token);
+    preferences.setString("email", _mail);
+    preferences.setString("password", _password);
+  }
+
   updateCurrentUser(Map<String, dynamic> json) {
     _userName = json['userName'];
     _mail = json['email'];
@@ -91,9 +140,7 @@ class UserData extends ChangeNotifier {
   Future<void> getCurrentUser() async {
     final url = server + '/users/current';
 
-    final response = await http
-        .get(Uri.parse(url), headers: header)
-        .timeout(KTimeOutDuration);
+    final response = await http.get(Uri.parse(url), headers: header).timeout(KTimeOutDuration);
 
     print('status code: ${response.statusCode}');
     print(response.headers);
@@ -131,7 +178,7 @@ class UserData extends ChangeNotifier {
     return isUsernameAvailable;
   }
 
-  Future<void> signUp() => auth(
+  Future<void> signUp() => _auth(
       KSignUp,
       json.encode({
         "username": _userName,
@@ -145,16 +192,13 @@ class UserData extends ChangeNotifier {
       }),
       (responseData) => null);
 
-  Future<void> signIn() =>
-      auth(KSignIn, json.encode({"email": _mail, "password": _password}),
-          (responseData) {
+  Future<void> signIn() => _auth(KSignIn, json.encode({"email": _mail, "password": _password}), (responseData) {
         token = responseData['token'];
-        //TODO: save token
-        setPrefData(_mail, _password);
+        header = {"Content-Type": "application/json", HttpHeaders.authorizationHeader: 'Bearer ' + token};
+        _setUserData();
       });
 
-  Future<void> auth(String endpoint, String body,
-      Function(Map<String, dynamic> responseData) onSuccess) async {
+  Future<void> _auth(String endpoint, String body, Function(Map<String, dynamic> responseData) onSuccess) async {
     final url = server + endpoint;
 
     final response = await http

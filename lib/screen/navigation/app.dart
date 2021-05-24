@@ -100,8 +100,7 @@ class AppState extends State<App> with TickerProviderStateMixin {
                     builder = (_) => ChatsScreen();
                     break;
                 }
-                return MaterialPageRoute(
-                    builder: builder, settings: routeSettings);
+                return MaterialPageRoute(builder: builder, settings: RouteSettings(name: routeSettings.name, arguments: context));
               },
             ),
           ),

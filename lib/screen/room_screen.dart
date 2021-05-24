@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:project/constants.dart';
 import 'package:project/model/models.dart';
+import 'package:project/provider/UserData.dart';
 import 'package:project/provider/navbar.dart';
 import 'package:project/provider/room_provider.dart';
 import 'package:project/provider/team_provider.dart';
+import 'package:project/screen/join_or_create_team.dart';
 import 'package:project/screen/team_screen.dart';
 import 'package:project/splash_screen/splash_screen.dart';
 import 'package:project/widgets/project_card_widget.dart';
@@ -26,15 +28,7 @@ class RoomScreen extends StatefulWidget {
 }
 
 class _RoomScreenState extends State<RoomScreen> {
-  var names = [
-    'Ahmed Mohamed',
-    'Mostafa Osama',
-    'Mohamed Hesham',
-    'Yousef Essam',
-    'Mahmoud Yousef',
-    'Beshoy Wagdy',
-    'Habiba Sayed'
-  ];
+  var names = ['Ahmed Mohamed', 'Mostafa Osama', 'Mohamed Hesham', 'Yousef Essam', 'Mahmoud Yousef', 'Beshoy Wagdy', 'Habiba Sayed'];
 
   bool switchProjects = false;
 
@@ -42,30 +36,53 @@ class _RoomScreenState extends State<RoomScreen> {
   - fix change room lag
   - fix scroll & refresh gesture lag
   - reload user rooms when refresh
+  4865b5b1-88e8-4d7a-bc4a-f72dd4a4635a
   * */
+  RoomProvider roomProvider;
+
+  bool _isInit = false;
+
+  @override
+  void didChangeDependencies() {
+    if (!_isInit) {
+      roomProvider = Provider.of<RoomProvider>(context, listen: false);
+      if (roomProvider.rooms.length > 0) roomProvider.changeRoom(roomProvider.rooms.first.id);
+      _isInit = true;
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final roomProvider = Provider.of<RoomProvider>(context, listen: false);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(45),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(KAppBarRound),
-              bottomRight: Radius.circular(KAppBarRound)),
+          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
           child: AppBar(
             centerTitle: true,
+            //TODO: change logout function
+            //need drawer ?
+            leading: IconButton(
+              onPressed: () async {
+                final user = Provider.of<UserData>(context, listen: false);
+                await user.clearUserData();
+                //app screen context
+                // Navigator.pop(context);
+                //Navigator.of((ModalRoute.of(context).settings.arguments as GlobalKey<ScaffoldState>).currentContext).popUntil((route) => route.isFirst);
+                Navigator.of((ModalRoute.of(context).settings.arguments))
+                    .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => SplashScreen()), (Route<dynamic> route) => false);
+              },
+              icon: Icon(Icons.logout),
+              splashRadius: 20,
+            ),
             title: InkWell(
                 onTap: () {
                   changeRoom(context, MediaQuery.of(context).size.height, roomProvider.rooms);
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text("Room", style: TextStyle(color: Colors.white)),
-                    Icon(Icons.arrow_drop_down, color: Colors.grey[600])
-                  ],
+                  children: [Text("Room", style: TextStyle(color: Colors.white)), Icon(Icons.arrow_drop_down, color: Colors.grey[600])],
                 )),
             actions: [
               Padding(
@@ -74,25 +91,55 @@ class _RoomScreenState extends State<RoomScreen> {
                   splashRadius: 20,
                   iconSize: 19,
                   icon: Image.asset(
-                    switchProjects
-                        ? 'assets/icons/projects.png'
-                        : 'assets/icons/team-2.png',
+                    switchProjects ? 'assets/icons/projects.png' : 'assets/icons/team-2.png',
                     color: Colors.white,
                   ),
-                  onPressed: () =>
-                      setState(() => switchProjects = !switchProjects),
+                  onPressed: () => setState(() => switchProjects = !switchProjects),
                 ),
               )
             ],
           ),
         ),
       ),
-      body: switchProjects ? projectWidget(names, context) : Teams(),
+      body: roomProvider.roomId == null
+          ? Column(
+              //brand new user
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    'Welcome \n\nlet\'s create your first room for your organization, company, work group freelance ...\nor join your team by invitation code',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white, fontSize: 17),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CreateRoomScreen())),
+                  autofocus: true,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: Icon(Icons.read_more_outlined, color: Colors.white, size: 25),
+                    decoration: BoxDecoration(color: Colors.deepOrange, borderRadius: BorderRadius.circular(10)),
+                  ),
+                )
+              ],
+            )
+          : switchProjects
+              ? projectWidget(names, context)
+              : Teams(),
     );
   }
 }
 
-class Teams extends StatelessWidget {
+class Teams extends StatefulWidget {
+  @override
+  _TeamsState createState() => _TeamsState();
+}
+
+class _TeamsState extends State<Teams> {
+  bool _reload = true;
+
   @override
   Widget build(BuildContext context) {
     final roomProvider = Provider.of<RoomProvider>(context);
@@ -131,58 +178,50 @@ class Teams extends StatelessWidget {
       );
     }
 
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: 16, left: 16),
-          child: Row(
-            children: [
-              Text(
-                "Teams",
-                style: TextStyle(fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
-              ),
-            ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        setState(() => _reload = true);
+      },
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 16, left: 16),
+            child: Row(
+              children: [
+                Text(
+                  "Teams",
+                  style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
-        ),
-
-        InkWell(
-          onTap: ()async{
-            SharedPreferences preferences = await SharedPreferences.getInstance();
-            preferences.clear();
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SplashScreen()));
-          },
-          child: Text("Sign Out"),
-
-        ),
-        RefreshIndicator(
-          onRefresh: () => roomProvider.getUserTeams(reload: true),
-          child: FutureBuilder(
-            future: roomProvider.getUserTeams(),
+          FutureBuilder(
+            future: roomProvider.getUserTeams(reload: _reload),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting)
-                return Expanded(
-                    child: Center(child: CircularProgressIndicator()));
-              else if (snapshot.error != null)
+                return Expanded(child: Center(child: CircularProgressIndicator()));
+              else if (snapshot.error != null) {
+                print(snapshot.error);
                 return Expanded(
                     child: Center(
                         child: Text(
                   'cannot reach the server !',
                   style: TextStyle(color: Colors.grey, fontSize: 15),
                 )));
-
-              return ListView.builder(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  itemCount: roomProvider.roomTeams.length,
-                  itemBuilder: (context, i) {
-                    return teamCard(roomProvider.roomTeams[i]);
-                  });
+              }
+              _reload = false;
+              return Expanded(
+                child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    itemCount: roomProvider.roomTeams.length,
+                    itemBuilder: (context, i) {
+                      return teamCard(roomProvider.roomTeams[i]);
+                    }),
+              );
             },
-          ),
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 }

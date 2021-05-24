@@ -11,6 +11,8 @@ import '../../model/models.dart' as model;
 import '../circular_checkBox.dart';
 
 class TaskCard extends StatelessWidget {
+  TaskCard({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     model.Task task = Provider.of<model.Task>(context, listen: false);
@@ -29,7 +31,7 @@ class TaskCard extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.red,
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => TaskScreen(), settings: RouteSettings(arguments: task.id)));
+          Navigator.push(context, MaterialPageRoute(builder: (_) => TaskScreen(taskId: task.id)));
         },
         child: Column(
           mainAxisSize: MainAxisSize.max,

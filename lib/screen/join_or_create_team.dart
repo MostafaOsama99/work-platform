@@ -121,12 +121,11 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
 
       setState(() => _isLoading = true);
 
-      ///97d59b88-fccc-4419-b88e-d9341eb0ee0c
-
       var _isSuccess = await handleRequest(() => Provider.of<TeamProvider>(context, listen: false).joinTeam(_codeController.value.text.trim()), context);
 
       setState(() => _isLoading = false);
       print('join team : $_isSuccess');
+      //TODO: notify user if he joined successfully, or not
     }
 
     return Scaffold(

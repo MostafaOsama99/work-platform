@@ -45,11 +45,12 @@ class TeamProvider extends ChangeNotifier {
 
   Future<void> createTask(Task task) async {
     //print(task.parentCheckpoint.id);
-    int newTaskId;
+    String newTaskId;
     await post(
         //if the task is assigned to a team, it will have the team, other wise : it will have member's team
         task.parentCheckpoint == null ? '/teams/${task.assignedTeam.id}/tasks' : '/tasks/subtask/${task.parentCheckpoint.id}',
         json.encode({
+          "teamId": _team.id,
           "name": task.name,
           "description": task.description,
           "plannedStartDate": task.datePlannedStart.toIso8601String(),
@@ -59,15 +60,15 @@ class TeamProvider extends ChangeNotifier {
           "childCheckpoints":
               List.generate(task.checkPoints.length, (index) => {"checkpointText": task.checkPoints[index].name, "description": task.checkPoints[index].description}),
         }),
-        (response) => newTaskId = response as int);
+        (response) => newTaskId = response);
     //assign team members
-    if (task.assignedTeam.id == _team.id) await assignMembers(newTaskId, task.members);
+    if (task.assignedTeam.id == _team.id) await post('/tasks/$newTaskId/assignedusers', json.encode(List.generate(task.members.length, (index) => task.members[index].userName)));
   }
 
   //assign members to the task
   //updates data locally, should i re-fetch it instead ??
   assignMembers(int taskId, List<User> assignedMembers) =>
-      post('/tasks/${taskId.toString()}/assignedusers', json.encode(List.generate(assignedMembers.length, (index) => assignedMembers[index].userName)), (_) {
+      post('/tasks/$taskId/assignedusers', json.encode(List.generate(assignedMembers.length, (index) => assignedMembers[index].userName)), (_) {
         _team.tasks.firstWhere((task) => task.id == taskId).members.addAll(assignedMembers);
       });
 
@@ -76,7 +77,10 @@ class TeamProvider extends ChangeNotifier {
 
     await get('/teams/${_team.id}/tasks', (response) {
       _team.tasks = [];
-      (response as List).forEach((task) => _team.tasks.add(Task.formJson(task)));
+      (response as List).forEach((task) {
+        print(task);
+        _team.tasks.add(Task.formJson(task));
+      });
     });
   }
 
@@ -88,23 +92,31 @@ class TeamProvider extends ChangeNotifier {
         notifyListeners();
       });
 
+  bool updatingTask = false;
+
   updateTask(Task newTask) async {
-    print(newTask.checkPoints);
-    await put(
-        '/tasks/${newTask.id}',
-        json.encode({
-          "name": newTask.name,
-          "description": newTask.description,
-          "plannedStartDate": newTask.datePlannedStart.toIso8601String(),
-          "plannedEndDate": newTask.datePlannedEnd.toIso8601String(),
-          "childCheckpoints": List.generate(newTask.checkPoints.length,
-              (index) => {'id': newTask.checkPoints[index].id, "checkpointText": newTask.checkPoints[index].name, "description": newTask.checkPoints[index].description}),
-        }));
+    if (!updatingTask) {
+      updatingTask = true;
+      newTask.checkPoints.forEach((element) => print(element.id));
+      await put(
+          '/tasks/${newTask.id}',
+          json.encode({
+            "name": newTask.name,
+            "description": newTask.description,
+            "plannedStartDate": newTask.datePlannedStart.toIso8601String(),
+            "plannedEndDate": newTask.datePlannedEnd.toIso8601String(),
+            "childCheckpoints": List.generate(newTask.checkPoints.length,
+                (index) => {'id': newTask.checkPoints[index].id ?? 0, "checkpointText": newTask.checkPoints[index].name, "description": newTask.checkPoints[index].description}),
+          }), (_) {
+        //internal update
+        int taskIndex = _team.tasks.indexOf(findById(newTask.id));
+        _team.tasks[taskIndex] = newTask;
+        updatingTask = false;
+      });
 
-    int taskIndex = _team.tasks.indexOf(findById(newTask.id));
-
-    _team.tasks[taskIndex] = await getTaskById(newTask.id);
-    notifyListeners();
+      //_team.tasks[taskIndex] = await getTaskById(newTask.id);
+      notifyListeners();
+    }
   }
 
   Future<Task> getTaskById(int taskId) async {
