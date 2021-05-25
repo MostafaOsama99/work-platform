@@ -59,7 +59,22 @@ class _TaskScreenState extends State<TaskScreen> {
 
   _reloadTask() {
     task = teamProvider.findById(widget.taskId);
-    _taskUpdate = task;
+    _taskUpdate = Task(
+      id: task.id,
+      name: task.name,
+      datePlannedStart: task.datePlannedStart,
+      datePlannedEnd: task.datePlannedEnd,
+      description: task.description,
+      progress: task.progress,
+      projectName: task.projectName,
+      checkPoints: task.checkPoints,
+      members: task.members,
+      taskCreator: task.taskCreator,
+      dateActualStart: task.dateActualStart,
+      dateActualEnd: task.dateActualEnd,
+      parentCheckpoint: task.parentCheckpoint,
+      assignedTeam: task.assignedTeam,
+    );
   }
 
   //change data in the required update;
@@ -101,19 +116,18 @@ class _TaskScreenState extends State<TaskScreen> {
     // _taskUpdate.datePlannedEnd ??= task.datePlannedEnd;
 
     updateTask() async {
-      setState(() {
-        _isLoading = true;
-      });
+      setState(() => _isLoading = true);
       //await Future.delayed(Duration(seconds: 2));
 
       // merge current checkpoints with added checkpoints
       _addCheckpoint.forEach((element) => _taskUpdate.checkPoints.add(element));
 
-      await handleRequest(() => teamProvider.updateTask(_taskUpdate), context);
+      teamProvider.updateTask(_taskUpdate);
+      // await handleRequest(() => teamProvider.updateTask(_taskUpdate), context);
       //await handleRequest(()=>teamProvider.updateTask(_taskUpdate), context);
 
       if (_removeCheckpoint.isNotEmpty) {
-        //remove checkpoints
+        await teamProvider.deleteCheckpoints(_removeCheckpoint);
       }
 
       if (_removedUsernames.isNotEmpty) {
@@ -133,10 +147,14 @@ class _TaskScreenState extends State<TaskScreen> {
 
       _reloadTask();
 
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
+
+    // Future<void> updateDescription(String desc) async {
+    //   setState(() => _isLoading = true);
+    //   await handleRequest(() => teamProvider.updateTaskDescription(desc, task.id), context);
+    //   setState(() =>_isLoading = false);
+    // }
 
     //used for add members button
     addUsers() async {
@@ -152,8 +170,6 @@ class _TaskScreenState extends State<TaskScreen> {
     }
 
     final notificationHeight = MediaQuery.of(context).padding.top;
-    print(task.members);
-
     return Scaffold(
       key: _scaffoldKey,
       body: CustomScrollView(
@@ -265,8 +281,10 @@ class _TaskScreenState extends State<TaskScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: DescriptionWidget(
-                  task.description,
+                  _taskUpdate.description,
+                  enableEdit: _isEditing,
                   taskAccentColor: taskTypes[task.type].accentColor,
+                  onChanged: (String desc) => setState(() => _taskUpdate.description = desc),
                 ),
               ),
               Divider(endIndent: 25, indent: 25),
@@ -326,7 +344,7 @@ class _TaskScreenState extends State<TaskScreen> {
                       _removeCheckpoint.add(cp.id);
                     },
                     //make sure that is a checkpoint left at least
-                    enableDelete: (_addCheckpoint.length > 0 || _taskUpdate.checkPoints.length > 0),
+                    enableDelete: (_addCheckpoint.length > 1 || _taskUpdate.checkPoints.length > 1),
                   ),
                 );
               },
@@ -542,7 +560,7 @@ class _UserTile extends StatelessWidget {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(' ${user.userName}', style: TextStyle(fontSize: 12.5, color: Colors.grey)),
+                        Text(' @${user.userName}', style: TextStyle(fontSize: 12.5, color: Colors.grey)),
                         Spacer(),
                         Text(user.jobTitle, style: TextStyle(fontSize: 13.5)),
                       ],

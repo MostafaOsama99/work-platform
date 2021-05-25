@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:project/model/taskType.dart';
+import 'package:project/provider/team_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
@@ -11,11 +12,13 @@ import '../../model/models.dart' as model;
 import '../circular_checkBox.dart';
 
 class TaskCard extends StatelessWidget {
-  TaskCard({Key key}) : super(key: key);
+  final int taskId;
+
+  TaskCard({Key key, @required this.taskId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    model.Task task = Provider.of<model.Task>(context, listen: false);
+    model.Task task = Provider.of<TeamProvider>(context).findById(taskId);
     final size = MediaQuery.of(context).size;
 
     return Container(
@@ -29,6 +32,7 @@ class TaskCard extends StatelessWidget {
         //    color: Colors.white10
       ),
       child: InkWell(
+        key: UniqueKey(),
         splashColor: Colors.red,
         onTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (_) => TaskScreen(taskId: task.id)));
@@ -144,10 +148,10 @@ class TaskCard extends StatelessWidget {
             ///checkpoints
             if (task.checkPoints != null)
               ...task.checkPoints.map((cp) => CheckPoint(
-                key: Key(cp.id.toString()),
-                checkPoint: cp,
-                taskAccentColor: taskTypes[task.type].accentColor,
-              )),
+                key: UniqueKey(),
+                    checkPoint: cp,
+                    taskAccentColor: taskTypes[task.type].accentColor,
+                  )),
 
             Padding(
               padding: const EdgeInsets.only(bottom: 4, top: 4),

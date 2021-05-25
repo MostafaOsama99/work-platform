@@ -47,7 +47,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
 
     updateTeam({String name, String description}) async {
       setState(() => _isLoading = true);
-      bool _isSuccess = await handleRequest(() => teamProvider.updateTeam(name, description), context);
+      await handleRequest(() => teamProvider.updateTeam(name, description), context);
       setState(() => _isLoading = false);
     }
 
@@ -104,7 +104,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                 )),
           ),
           Divider(height: 16, indent: 30, endIndent: 30),
-          DescriptionWidget(teamProvider.team.description),
+          DescriptionWidget(teamProvider.team.description, onChanged: (desc) => updateTeam(description: desc)),
           Divider(height: 16, indent: 30, endIndent: 30),
 
           /*

@@ -35,11 +35,11 @@ class Task with ChangeNotifier {
 
   Task(
       {@required this.id,
-      @required this.name,
+      this.name,
       this.description,
       this.taskCreator, //task creator id
       this.parentCheckpoint,
-      @required this.datePlannedEnd,
+      this.datePlannedEnd,
       this.dateActualStart,
       this.dateActualEnd,
       this.datePlannedStart,
@@ -62,6 +62,7 @@ class Task with ChangeNotifier {
       dateActualStart: DateTime.parse(json["actualStartDate"]),
       dateActualEnd: DateTime.parse(json["actualEndDate"]),
       taskCreator: User.fromJson(json['creator']),
+      parentCheckpoint: json['parentCheckPoint'] != null ? CheckPoint.fromJson(json['parentCheckPoint']) : null,
       members: ((json['assignedUsers'] ?? []) as List).map((user) => User.fromJson(user)).toList(),
       checkPoints: (json['childCheckPoints'] as List).map((cp) => CheckPoint.fromJson(cp)).toList(),
     );

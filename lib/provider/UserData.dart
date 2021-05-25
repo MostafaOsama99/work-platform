@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:project/model/http_exception.dart';
 import 'package:http/http.dart' as http;
 import 'package:project/provider/data_constants.dart';
-import 'package:project/shared_preferences/user_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants.dart';

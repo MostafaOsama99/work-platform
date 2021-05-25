@@ -45,7 +45,6 @@ Future<dynamic> handleRequest(Function serverRequest, BuildContext context, [Voi
     print('*** unhandled exception! ***: $e');
   }
   if (onException != null) onException();
-  print('returned');
   return false;
 }
 

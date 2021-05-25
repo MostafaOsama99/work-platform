@@ -8,13 +8,14 @@ import 'descriptionTextField.dart';
 class DescriptionWidget extends StatelessWidget {
   final String description;
   final Color taskAccentColor;
+  final Function(String value) onChanged;
+  final bool enableEdit;
 
-  DescriptionWidget(this.description,{ this.taskAccentColor = Colors.white});
-
+  DescriptionWidget(this.description, {this.taskAccentColor = Colors.white, this.onChanged, this.enableEdit = true});
 
   @override
   Widget build(BuildContext context) {
-  final _descriptionController = TextEditingController(text: description);
+    final _descriptionController = TextEditingController(text: description);
 
     return Column(
       children: [
@@ -23,18 +24,22 @@ class DescriptionWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Description',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: taskAccentColor)),
-              IconButton(
-                  splashRadius: 20,
-                  splashColor: Color.fromRGBO(8, 77, 99, 1),
-                  icon: Icon(
-                    Icons.edit,
-                    color: Colors.grey,
-                  ),
-                  onPressed: () {
-                    editTextField(context, _descriptionController.value.text, maxLines: 7);
-                  }),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: Text('Description', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: taskAccentColor)),
+              ),
+              if (enableEdit)
+                IconButton(
+                    splashRadius: 20,
+                    splashColor: Color.fromRGBO(8, 77, 99, 1),
+                    icon: Icon(
+                      Icons.edit,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () async {
+                      final String result = await editTextField(context, _descriptionController.value.text, maxLines: 7);
+                      if (result != null) onChanged(result);
+                    }),
             ],
           ),
         ),
