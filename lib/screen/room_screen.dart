@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
 import 'package:project/model/models.dart';
 import 'package:project/provider/UserData.dart';
+import 'package:project/provider/data_constants.dart';
 import 'package:project/provider/navbar.dart';
 import 'package:project/provider/room_provider.dart';
 import 'package:project/provider/team_provider.dart';
@@ -43,17 +44,13 @@ class _RoomScreenState extends State<RoomScreen> {
   bool _isInit = false;
 
   @override
-  void didChangeDependencies() {
+  Widget build(BuildContext context) {
+    //initialize provider
     if (!_isInit) {
-      roomProvider = Provider.of<RoomProvider>(context, listen: false);
-      if (roomProvider.rooms.length > 0) roomProvider.changeRoom(roomProvider.rooms.first.id);
+      roomProvider = Provider.of<RoomProvider>(context);
       _isInit = true;
     }
-    super.didChangeDependencies();
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(45),
@@ -102,28 +99,36 @@ class _RoomScreenState extends State<RoomScreen> {
         ),
       ),
       body: roomProvider.roomId == null
-          ? Column(
-              //brand new user
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    'Welcome \n\nlet\'s create your first room for your organization, company, work group freelance ...\nor join your team by invitation code',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 17),
+          ? RefreshIndicator(
+              onRefresh: () async {
+                await handleRequest(() => roomProvider.getUserRooms(), context);
+                if (roomProvider.rooms.isNotEmpty) {
+                  roomProvider.changeRoom(roomProvider.rooms.first.id);
+                }
+              },
+              child: Column(
+                //brand new user
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      'Welcome \n\nlet\'s create your first room for your organization, company, work group freelance ...\nor join your team by invitation code',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white, fontSize: 17),
+                    ),
                   ),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CreateRoomScreen())),
-                  autofocus: true,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: Icon(Icons.read_more_outlined, color: Colors.white, size: 25),
-                    decoration: BoxDecoration(color: Colors.deepOrange, borderRadius: BorderRadius.circular(10)),
-                  ),
-                )
-              ],
+                  TextButton(
+                    onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CreateRoomScreen())),
+                    autofocus: true,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      child: Icon(Icons.read_more_outlined, color: Colors.white, size: 25),
+                      decoration: BoxDecoration(color: Colors.deepOrange, borderRadius: BorderRadius.circular(10)),
+                    ),
+                  )
+                ],
+              ),
             )
           : switchProjects
               ? projectWidget(names, context)
@@ -138,12 +143,17 @@ class Teams extends StatefulWidget {
 }
 
 class _TeamsState extends State<Teams> {
-  bool _reload = true;
+  bool _reload = false;
+
+  bool _isInit = false;
+  RoomProvider roomProvider;
 
   @override
   Widget build(BuildContext context) {
-    final roomProvider = Provider.of<RoomProvider>(context);
-    final teamProvider = Provider.of<TeamProvider>(context);
+    if (!_isInit) {
+      roomProvider = Provider.of<RoomProvider>(context);
+      _isInit = true;
+    }
 
     Widget teamCard(Team team) {
       return Padding(
@@ -152,7 +162,7 @@ class _TeamsState extends State<Teams> {
           contentPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 12),
           focusColor: Colors.green.withOpacity(0.5),
           onTap: () {
-            teamProvider.changeTeam = team;
+            Provider.of<TeamProvider>(context, listen: false).changeTeam = team;
             //teamProvider.createTask();
             //teamProvider.fetchMembers();
             Navigator.of(context).push(MaterialPageRoute(builder: (_) => TeamScreen())).then((value) {

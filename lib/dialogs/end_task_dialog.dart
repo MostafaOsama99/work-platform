@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_duration_picker/flutter_duration_picker.dart';
+import 'package:project/provider/room_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../model/models.dart';
 import '../widgets/circular_checkBox.dart';
 import '../constants.dart';
 
 class EndTaskDialog extends StatefulWidget {
-  final Duration duration;
-  final Task task;
-
-  const EndTaskDialog({Key key, this.duration, this.task}) : super(key: key);
-
   @override
   _EndTaskDialogState createState() => _EndTaskDialogState();
 }
@@ -21,18 +18,15 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
   bool _isInit = false;
 
   Duration _duration;
-
-  @override
-  void initState() {
-    _duration = widget.duration;
-    super.initState();
-  }
+  RoomProvider roomProvider;
 
   @override
   void didChangeDependencies() {
     if (!_isInit) {
       _padding = MediaQuery.of(context).padding;
       _size = MediaQuery.of(context).size;
+      roomProvider = Provider.of<RoomProvider>(context, listen: false);
+      _duration = roomProvider.session.startTime.difference(roomProvider.session.endTime);
     }
     super.didChangeDependencies();
   }
@@ -42,8 +36,7 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
     return Dialog(
       backgroundColor: COLOR_SCAFFOLD,
       insetPadding: EdgeInsets.only(top: _padding.top + 30, bottom: 70, left: 12, right: 12),
-      shape: RoundedRectangleBorder(
-          side: BorderSide(color: COLOR_ACCENT.withOpacity(0.75)), borderRadius: BorderRadius.all(Radius.circular(25))),
+      shape: RoundedRectangleBorder(side: BorderSide(color: COLOR_ACCENT.withOpacity(0.75)), borderRadius: BorderRadius.all(Radius.circular(25))),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
@@ -58,7 +51,7 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
               child: InkWell(
                 customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                 onTap: () async {
-                  var response = await showDialog(context: context, builder: (_) => DurationDialog(_duration));
+                  Duration response = await showDialog(context: context, builder: (_) => DurationDialog(_duration));
                   if (response != null) setState(() => _duration = response);
                 },
                 child: Ink(
@@ -69,9 +62,7 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
                     children: [
                       Text('session time:', style: const TextStyle(fontSize: 16)),
                       Text(
-                        (_duration.inHours % 60).toString().padLeft(2, '0') +
-                            ':' +
-                            (_duration.inMinutes % 60).toString().padLeft(2, '0'),
+                        (_duration.inHours % 60).toString().padLeft(2, '0') + ':' + (_duration.inMinutes % 60).toString().padLeft(2, '0'),
                         style: const TextStyle(fontFamily: 'digital', fontSize: 22, letterSpacing: 1.2),
                       )
                     ],
@@ -84,7 +75,7 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   itemBuilder: (_, index) => CheckPointWidget(
                         key: Key('$index'),
-                        checkPoint: widget.task.checkPoints[index],
+                        checkPoint: roomProvider.session.task.checkPoints[index],
                       ),
                   separatorBuilder: (_, __) => Divider(
                         endIndent: 5,
@@ -92,7 +83,7 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
                         color: Colors.white12,
                         height: 18,
                       ),
-                  itemCount: widget.task.checkPoints.length),
+                  itemCount: roomProvider.session.task.checkPoints.length),
             ),
             Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -105,13 +96,10 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
                   borderSide: BorderSide(width: 1.5, color: COLOR_BACKGROUND),
                   child: Text(
                     'Okay',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green.shade700),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green.shade700),
                   ),
                   onPressed: () {
-                    if (_duration == widget.duration)
+                    if (_duration == roomProvider.session.startTime.difference(roomProvider.session.endTime))
                       Navigator.of(context).pop();
                     else
                       // user has edited the duration
@@ -144,6 +132,11 @@ class _CheckPointWidgetState extends State<CheckPointWidget> {
     super.initState();
   }
 
+  ///save new checkpoint percentage to the current session
+  saveCheckPointPercentage() {
+    Provider.of<RoomProvider>(context, listen: false).session.task.checkPoints.firstWhere((cp) => cp.id == widget.checkPoint.id).percentage = percentage.toInt();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -170,18 +163,13 @@ class _CheckPointWidgetState extends State<CheckPointWidget> {
                   widget.checkPoint.name,
                   softWrap: false,
                   overflow: TextOverflow.fade,
-                  style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                      fontStyle: _value ? FontStyle.italic : null,
-                      decoration: _value ? TextDecoration.lineThrough : null),
+                  style: TextStyle(color: Colors.white70, fontSize: 16, fontStyle: _value ? FontStyle.italic : null, decoration: _value ? TextDecoration.lineThrough : null),
                 ),
               ),
               //Spacer(),
               Text(
                 percentage.round().toString() + '%',
-                style: const TextStyle(
-                    color: Colors.white70, fontSize: 16, fontStyle: FontStyle.italic, fontFamily: 'digital'),
+                style: const TextStyle(color: Colors.white70, fontSize: 16, fontStyle: FontStyle.italic, fontFamily: 'digital'),
               )
             ],
           ),
@@ -195,7 +183,10 @@ class _CheckPointWidgetState extends State<CheckPointWidget> {
               min: 0,
               max: 100,
               onChanged: (double value) => setState(() => percentage = value),
-              onChangeEnd: (value) => setState(() => _value = (value == 100.0)),
+              onChangeEnd: (value) {
+                saveCheckPointPercentage();
+                setState(() => _value = (value == 100.0));
+              },
               label: percentage.round().toString(),
               inactiveColor: COLOR_BACKGROUND,
               activeColor: COLOR_ACCENT,
@@ -219,10 +210,18 @@ class DurationDialog extends StatefulWidget {
 class _DurationDialogState extends State<DurationDialog> {
   Duration _duration;
 
+  //Duration _duration;
+  RoomProvider roomProvider;
+  bool _isInit = false;
+
   @override
-  void initState() {
-    _duration = widget.duration;
-    super.initState();
+  void didChangeDependencies() {
+    if (!_isInit) {
+      roomProvider = Provider.of<RoomProvider>(context, listen: false);
+      _duration = roomProvider.session.startTime.difference(roomProvider.session.endTime);
+      _isInit = true;
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -261,6 +260,8 @@ class _DurationDialogState extends State<DurationDialog> {
                     highlightedBorderColor: Colors.green,
                     child: Icon(Icons.done, color: Colors.green),
                     onPressed: () {
+                      //update the roomProvider directly
+                      roomProvider.session.extraDuration = _duration - roomProvider.session.startTime.difference(roomProvider.session.endTime);
                       Navigator.of(context).pop(_duration);
                     }),
               ],

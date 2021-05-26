@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:project/provider/data_constants.dart';
+import 'package:project/provider/room_provider.dart';
+import 'package:project/provider/team_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../model/models.dart';
 import '../../model/taskType.dart';
 import '../../constants.dart';
-import '../../demoData.dart';
 import '../../dialogs/end_task_dialog.dart';
 import '../../dialogs/custom_alert_dialog.dart';
 
@@ -17,22 +20,25 @@ class StatisticsScreen extends StatefulWidget {
 
 class _StatisticsScreenState extends State<StatisticsScreen> with TickerProviderStateMixin {
   Task _activeTask;
-  Task _endedTask;
   int _teamId;
+
+  bool _isLoading = false;
 
   ///to control the timer
   GlobalKey<CounterState> _timerKey = GlobalKey();
 
-  @override
-  void initState() {
-    //TODO: check for online working task
-    super.initState();
-  }
+  TeamProvider teamProvider;
+  RoomProvider roomProvider;
+
+  bool _isInit = false;
+  bool _loadTasks = true;
+  bool _isLoadingTasks = true;
 
   ///[isWorking] is if you hit play task or stop task
   toggleTaskTime({bool isWorking, Task task, int teamId}) async {
     if (isWorking) {
       if (_activeTask != null) {
+        //if you press play task and there's a working task already
         bool response = await showDialog(
             context: context,
             builder: (_) => CustomAlertDialog(
@@ -44,7 +50,11 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
         else
           await toggleTaskTime(isWorking: false);
       }
+      //start a new session
+      setState(() => _isLoading = true);
+      await roomProvider.openSession(Session(task: task, roomId: roomProvider.roomId, sessionId: null, startTime: DateTime.now()));
       setState(() {
+        _isLoading = false;
         _teamId = teamId;
         _activeTask = task;
       });
@@ -53,17 +63,49 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
 
     ///stop current session
     else {
+      setState(() => _isLoading = true);
+      //TODO: add extra duration here
       setState(() {
-        _endedTask = _activeTask;
+        _isLoading = false;
         _teamId = null;
         _activeTask = null;
       });
-      _timerKey.currentState.stopTimer();
+      await _timerKey.currentState.stopTimer();
+      await updateTask();
     }
+  }
+
+  updateTask() async {
+    await roomProvider.updateSessionTask(roomProvider.session.task);
+    await roomProvider.closeSession();
+    setState(() => _loadTasks = true);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_isInit) {
+      teamProvider = Provider.of<TeamProvider>(context, listen: false);
+      roomProvider = Provider.of<RoomProvider>(context, listen: false);
+      _isLoading = true;
+      //check for an opened session already
+      //handleRequest(()=> roomProvider.currentSession(), context)
+      roomProvider.currentSession().then((value) {
+        DateTime startTime = roomProvider.session?.startTime;
+        if (startTime != null) {
+          //if there's an opened one, get it's task
+          setState(() {
+            _activeTask = roomProvider.session.task;
+            _teamId = roomProvider.session.teamId;
+            print(_teamId);
+          });
+          _timerKey.currentState.startTimer(startTime);
+          _timerKey.currentState._updateDuration();
+        }
+        setState(() => _isLoading = false);
+      });
+      _isInit = true;
+    }
+
     return Scaffold(
       body: Column(
         children: [
@@ -71,11 +113,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
             margin: EdgeInsets.only(left: 12, right: 12, bottom: 8, top: MediaQuery.of(context).padding.top + 8),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(60),
-                  bottomRight: Radius.circular(60),
-                  topLeft: Radius.circular(15),
-                  bottomLeft: Radius.circular(15)),
+              borderRadius: BorderRadius.only(topRight: Radius.circular(60), bottomRight: Radius.circular(60), topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
               color: Color.fromRGBO(24, 29, 35, 1), //COLOR_ACCENT.withOpacity(0.8),
             ),
             child: Row(
@@ -91,8 +129,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
                             borderRadius: BorderRadius.circular(30),
                             color: COLOR_SCAFFOLD,
                           ),
-                          child: Text('Daily Progress',
-                              softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 19))),
+                          child: Text('Daily Progress', softWrap: false, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 19))),
                       if (_activeTask != null)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -109,38 +146,28 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
                                   highlightElevation: 2,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
-                                    side: BorderSide(
-                                        color: Colors.deepOrange[800]
-                                            .withOpacity(0.5)),
+                                    side: BorderSide(color: Colors.deepOrange[800].withOpacity(0.5)),
                                   ),
-                                  onPressed: () =>
-                                      toggleTaskTime(isWorking: false)),
+                                  onPressed: () => toggleTaskTime(isWorking: false)),
                             ),
                             SizedBox(width: 10),
                             Expanded(
                                 child: Text(
-                              _activeTask.name,
-                              style: const TextStyle(fontSize: 16),
-                              softWrap: false,
-                              overflow: TextOverflow.fade,
-                            )),
+                                  _activeTask.name,
+                                  style: const TextStyle(fontSize: 16),
+                                  softWrap: false,
+                                  overflow: TextOverflow.fade,
+                                )),
                           ],
                         ),
                     ],
                   ),
                 ),
+
+                ///*** counter clock ///***
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Counter(_timerKey, (workTime) async {
-                    final response = await showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (_) => EndTaskDialog(
-                              duration: workTime,
-                              task: _endedTask,
-                            ));
-                    return response;
-                  }),
+                  child: Counter(_timerKey, _isLoading),
                 ),
                 // SizedBox(height: 8),
               ],
@@ -148,7 +175,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
           ),
           Expanded(
             child: DefaultTabController(
-              length: teams.length,
+              length: roomProvider.roomTeams.length,
               child: Column(
                 children: [
                   Padding(
@@ -176,13 +203,11 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
                             indicator: BoxDecoration(borderRadius: BorderRadius.circular(50), color: COLOR_ACCENT),
                             indicatorSize: TabBarIndicatorSize.label,
                             tabs: [
-                              for (final team in teams)
+                              for (final team in roomProvider.roomTeams)
                                 Tab(
                                   child: Container(
                                     padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        border: Border.all(color: COLOR_ACCENT, width: 1)),
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), border: Border.all(color: COLOR_ACCENT, width: 1)),
                                     child: Text(team.name),
                                   ),
                                 ),
@@ -195,45 +220,59 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
                   Expanded(
                     child: TabBarView(
                       children: [
-                        for (final Team _team in teams)
-                          ShaderMask(
-                            shaderCallback: (Rect bounds) {
-                              return LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [COLOR_SCAFFOLD, Colors.transparent, Colors.transparent, Colors.blue],
-                                stops: [0.0, 0.04, 0.96, 1.0],
-                              ).createShader(bounds);
-                            },
-                            blendMode: BlendMode.dstOut,
-                            child: _team.tasks.isNotEmpty
-                                ? ListView.builder(
-                                    padding: const EdgeInsets.only(left: 4, right: 4, top: 2),
-                                    key: UniqueKey(),
-                                    itemCount: _team.tasks.length,
-                                    itemBuilder: (_, index) => WorkTile(
-                                          key: UniqueKey(),
-                                          task: _team.tasks[index],
-                                          isWorking: _activeTask == null
-                                              ? false
-                                              : (_activeTask.id == _team.tasks[index].id && _teamId == _team.id),
-                                          onPressed: (bool value, Task task) {
-                                            toggleTaskTime(isWorking: value, task: task, teamId: _team.id);
-                                          },
-                                        ))
-                                : Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        'assets/icons/task_empty.png',
-                                        color: COLOR_BACKGROUND,
-                                      ),
-                                      Text(
-                                        'No tasks here !',
-                                        style: const TextStyle(color: Colors.white30, fontSize: 16),
-                                      )
-                                    ],
-                                  ),
+                        for (final Team tm in roomProvider.roomTeams)
+                          ChangeNotifierProvider.value(
+                            value: TeamProvider(tm),
+                            child: Consumer<TeamProvider>(
+                              builder: (BuildContext context, _team, Widget child) {
+                                //setState(() => _isLoadingTasks = true);
+                                if (_loadTasks)
+                                  _team.getTasks(_loadTasks).then((value) => setState(() {
+                                        print('loading tasks');
+                                        _isLoadingTasks = false;
+                                        _loadTasks = false;
+                                      }));
+                                return _isLoadingTasks
+                                    ? Center(child: SizedBox(height: 20, child: CircularProgressIndicator()))
+                                    : ShaderMask(
+                                        shaderCallback: (Rect bounds) {
+                                          return LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            colors: [COLOR_SCAFFOLD, Colors.transparent, Colors.transparent, Colors.blue],
+                                            stops: [0.0, 0.04, 0.96, 1.0],
+                                          ).createShader(bounds);
+                                        },
+                                        blendMode: BlendMode.dstOut,
+                                        child: _team.tasks.isNotEmpty
+                                            ? ListView.builder(
+                                                padding: const EdgeInsets.only(left: 4, right: 4, top: 2),
+                                                key: UniqueKey(),
+                                                itemCount: _team.tasks.length,
+                                                itemBuilder: (_, index) => WorkTile(
+                                                      key: UniqueKey(),
+                                                      task: _team.tasks[index],
+                                                      isWorking: _activeTask == null ? false : (_activeTask.id == _team.tasks[index].id && _teamId == _team.team.id),
+                                                      onPressed: (bool value, Task task) {
+                                                        toggleTaskTime(isWorking: value, task: task, teamId: _team.team.id);
+                                                      },
+                                                    ))
+                                            : Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                    'assets/icons/task_empty.png',
+                                                    color: COLOR_BACKGROUND,
+                                                  ),
+                                                  Text(
+                                                    'No tasks here !',
+                                                    style: const TextStyle(color: Colors.white30, fontSize: 16),
+                                                  )
+                                                ],
+                                              ),
+                                      );
+                              },
+                            ),
                           )
                       ],
                     ),
@@ -257,19 +296,17 @@ class WorkTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool _isExceed = task.datePlannedEnd.isAfter(DateTime.now());
+    bool _isExceed = task.datePlannedEnd.isBefore(DateTime.now());
 
     int _spent;
-    if (task.datePlannedEnd.isAfter(DateTime.now())) {
-      _isExceed = true;
+    if (_isExceed) {
       _spent = 100;
     } else
-      _spent = (task.datePlannedStart.difference(task.datePlannedEnd).inDays /
-              task.datePlannedStart.difference(DateTime.now()).inDays *
-              100)
-          .toInt();
+      _spent = (task.datePlannedStart.difference(DateTime.now()).inDays / task.datePlannedStart.difference(task.datePlannedEnd).inDays * 100).toInt();
 
     LinearGradient _timeGradient;
+
+    print('spent: $_spent');
 
     if (_spent <= task.progress)
       _timeGradient = LinearGradient(colors: [COLOR_ACCENT, Colors.blueAccent], stops: [0.2, 0.8]);
@@ -319,15 +356,10 @@ class WorkTile extends StatelessWidget {
                         width: 35,
                         child: RaisedButton(
                             padding: EdgeInsets.zero,
-                            child: isWorking
-                                ? Icon(Icons.pause, color: Colors.white)
-                                : Icon(Icons.play_arrow_sharp,
-                                    color: Colors.white70),
+                            child: isWorking ? Icon(Icons.pause, color: Colors.white) : Icon(Icons.play_arrow_sharp, color: Colors.white70),
                             splashColor: Colors.deepOrange,
                             textColor: Colors.deepOrange,
-                            color: isWorking
-                                ? Colors.deepOrange[800]
-                                : COLOR_BACKGROUND,
+                            color: isWorking ? Colors.deepOrange[800] : COLOR_BACKGROUND,
                             highlightElevation: 2,
                             //autofocus: false,
                             //clipBehavior: Clip.antiAlias,
@@ -390,10 +422,7 @@ class WorkTile extends StatelessWidget {
                             selectedColor: Colors.white,
                             unselectedColor: Colors.black38,
                             gradientColor: LinearGradient(
-                                colors: [Theme.of(context).appBarTheme.color, Colors.greenAccent[700]],
-                                stops: [0.2, 0.9],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight),
+                                colors: [Theme.of(context).appBarTheme.color, Colors.greenAccent[700]], stops: [0.2, 0.9], begin: Alignment.topLeft, end: Alignment.bottomRight),
                             padding: 0,
                           ),
                         ),
@@ -412,9 +441,9 @@ class WorkTile extends StatelessWidget {
 }
 
 class Counter extends StatefulWidget {
-  final Function(Duration workTime) onStop;
+  final bool _isLoading;
 
-  Counter(Key key, this.onStop) : super(key: key);
+  Counter(Key key, [this._isLoading = false]) : super(key: key);
 
   @override
   createState() => CounterState();
@@ -439,9 +468,11 @@ class CounterState extends State<Counter> {
   _updateDuration() => setState(() => _duration = _oldDuration + DateTime.now().difference(_startTime));
 
   ///starts the counter, toggle the colon each 1 second, call updateTime() each 60 seconds
-  startTimer() {
+  ///[startTime] if there's already an open session
+  startTimer([DateTime startTime]) {
+    print('startTime called');
     int _seconds = 0;
-    _startTime = DateTime.now();
+    _startTime = startTime ?? DateTime.now();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       _toggleColon();
       _seconds++;
@@ -456,17 +487,20 @@ class CounterState extends State<Counter> {
   ///make sure that time is closed and colon is shown
   stopTimer() async {
     _updateDuration();
-    var sessionDuration = DateTime.now().difference(_startTime);
+    DateTime _endTime = DateTime.now();
+    //set session end time
+    Provider.of<RoomProvider>(context, listen: false).session.endTime = _endTime;
     _timer.cancel();
     setState(() {
       _showColon = true;
     });
-    var userDuration = await widget.onStop(sessionDuration);
+
+    Duration userDuration = await showDialog(context: context, barrierDismissible: false, builder: (_) => EndTaskDialog());
 
     //add this session time to total day time
     //if user has edited the session time
     if (userDuration != null) {
-      _oldDuration = _oldDuration + userDuration;
+      _oldDuration += userDuration;
       // re-update the screen
       setState(() => _duration = _oldDuration);
     } else
@@ -488,12 +522,14 @@ class CounterState extends State<Counter> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        RichText(
-            text: TextSpan(style: const TextStyle(fontFamily: 'digital', fontSize: 24), children: [
-          TextSpan(text: (_duration.inHours % 60).toString().padLeft(2, '0')),
-          TextSpan(text: ':', style: TextStyle(color: _showColon ? Colors.white : COLOR_SCAFFOLD)),
-          TextSpan(text: (_duration.inMinutes % 60).toString().padLeft(2, '0')),
-        ])),
+        widget._isLoading
+            ? CircularProgressIndicator()
+            : RichText(
+                text: TextSpan(style: const TextStyle(fontFamily: 'digital', fontSize: 24), children: [
+                TextSpan(text: (_duration.inHours % 60).toString().padLeft(2, '0')),
+                TextSpan(text: ':', style: TextStyle(color: _showColon ? Colors.white : COLOR_SCAFFOLD)),
+                TextSpan(text: (_duration.inMinutes % 60).toString().padLeft(2, '0')),
+              ])),
         CircularStepProgressIndicator(
           totalSteps: KTargetWorkHours * 12,
           //increment each 5 minutes (60/5=12)

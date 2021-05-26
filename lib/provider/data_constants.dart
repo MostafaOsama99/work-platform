@@ -27,7 +27,7 @@ String token;
 // = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0QHRlc3QuY29tIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZWlkZW50aWZpZXIiOiJiZGNjZWYwNi1iYjczLTQzZWUtOGY2OC01YTVmMjcyZTVkYTEiLCJleHAiOjE2MjA1NjAxMTgsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjQ0MzM2LyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxob3N0OjQ0MzM2LyJ9.g_JIZi3NXAbG9YoYaCqOhIrIbloJk0G2JhGlRdcfbnQ';
 // 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0MUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImM5Mjg4ZGQ2LTNlZjEtNGJlYi1iNjE1LTczZTljNDIwMTIxNCIsImV4cCI6MTYyMDM5NTM1MCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzYvIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzYvIn0.Feyn_-_EY7gH5cmoZRscgannH-75Jvv6r6DYNMHyVrk';
 
-///this function handles any API request & show snackBar on Exception for Auth now
+///this function handles any API request & show snackBar on Exception
 Future<dynamic> handleRequest(Function serverRequest, BuildContext context, [VoidCallback onException]) async {
   try {
     return await serverRequest();
@@ -65,8 +65,18 @@ Future<dynamic> get(String endpoint, Function(dynamic responseData) onSuccess) a
   print('${response.request}');
 
   if (response.statusCode == 200) {
-    return onSuccess(json.decode(response.body));
-  } else
+    var res;
+    try {
+      res = json.decode(response.body);
+      return onSuccess(res);
+    } catch (e) {
+      //close session API
+      return onSuccess(response.body);
+    }
+    //204 no content
+  } else if (response.statusCode == 204)
+    return;
+  else
     throw ServerException(response.body);
 }
 
@@ -76,7 +86,6 @@ Future<bool> post(String endpoint, String body, [Function(String responseData) o
 
   final response = await http.post(Uri.parse(url), headers: header, body: body).timeout(KTimeOutDuration);
 
-  print(response.body);
   print(response.headers);
   print(response.statusCode);
   print('${response.request}');
@@ -85,7 +94,7 @@ Future<bool> post(String endpoint, String body, [Function(String responseData) o
   print('body: ${response.body}');
 
   if (response.statusCode == 200) {
-    if (onSuccess != null) onSuccess(response.body);
+    if (onSuccess != null) onSuccess(response?.body);
     return true;
   } else
     throw ServerException(response.body);

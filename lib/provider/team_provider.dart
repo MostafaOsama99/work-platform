@@ -7,6 +7,8 @@ import '../model/taskType.dart';
 import 'data_constants.dart';
 
 class TeamProvider extends ChangeNotifier {
+  TeamProvider([this._team]);
+
   Team _team;
 
   Team get team => _team;
@@ -27,8 +29,8 @@ class TeamProvider extends ChangeNotifier {
         'name': name,
         'description': description,
       })
-      //, (responseData) => null
-      );
+    //, (responseData) => null
+  );
 
   updateTeam(String name, String description) async {
     bool _isSuccess = await put('/teams/${_team.id}', json.encode({'name': name ?? _team.name, 'description': description ?? _team.description}));
@@ -40,14 +42,14 @@ class TeamProvider extends ChangeNotifier {
   }
 
   Future<void> fetchMembers() => get('/teams/${_team.id}/members', (response) {
-        _team.members = List.generate((response as List).length, (index) => User.fromJson(response[index]));
-      });
+    _team.members = List.generate((response as List).length, (index) => User.fromJson(response[index]));
+  });
 
   Future<void> createTask(Task task) async {
     //print(task.parentCheckpoint.id);
     String newTaskId;
     await post(
-        //if the task is assigned to a team, it will have the team, other wise : it will have member's team
+      //if the task is assigned to a team, it will have the team, other wise : it will have member's team
         task.parentCheckpoint == null ? '/teams/${task.assignedTeam.id}/tasks' : '/tasks/subtask/${task.parentCheckpoint.id}',
         json.encode({
           "teamId": _team.id,
@@ -58,9 +60,9 @@ class TeamProvider extends ChangeNotifier {
           "actualStartDate": task.dateActualStart.toIso8601String(),
           "isFinished": false,
           "childCheckpoints":
-              List.generate(task.checkPoints.length, (index) => {"checkpointText": task.checkPoints[index].name, "description": task.checkPoints[index].description}),
+          List.generate(task.checkPoints.length, (index) => {"checkpointText": task.checkPoints[index].name, "description": task.checkPoints[index].description}),
         }),
-        (response) => newTaskId = response);
+            (response) => newTaskId = response);
     //assign team members
     if (task.assignedTeam.id == _team.id) await post('/tasks/$newTaskId/assignedusers', json.encode(List.generate(task.members.length, (index) => task.members[index].userName)));
   }
@@ -72,7 +74,7 @@ class TeamProvider extends ChangeNotifier {
         _team.tasks.firstWhere((task) => task.id == taskId).members.addAll(assignedMembers);
       });
 
-  getTasks([bool reload = false]) async {
+  Future<void> getTasks([bool reload = false]) async {
     if (!reload) return;
     //TODO: remove fetch members call from here
     fetchMembers();
@@ -90,9 +92,9 @@ class TeamProvider extends ChangeNotifier {
   Task findById(int id) => _team.tasks.firstWhere((task) => task.id == id);
 
   removeAssignedMembers(int taskId, List<String> removedUserNames) => delete('/tasks/$taskId/assignedusers', json.encode(removedUserNames), (_) {
-        team.tasks.firstWhere((task) => task.id == taskId).members.removeWhere((member) => removedUserNames.contains(member.userName));
-        notifyListeners();
-      });
+    team.tasks.firstWhere((task) => task.id == taskId).members.removeWhere((member) => removedUserNames.contains(member.userName));
+    notifyListeners();
+  });
 
   updateTask(Task newTask) async {
     newTask.checkPoints.forEach((element) => print(element.id));
@@ -104,9 +106,9 @@ class TeamProvider extends ChangeNotifier {
           "plannedStartDate": newTask.datePlannedStart.toIso8601String(),
           "plannedEndDate": newTask.datePlannedEnd.toIso8601String(),
           "childCheckpoints": List.generate(newTask.checkPoints.length,
-              (index) => {'id': newTask.checkPoints[index].id ?? 0, "checkpointText": newTask.checkPoints[index].name, "description": newTask.checkPoints[index].description}),
+                  (index) => {'id': newTask.checkPoints[index].id ?? 0, "checkpointText": newTask.checkPoints[index].name, "description": newTask.checkPoints[index].description}),
         }),
-        (_) {});
+            (_) {});
     //internal update
     int taskIndex = _team.tasks.indexOf(findById(newTask.id));
     _team.tasks[taskIndex] = await getTaskById(newTask.id);

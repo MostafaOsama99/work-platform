@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -60,11 +58,12 @@ class Task with ChangeNotifier {
       datePlannedStart: DateTime.parse(json["plannedStartDate"]),
       datePlannedEnd: DateTime.parse(json["plannedEndDate"]),
       dateActualStart: DateTime.parse(json["actualStartDate"]),
-      dateActualEnd: DateTime.parse(json["actualEndDate"]),
+      dateActualEnd: json["actualEndDate"] != null ? DateTime.parse(json["actualEndDate"]) : null,
       taskCreator: User.fromJson(json['creator']),
       parentCheckpoint: json['parentCheckPoint'] != null ? CheckPoint.fromJson(json['parentCheckPoint']) : null,
       members: ((json['assignedUsers'] ?? []) as List).map((user) => User.fromJson(user)).toList(),
-      checkPoints: (json['childCheckPoints'] as List).map((cp) => CheckPoint.fromJson(cp)).toList(),
+      checkPoints:
+          json['childCheckPoints'] != null ? List<CheckPoint>.generate(json['childCheckPoints'].length, (index) => CheckPoint.fromJson(json['childCheckPoints'][index])) : [],
     );
   }
 
@@ -88,11 +87,11 @@ class CheckPoint {
   final bool isFinished;
 
   // [percentage] = -1: means that this checkpoint doesn't have any subtask, so use checkbox, otherwise show progress
-  final int percentage;
+  int percentage;
 
   final List<Task> subtasks;
 
-  const CheckPoint({
+  CheckPoint({
     @required this.id,
     @required this.name,
     this.subtasks,
@@ -146,6 +145,7 @@ class User {
   const User({@required this.userName, this.imageUrl, @required this.name, @required this.jobTitle});
 
   factory User.fromJson(Map<String, dynamic> json) {
+    if (json == null || json.isEmpty) return null;
     return User(userName: json['userName'], name: json['name'], imageUrl: json['imageUrl'], jobTitle: json['jobTitle']);
   }
 
@@ -204,5 +204,33 @@ class Team {
         dateCreated: DateTime.parse(json['createdAt']),
         //TODO; remove null check
         leader: json['leader'] != null ? User.fromJson(json['leader']) : null);
+  }
+}
+
+///this class holds user session data
+class Session {
+  final roomId, sessionId, teamId;
+  final Task task;
+  final DateTime startTime;
+  DateTime endTime;
+  Duration extraDuration;
+
+  Session({this.teamId, @required this.task, @required this.roomId, @required this.sessionId, @required this.startTime, this.endTime});
+
+  factory Session.fromJson(Map json) => Session(
+      /*TODO teamId: json['team']['teamId'],*/
+      task: Task.formJson(json['task']),
+      roomId: null /* TODO: json['team']['roomId'] */,
+      sessionId: json['id'],
+      startTime: DateTime.parse(json['startDate']));
+
+  Session copyWith({int taskId, int roomId, int teamId, int sessionId, DateTime startTime, DateTime endTime}) {
+    return Session(
+        task: taskId ?? this.task,
+        roomId: roomId ?? this.roomId,
+        teamId: teamId ?? this.teamId,
+        sessionId: sessionId ?? this.sessionId,
+        startTime: startTime ?? this.startTime,
+        endTime: endTime ?? this.endTime);
   }
 }

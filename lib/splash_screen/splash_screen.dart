@@ -26,6 +26,10 @@ class _SplashScreenState extends State<SplashScreen> {
       try {
         print('getting user rooms ...');
         await roomProvider.getUserRooms();
+        if (roomProvider.rooms.length > 0) {
+          roomProvider.changeRoom(roomProvider.rooms.first.id);
+          await roomProvider.getUserTeams(reload: true);
+        }
         return Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => App()));
       } catch (e) {
         print('splash screen exception: $e');

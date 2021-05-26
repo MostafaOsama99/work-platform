@@ -96,41 +96,48 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
       ),
       body: RefreshIndicator(
         onRefresh: () async => setState(() => _reload = true),
-        child: FutureBuilder(
-          future: teamProvider.getTasks(_reload),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting)
-              return Expanded(child: Center(child: CircularProgressIndicator()));
-            else if (snapshot.error != null) {
-              print(snapshot.error);
-              return Expanded(
-                  child: Center(
-                      child: Text(
-                'cannot reach the server !',
-                style: TextStyle(color: Colors.grey, fontSize: 15),
-              )));
-            }
+        child: Column(
+          children: [
+            FutureBuilder(
+              future: teamProvider.getTasks(_reload),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  return Expanded(child: Center(child: CircularProgressIndicator()));
+                else if (snapshot.error != null) {
+                  print(snapshot.error);
+                  return Expanded(
+                      child: Center(
+                          child: Text(
+                    'cannot reach the server !',
+                    style: TextStyle(color: Colors.grey, fontSize: 15),
+                  )));
+                }
 
-            // _scrollController.addListener(hideButton);
-            //
-            // _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 200), reverseDuration: Duration(milliseconds: 175));
-            // _animation = CurvedAnimation(parent: _animationController, curve: Curves.easeIn, reverseCurve: Curves.easeOutCirc);
-            // _animationController.value = 1;
+                // _scrollController.addListener(hideButton);
+                //
+                // _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 200), reverseDuration: Duration(milliseconds: 175));
+                // _animation = CurvedAnimation(parent: _animationController, curve: Curves.easeIn, reverseCurve: Curves.easeOutCirc);
+                // _animationController.value = 1;
 
-            // _navBarProvider = Provider.of<NavBar>(context, listen: false);
-            // _navBarProvider.scrollController = _scrollController;
+                // _navBarProvider = Provider.of<NavBar>(context, listen: false);
+                // _navBarProvider.scrollController = _scrollController;
 
-            _reload = false;
-            return ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              controller: _scrollController,
-              itemCount: teamProvider.tasks.length,
-              itemBuilder: (_, i) => TaskCard(
-                key: UniqueKey(),
-                taskId: teamProvider.tasks[i].id,
-              ),
-            );
-          },
+                _reload = false;
+                // return Text('data');
+                return Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    controller: _scrollController,
+                    itemCount: teamProvider.tasks.length,
+                    itemBuilder: (_, i) => TaskCard(
+                      key: UniqueKey(),
+                      taskId: teamProvider.tasks[i].id,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(

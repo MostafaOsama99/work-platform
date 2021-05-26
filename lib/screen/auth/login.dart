@@ -126,6 +126,7 @@ class LoginState extends State<Login> {
             child: TextFormField(
               style: TextStyle(fontSize: 16, color: Colors.black),
               obscureText: hidePassword,
+              enableInteractiveSelection: false,
               textInputAction: TextInputAction.done,
               focusNode: _passwordFocusScope,
               onSaved: (value) => user.setPassword = value,

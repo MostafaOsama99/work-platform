@@ -123,7 +123,7 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
       //collapseMode: CollapseMode.pin,
       background: Opacity(
         opacity: opacity <= 0.5 ? opacity / 2 : opacity,
-        child: Container(
+        child: Padding(
           padding: EdgeInsets.only(top: notificationHeight, right: 16, left: 16),
           //height: 150 - notificationHeight,
           child: Column(
@@ -219,34 +219,33 @@ class _BuildFlexibleSpaceState extends State<BuildFlexibleSpace> {
                     key: _titleKey,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 9),
-                      child: Expanded(
-                        child: TextFormField(
-                          initialValue: task.name,
-                          focusNode: _focus,
-                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                          enabled: widget.isEdit,
-                          validator: (value) => (value.length < 3 || value.length == KTaskTitleLength) ? '' : null,
-                          onChanged: (value) {
-                            setState(() => titleLength = value.trim().length);
-                            if (_titleKey.currentState.validate()) widget.changeName(value.trim());
-                          },
-                          maxLength: KTaskTitleLength,
-                          textInputAction: TextInputAction.done,
-                          decoration: InputDecoration(
-                            errorStyle: TextStyle(height: 0),
-                            errorMaxLines: 1,
-                            contentPadding: EdgeInsets.zero,
-                            isDense: true,
-                            filled: false,
-                            counter: SizedBox(),
-                            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
-                            focusedErrorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
-                            disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                            enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                            errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                          ),
-                          style: TextStyle(fontSize: 16 - topPadding / 2, fontWeight: FontWeight.bold),
+                      child: TextFormField(
+                        enableInteractiveSelection: false,
+                        initialValue: task.name,
+                        focusNode: _focus,
+                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                        enabled: widget.isEdit,
+                        validator: (value) => (value.length < 3 || value.length == KTaskTitleLength) ? '' : null,
+                        onChanged: (value) {
+                          setState(() => titleLength = value.trim().length);
+                          if (_titleKey.currentState.validate()) widget.changeName(value.trim());
+                        },
+                        maxLength: KTaskTitleLength,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                          errorStyle: TextStyle(height: 0),
+                          errorMaxLines: 1,
+                          contentPadding: EdgeInsets.zero,
+                          isDense: true,
+                          filled: false,
+                          counter: SizedBox(),
+                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
+                          focusedErrorBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.red)),
+                          disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                          enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                          errorBorder: OutlineInputBorder(borderSide: BorderSide.none),
                         ),
+                        style: TextStyle(fontSize: 16 - topPadding / 2, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),

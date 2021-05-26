@@ -7,13 +7,13 @@ import 'model/project.dart';
 const longDescription =
     'Human resources (HR) is the division of a business that is charged with finding, screening, recruiting, and training job applicants, as well as administering employee-benefit programs. HR plays a key role in helping companies deal with a fast-changing business environment and a greater demand for quality employees in the 21st century.,';
 
-const List<User> users = [
+ List<User> users = [
   User(name: 'Mostafa Osama Hamed', jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
   User(name: 'Youssef Essam Name', jobTitle: 'Java Developer', userName: '@Youssef_12'),
   User(name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
 ];
 
-const List<User> usersLong = [
+List<User> usersLong = [
   User(name: 'Mostafa Osama Hamed', jobTitle: 'Flutter Developer', userName: '@Mostafa99'),
   User(name: 'Youssef Essam Name', jobTitle: 'Java Developer', userName: '@Youssef_12'),
   User(name: 'Mohammed Hesham Name', jobTitle: 'Flutter Developer', userName: '@MohammedH65'),
@@ -57,7 +57,7 @@ final List<Team> teams = [
         description: 'Create Marketing strategy for new year',
         progress: 80,
         projectName: 'HR  ',
-        checkPoints: const [
+        checkPoints: [
           CheckPoint(id: 0, name: 'strategy plan for first week', isFinished: false, description: 'in this week we would create strategy plan to achieve our strategy goal'),
           CheckPoint(id: 1, name: 'assign task for marketing team', isFinished: false, percentage: 10, description: "marketing team should be working on our plan ")
         ],
@@ -72,7 +72,7 @@ final List<Team> teams = [
         description: 'Create Marketing strategy for new year',
         progress: 10,
         projectName: 'Hr  ',
-        checkPoints: const [
+        checkPoints: [
           CheckPoint(id: 0, name: 'strategy plan for first week', isFinished: false, description: 'in this week we would create strategy plan to achieve our strategy goal'),
           CheckPoint(id: 1, name: 'assign task for marketing team', isFinished: false, percentage: 10, description: "marketing team should be working on our plan ")
         ],
@@ -87,7 +87,7 @@ final List<Team> teams = [
         description: 'Create Marketing strategy for new year',
         progress: 60,
         projectName: 'Hr  ',
-        checkPoints: const [
+        checkPoints: [
           CheckPoint(id: 0, name: 'strategy plan for first week', isFinished: false, description: 'in this week we would create strategy plan to achieve our strategy goal'),
           CheckPoint(id: 1, name: 'assign task for marketing team', isFinished: false, percentage: 10, description: "marketing team should be working on our plan ")
         ],
@@ -102,7 +102,7 @@ final List<Team> teams = [
         description: 'Create Marketing strategy for new year',
         progress: 20,
         projectName: 'Hr  ',
-        checkPoints: const [
+        checkPoints: [
           CheckPoint(id: 0, name: 'strategy plan for first week', isFinished: true, description: 'in this week we would create strategy plan to achieve our strategy goal'),
           CheckPoint(id: 1, name: 'assign task for marketing team', isFinished: false, percentage: 10, description: "marketing team should be working on our plan ")
         ],
@@ -119,7 +119,7 @@ final List<Team> teams = [
         description: 'Create Marketing strategy for new year',
         progress: 80,
         projectName: 'Hr  ',
-        checkPoints: const [
+        checkPoints: [
           CheckPoint(id: 0, name: 'strategy plan for first week', isFinished: false, description: 'in this week we would create strategy plan to achieve our strategy goal'),
           CheckPoint(id: 1, name: 'assign task for marketing team', isFinished: false, percentage: 10, description: "marketing team should be working on our plan ")
         ],
@@ -134,7 +134,7 @@ final List<Team> teams = [
         description: 'Create Marketing strategy for new year',
         progress: 30,
         projectName: 'Hr  ',
-        checkPoints: const [
+        checkPoints: [
           CheckPoint(id: 0, name: 'strategy plan for first week', isFinished: false, description: 'in this week we would create strategy plan to achieve our strategy goal'),
           CheckPoint(id: 1, name: 'assign task for marketing team', isFinished: false, percentage: 10, description: "marketing team should be working on our plan ")
         ],
@@ -151,7 +151,7 @@ final List<Team> teams = [
         description: 'Create Marketing strategy for new year',
         progress: 80,
         projectName: 'Hr  ',
-        checkPoints: const [
+        checkPoints: [
           CheckPoint(id: 0, name: 'strategy plan for first week', isFinished: false, description: 'in this week we would create strategy plan to achieve our strategy goal'),
           CheckPoint(id: 1, name: 'assign task for marketing team', isFinished: false, percentage: 10, description: "marketing team should be working on our plan ")
         ],
@@ -172,7 +172,7 @@ List<Task> demoTasks = [
       description: 'Create Marketing strategy for new year',
       progress: 80,
       projectName: 'Hr  ',
-      checkPoints: const [
+      checkPoints: [
         CheckPoint(id: 0, name: 'strategy plan for first week', isFinished: false, description: 'in this week we would create strategy plan to achieve our strategy goal'),
         CheckPoint(id: 1, name: 'assign task for marketing team', isFinished: false, percentage: 10, description: "marketing team should be working on our plan ")
       ],
@@ -187,7 +187,7 @@ List<Task> demoTasks = [
       description: "social media team is to grow the business by strategically creating content, ads, and engaging with the target audience on different social media platforms.",
       progress: 10,
       projectName: 'Hr',
-      checkPoints: const [
+      checkPoints: [
         CheckPoint(id: 0, name: 'create facebook content', isFinished: false, description: 'we need a strong content that attracts customer to our company '),
         CheckPoint(id: 1, name: 'create twitter content', isFinished: false, description: "create twitter content and maintain company goals")
       ],
@@ -203,7 +203,7 @@ List<Task> demoTasks = [
       description:
           'Search engine marketing, or SEM, is one of the most effective ways to grow your business in an increasingly competitive marketplace. With millions of businesses out there all vying for the same eyeballs, it’s never been more important to advertise online, and search engine marketing is the most effective way to promote your products and grow your business.',
       progress: 95,
-      checkPoints: const [
+      checkPoints: [
         CheckPoint(id: 0, name: 'assign task to engineers', isFinished: false, description: 'we should achieve our search within a week'),
         CheckPoint(id: 1, name: 'achieve plans goal', description: 'good luck', isFinished: false)
       ],
@@ -216,7 +216,7 @@ List<Task> demoTasks = [
           description: 'Create Marketing strategy for new year',
           progress: 80,
           projectName: 'Hr  ',
-          checkPoints: const [
+          checkPoints: [
             CheckPoint(id: 0, name: 'strategy plan for first week', isFinished: false, description: 'in this week we would create strategy plan to achieve our strategy goal'),
             CheckPoint(id: 1, name: 'assign task for marketing team', isFinished: false, percentage: 10, description: "marketing team should be working on our plan ")
           ],
@@ -232,7 +232,7 @@ List<Task> demoTasks = [
       description:
           'Search engine marketing, or SEM, is one of the most effective ways to grow your business in an increasingly competitive marketplace. With millions of businesses out there all vying for the same eyeballs, it’s never been more important to advertise online, and search engine marketing is the most effective way to promote your products and grow your business.',
       progress: 95,
-      checkPoints: const [
+      checkPoints: [
         CheckPoint(id: 0, name: 'assign task to engineers', isFinished: false, description: 'we should achieve our search within a week'),
         CheckPoint(id: 1, name: 'achieve plans goal', description: 'good luck', isFinished: false)
       ],
@@ -245,7 +245,7 @@ List<Task> demoTasks = [
           description: 'Create Marketing strategy for new year',
           progress: 80,
           projectName: 'Hr  ',
-          checkPoints: const [
+          checkPoints: [
             CheckPoint(id: 0, name: 'strategy plan for first week', isFinished: false, description: 'in this week we would create strategy plan to achieve our strategy goal'),
             CheckPoint(id: 1, name: 'assign task for marketing team', isFinished: false, percentage: 10, description: "marketing team should be working on our plan ")
           ],
@@ -254,7 +254,7 @@ List<Task> demoTasks = [
           taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Mostafa Osama')),
       taskCreator: User(userName: '@UserName', jobTitle: 'job title', name: 'Mostafa Osama')),
 
-//  Task( id: '2', name: 'create front-end',datePlannedStart: DateTime(2020,12,1) , datePlannedEnd: DateTime(2021,1,15),description: 'create app UI', progress: 20.0, projectName: 'work platform', checkPoints: const [ CheckPoint( id: '0', name: 'room screen', value: false, description: 'description of room screen'), CheckPoint(id: 0 name: 'team screen', value: false, percentage: 10)],
+//  Task( id: '2', name: 'create front-end',datePlannedStart: DateTime(2020,12,1) , datePlannedEnd: DateTime(2021,1,15),description: 'create app UI', progress: 20.0, projectName: 'work platform', checkPoints:  [ CheckPoint( id: '0', name: 'room screen', value: false, description: 'description of room screen'), CheckPoint(id: 0 name: 'team screen', value: false, percentage: 10)],
 ];
 
 List<Teams> myTeams = [
@@ -273,7 +273,7 @@ List<Teams> myTeams = [
         description: 'create app UI',
         progress: 20,
         projectName: 'work platform',
-        checkPoints: const [
+        checkPoints: [
           CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
           CheckPoint(id: 1, name: 'team screen', isFinished: false, percentage: 10)
         ],
@@ -289,7 +289,7 @@ List<Teams> myTeams = [
         description: 'create app UI',
         progress: 20,
         projectName: 'work platform',
-        checkPoints: const [
+        checkPoints: [
           CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
           CheckPoint(id: 1, name: 'team screen', isFinished: false, percentage: 10)
         ],
@@ -303,7 +303,7 @@ List<Teams> myTeams = [
         description: '',
         progress: 10,
         projectName: 'work platform',
-        checkPoints: const [
+        checkPoints: [
           CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
           CheckPoint(id: 1, name: 're-design task widget', isFinished: false)
         ],
@@ -316,7 +316,7 @@ List<Teams> myTeams = [
         datePlannedEnd: DateTime(2021, 2, 5),
         description: '',
         progress: 10,
-        checkPoints: const [
+        checkPoints: [
           CheckPoint(id: 0, name: 'task model', isFinished: false, description: 'finish task data model'),
           CheckPoint(id: 1, name: 're-design task widget', isFinished: false)
         ],
@@ -359,7 +359,7 @@ List<Project> project = [
               description: 'create app UI',
               progress: 20,
               projectName: 'work platform',
-              checkPoints: const [
+              checkPoints: [
                 CheckPoint(id: 0, name: 'room screen', isFinished: false, description: 'description of room screen'),
                 CheckPoint(id: 01, name: 'team screen', isFinished: false, percentage: 10)
               ],
@@ -376,7 +376,7 @@ List<Project> project = [
                   description: 'create UI Home',
                   progress: 20,
                   projectName: 'Home Home',
-                  checkPoints: const [
+                  checkPoints: [
                     CheckPoint(id: 0, name: 'Home screen', isFinished: false, description: 'description of Home screen'),
                     CheckPoint(id: 01, name: 'team screen', isFinished: false, percentage: 15)
                   ],
@@ -390,7 +390,7 @@ List<Project> project = [
                   description: '',
                   progress: 15,
                   projectName: 'flutter',
-                  checkPoints: const [
+                  checkPoints: [
                     CheckPoint(id: 0, name: 'flutter model', isFinished: false, description: 'finish flutter data model'),
                     CheckPoint(id: 01, name: 're-design task widget', isFinished: false)
                   ],

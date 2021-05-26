@@ -240,6 +240,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
             height: KTextFieldHeight,
             child: TextFormField(
               controller: _passwordController,
+              enableInteractiveSelection: false,
               style: TS_Style,
               obscureText: hidePassword,
               focusNode: _passwordFocusNode,
@@ -288,6 +289,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
             height: KTextFieldHeight,
             child: TextFormField(
               style: TS_Style,
+              enableInteractiveSelection: false,
               obscureText: hidePassword,
               textInputAction: TextInputAction.next,
               focusNode: _password2FocusNode,
