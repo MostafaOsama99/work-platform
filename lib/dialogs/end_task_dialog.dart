@@ -14,19 +14,16 @@ class EndTaskDialog extends StatefulWidget {
 
 class _EndTaskDialogState extends State<EndTaskDialog> {
   EdgeInsets _padding;
-  var _size;
   bool _isInit = false;
 
-  Duration _duration;
   RoomProvider roomProvider;
 
   @override
   void didChangeDependencies() {
     if (!_isInit) {
       _padding = MediaQuery.of(context).padding;
-      _size = MediaQuery.of(context).size;
-      roomProvider = Provider.of<RoomProvider>(context, listen: false);
-      _duration = roomProvider.session.startTime.difference(roomProvider.session.endTime);
+      roomProvider = Provider.of<RoomProvider>(context);
+      _isInit = true;
     }
     super.didChangeDependencies();
   }
@@ -51,8 +48,7 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
               child: InkWell(
                 customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                 onTap: () async {
-                  Duration response = await showDialog(context: context, builder: (_) => DurationDialog(_duration));
-                  if (response != null) setState(() => _duration = response);
+                  await showDialog(context: context, builder: (_) => DurationDialog());
                 },
                 child: Ink(
                   decoration: BoxDecoration(color: COLOR_BACKGROUND, borderRadius: BorderRadius.circular(25)),
@@ -62,7 +58,9 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
                     children: [
                       Text('session time:', style: const TextStyle(fontSize: 16)),
                       Text(
-                        (_duration.inHours % 60).toString().padLeft(2, '0') + ':' + (_duration.inMinutes % 60).toString().padLeft(2, '0'),
+                        (roomProvider.session.totalDuration.inHours % 60).toString().padLeft(2, '0') +
+                            ':' +
+                            (roomProvider.session.totalDuration.inMinutes % 60).toString().padLeft(2, '0'),
                         style: const TextStyle(fontFamily: 'digital', fontSize: 22, letterSpacing: 1.2),
                       )
                     ],
@@ -99,13 +97,8 @@ class _EndTaskDialogState extends State<EndTaskDialog> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green.shade700),
                   ),
                   onPressed: () {
-                    if (_duration == roomProvider.session.startTime.difference(roomProvider.session.endTime))
                       Navigator.of(context).pop();
-                    else
-                      // user has edited the duration
-                      Navigator.of(context).pop(_duration);
-                  },
-                )),
+                    })),
           ],
         ),
       ),
@@ -199,10 +192,6 @@ class _CheckPointWidgetState extends State<CheckPointWidget> {
 }
 
 class DurationDialog extends StatefulWidget {
-  final Duration duration;
-
-  const DurationDialog(this.duration);
-
   @override
   _DurationDialogState createState() => _DurationDialogState();
 }
@@ -215,17 +204,13 @@ class _DurationDialogState extends State<DurationDialog> {
   bool _isInit = false;
 
   @override
-  void didChangeDependencies() {
+  Widget build(BuildContext context) {
     if (!_isInit) {
       roomProvider = Provider.of<RoomProvider>(context, listen: false);
-      _duration = roomProvider.session.startTime.difference(roomProvider.session.endTime);
+      _duration = roomProvider.session.totalDuration;
       _isInit = true;
     }
-    super.didChangeDependencies();
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: COLOR_SCAFFOLD,
       elevation: 0,
@@ -242,9 +227,9 @@ class _DurationDialogState extends State<DurationDialog> {
           ),
           Center(
               child: DurationPicker(
-            duration: _duration,
-            onChange: (Duration value) => setState(() => _duration = value),
-          )),
+                duration: _duration,
+                onChange: (Duration value) => setState(() => _duration = value),
+              )),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -261,8 +246,8 @@ class _DurationDialogState extends State<DurationDialog> {
                     child: Icon(Icons.done, color: Colors.green),
                     onPressed: () {
                       //update the roomProvider directly
-                      roomProvider.session.extraDuration = _duration - roomProvider.session.startTime.difference(roomProvider.session.endTime);
-                      Navigator.of(context).pop(_duration);
+                      roomProvider.setSessionExtraDuration(_duration - roomProvider.session.duration);
+                      Navigator.of(context).pop();
                     }),
               ],
             ),

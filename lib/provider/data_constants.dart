@@ -68,11 +68,11 @@ Future<dynamic> get(String endpoint, Function(dynamic responseData) onSuccess) a
     var res;
     try {
       res = json.decode(response.body);
-      return onSuccess(res);
     } catch (e) {
       //close session API
-      return onSuccess(response.body);
+      res = response.body;
     }
+    return onSuccess(res);
     //204 no content
   } else if (response.statusCode == 204)
     return;

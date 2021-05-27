@@ -128,7 +128,7 @@ class _EditTeamScreenState extends State<EditTeamScreen> {
                     Text('Invite Members to this team:', style: TextStyle(fontSize: 15)),
                     Padding(
                       padding: const EdgeInsets.only(top: 4, left: 16),
-                      child: Text(teamProvider.team.code.substring(0, 28) + '...',
+                      child: Text(teamProvider.team.code.substring(0, 15) + '...',
                           overflow: TextOverflow.fade, style: TextStyle(fontSize: 15, fontStyle: FontStyle.italic, color: Colors.white70)),
                     ),
                   ],

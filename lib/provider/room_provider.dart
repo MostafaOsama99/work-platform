@@ -29,6 +29,25 @@ class RoomProvider extends ChangeNotifier {
 
   Session get session => _currentSession;
 
+  Duration _previousSessionsDuration = Duration.zero;
+
+  Duration get previousSessionsDuration => _previousSessionsDuration;
+
+  void setSessionExtraDuration(Duration duration) {
+    _currentSession.extraDuration = duration ?? Duration.zero;
+    notifyListeners();
+  }
+
+  List<Session> _previousSessions = [];
+
+  void clear() {
+    _room = null;
+    _rooms = [];
+    _roomTeams = [];
+    _currentSession = null;
+    _previousSessions = [];
+  }
+
   //set changeCurrentRoomId(int value) => _room = value;
 
   //int get currentRoomId => _roomId;
@@ -72,47 +91,54 @@ class RoomProvider extends ChangeNotifier {
         (rooms as List).forEach((element) => _rooms.add(Room.formJson(element)));
       });
 
-  openSession(Session session) => get('/users/task/${session.task.id}/sessions/open', (response) {
+  //TODO REFACTOR: create session provider separated out of room provider
+  Future<void> openSession(Session session) => get('/users/task/${session.task.id}/sessions/open', (response) {
         print(response);
         _currentSession = session.copyWith(sessionId: response);
       });
 
-  closeSession() => get('/users/task/sessions/${_currentSession.sessionId}/close?extra-time=0', (_) {
+  Future<void> closeSession() => get('/users/task/sessions/${_currentSession.sessionId}/close?extra-time=${session.extraDuration?.inMinutes ?? 0}', (_) {
+        _previousSessions.add(_currentSession);
+        _previousSessionsDuration += _currentSession.extraDuration;
         _currentSession = null;
+        notifyListeners();
       });
 
   Future<void> currentSession() => get('/users/task/sessions/current', (response) async {
         if (response != null) {
-          print(response['task']);
-          (response as Map).keys.forEach((element) {
-            print(element);
-          });
-          await getTaskById(response['taskId']).then((task) {
-            response['task'] = task;
-            print(task);
-            print(response['task']);
-            _currentSession = Session.fromJson(response);
-          });
+          _currentSession = Session.fromJson(response);
         }
       });
 
-  updateSessionTask(Task sessionTask) async {
-    sessionTask.checkPoints.forEach((element) => print(element.id));
+  /// this API returns all sessions between given time, and if there's an opened one (active session) it returns also.
+  /// so we have to remove this one to [_currentSession] as opened one, and to calculate [_previousSessionsDuration] correctly
+  Future<void> getPreviousSessions(DateTime startTime, DateTime endTime) =>
+      get('/users/task/sessions?start-date=${startTime.toIso8601String()}&end-date=${endTime.toIso8601String()}', (response) {
+        if ((response as List).isNotEmpty) {
+          _previousSessions = [];
+          (response as List).forEach((json) {
+            if (json['endDate'] == null) {
+              _currentSession = Session.fromJson(json);
+            } else
+              _previousSessions.add(Session.fromJson(json));
+          });
+          _calcPreviousSessionsDuration();
+        }
+      });
+
+  void _calcPreviousSessionsDuration() {
+    Duration total = Duration.zero;
+    _previousSessions.forEach((session) => total += session.totalDuration);
+    _previousSessionsDuration = total;
+  }
+
+  Future<void> updateSessionTask(Task sessionTask) async {
     await put(
         '/tasks/${sessionTask.id}',
         json.encode({
           "name": sessionTask.name,
-          "description": sessionTask.description,
-          "plannedStartDate": sessionTask.datePlannedStart.toIso8601String(),
-          "plannedEndDate": sessionTask.datePlannedEnd.toIso8601String(),
-          "childCheckpoints": List.generate(
-              sessionTask.checkPoints.length,
-              (index) => {
-                    'id': sessionTask.checkPoints[index].id ?? 0,
-                    "checkpointText": sessionTask.checkPoints[index].name,
-                    "description": sessionTask.checkPoints[index].description,
-                    'percentage': sessionTask.checkPoints[index].percentage
-                  }),
+          "childCheckpoints":
+              List.generate(sessionTask.checkPoints.length, (index) => {'id': sessionTask.checkPoints[index].id ?? 0, 'percentage': sessionTask.checkPoints[index].percentage}),
         }),
         (_) {});
 
@@ -122,13 +148,4 @@ class RoomProvider extends ChangeNotifier {
     // _team.tasks[taskIndex] = await getTaskById(newTask.id);
     notifyListeners();
   }
-}
-
-//TODO: remove this
-Future<Map> getTaskById(int taskId) async {
-  Map _task;
-  await get('/tasks/$taskId', (res) {
-    _task = res;
-  });
-  return _task;
 }

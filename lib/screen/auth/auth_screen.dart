@@ -43,7 +43,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     final _buttonSocialWidth = MediaQuery.of(context).size.width / 2.7;
 
-    final GlobalKey<LoginState> _loginForm = GlobalKey<LoginState>();
+    //final GlobalKey<LoginState> _loginForm = GlobalKey<LoginState>();
     //final GlobalKey<SignUpState> _signUp = GlobalKey<SignUpState>();
 
     return Scaffold(
@@ -136,7 +136,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         Expanded(
                           child: _isLogin
                               ? Login(
-                                  key: _loginForm,
+                            //  key: _loginForm,
                                   whenLoading: loading,
                                   scaffoldKey: _scaffoldKey,
                                 )

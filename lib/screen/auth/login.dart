@@ -18,13 +18,14 @@ class Login extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
-  LoginState createState() => LoginState();
+  _LoginState createState() => _LoginState();
 }
 
-class LoginState extends State<Login> {
+class _LoginState extends State<Login> {
   static final _formKey = GlobalKey<FormState>();
 
   final _passwordFocusScope = FocusNode();
+  final _mailFocusScope = FocusNode();
 
   String emailValidation = '';
   String passwordValidation = '';
@@ -34,6 +35,7 @@ class LoginState extends State<Login> {
   @override
   void dispose() {
     _passwordFocusScope.dispose();
+    _mailFocusScope.dispose();
     super.dispose();
   }
 
@@ -71,12 +73,11 @@ class LoginState extends State<Login> {
         await handleRequest(roomProvider.getUserRooms, widget.scaffoldKey.currentContext, () => throw (Exception('auth failed')));
 
         //if the user has something to show
-        // if (roomProvider.rooms.isNotEmpty) {
-        //   roomProvider.changeRoom(roomProvider.rooms.first.id);
-        //
-        //   //  initial loading
-        //   await roomProvider.getUserTeams(reload: true);
-        // }
+        if (roomProvider.rooms.isNotEmpty) {
+          roomProvider.changeRoom(roomProvider.rooms.first.id);
+          //  initial loading
+          await roomProvider.getUserTeams(reload: true);
+        }
         Navigator.of(widget.scaffoldKey.currentContext).pushReplacement(MaterialPageRoute(builder: (_) => App()));
       } catch (e) {
         print('login exception: $e');
@@ -94,6 +95,7 @@ class LoginState extends State<Login> {
           SizedBox(
             height: KTextFieldHeight,
             child: TextFormField(
+              focusNode: _mailFocusScope,
               textInputAction: TextInputAction.next,
               style: TextStyle(fontSize: 16, color: Colors.black),
               keyboardType: TextInputType.emailAddress,
@@ -126,7 +128,7 @@ class LoginState extends State<Login> {
             child: TextFormField(
               style: TextStyle(fontSize: 16, color: Colors.black),
               obscureText: hidePassword,
-              enableInteractiveSelection: false,
+              //enableInteractiveSelection: false,
               textInputAction: TextInputAction.done,
               focusNode: _passwordFocusScope,
               onSaved: (value) => user.setPassword = value,

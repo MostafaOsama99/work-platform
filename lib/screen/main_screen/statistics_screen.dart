@@ -71,7 +71,23 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
         _activeTask = null;
       });
       await _timerKey.currentState.stopTimer();
+      await showDialog(context: context, barrierDismissible: false, builder: (_) => EndTaskDialog());
       await updateTask();
+    }
+  }
+
+  Future<void> initializeCounter() async {
+    await handleRequest(() => roomProvider.getPreviousSessions(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day), DateTime.now()), context);
+    //await handleRequest(roomProvider.currentSession, context);
+    DateTime startTime = roomProvider.session?.startTime;
+    if (startTime != null) {
+      //if there's an opened one, get it's task
+      setState(() {
+        _activeTask = roomProvider.session.task;
+        _teamId = roomProvider.session.teamId;
+      });
+      _timerKey.currentState.startTimer(startTime);
+      _timerKey.currentState._updateDuration();
     }
   }
 
@@ -87,25 +103,12 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
       teamProvider = Provider.of<TeamProvider>(context, listen: false);
       roomProvider = Provider.of<RoomProvider>(context, listen: false);
       _isLoading = true;
-      //check for an opened session already
-      //handleRequest(()=> roomProvider.currentSession(), context)
-      roomProvider.currentSession().then((value) {
-        DateTime startTime = roomProvider.session?.startTime;
-        if (startTime != null) {
-          //if there's an opened one, get it's task
-          setState(() {
-            _activeTask = roomProvider.session.task;
-            _teamId = roomProvider.session.teamId;
-            print(_teamId);
-          });
-          _timerKey.currentState.startTimer(startTime);
-          _timerKey.currentState._updateDuration();
-        }
+      initializeCounter().then((value) {
         setState(() => _isLoading = false);
       });
       _isInit = true;
     }
-
+//_isLoading = false;
     return Scaffold(
       body: Column(
         children: [
@@ -153,11 +156,11 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
                             SizedBox(width: 10),
                             Expanded(
                                 child: Text(
-                                  _activeTask.name,
-                                  style: const TextStyle(fontSize: 16),
-                                  softWrap: false,
-                                  overflow: TextOverflow.fade,
-                                )),
+                              _activeTask.name,
+                              style: const TextStyle(fontSize: 16),
+                              softWrap: false,
+                              overflow: TextOverflow.fade,
+                            )),
                           ],
                         ),
                     ],
@@ -450,9 +453,6 @@ class Counter extends StatefulWidget {
 }
 
 class CounterState extends State<Counter> {
-  ///for previous work hours sessions
-  Duration _oldDuration;
-
   ///for total work hours (shown on screen)
   Duration _duration;
 
@@ -465,7 +465,7 @@ class CounterState extends State<Counter> {
 
   ///updates duration to be shown on screen
   ///
-  _updateDuration() => setState(() => _duration = _oldDuration + DateTime.now().difference(_startTime));
+  _updateDuration() => setState(() => _duration = DateTime.now().difference(_startTime));
 
   ///starts the counter, toggle the colon each 1 second, call updateTime() each 60 seconds
   ///[startTime] if there's already an open session
@@ -494,26 +494,17 @@ class CounterState extends State<Counter> {
     setState(() {
       _showColon = true;
     });
-
-    Duration userDuration = await showDialog(context: context, barrierDismissible: false, builder: (_) => EndTaskDialog());
-
-    //add this session time to total day time
-    //if user has edited the session time
-    if (userDuration != null) {
-      _oldDuration += userDuration;
-      // re-update the screen
-      setState(() => _duration = _oldDuration);
-    } else
-      _oldDuration = _duration;
-
     _startTime = null;
   }
 
+  RoomProvider roomProvider;
+
   @override
   void initState() {
-    // TODO: get previous work hours
-    _oldDuration = Duration(seconds: 1175);
-    _duration = _oldDuration;
+    _duration = Duration.zero;
+    Future.delayed(Duration.zero).then((value) {
+      roomProvider = Provider.of<RoomProvider>(context, listen: false);
+    });
     super.initState();
   }
 
@@ -526,14 +517,14 @@ class CounterState extends State<Counter> {
             ? CircularProgressIndicator()
             : RichText(
                 text: TextSpan(style: const TextStyle(fontFamily: 'digital', fontSize: 24), children: [
-                TextSpan(text: (_duration.inHours % 60).toString().padLeft(2, '0')),
+                TextSpan(text: ((roomProvider.previousSessionsDuration + _duration).inHours % 60).toString().padLeft(2, '0')),
                 TextSpan(text: ':', style: TextStyle(color: _showColon ? Colors.white : COLOR_SCAFFOLD)),
-                TextSpan(text: (_duration.inMinutes % 60).toString().padLeft(2, '0')),
+                TextSpan(text: ((roomProvider.previousSessionsDuration + _duration).inMinutes % 60).toString().padLeft(2, '0')),
               ])),
         CircularStepProgressIndicator(
           totalSteps: KTargetWorkHours * 12,
           //increment each 5 minutes (60/5=12)
-          currentStep: _duration.inMinutes ~/ 5,
+          currentStep: (roomProvider.previousSessionsDuration ?? Duration.zero + _duration).inMinutes ~/ 5,
           // ~/ => int
           stepSize: 3,
           selectedStepSize: 8,

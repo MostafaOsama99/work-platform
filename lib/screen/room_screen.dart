@@ -15,8 +15,6 @@ import 'package:provider/provider.dart';
 
 import 'package:project/demoData.dart';
 import 'package:project/widgets/home/dropDownMenu.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'auth/auth_screen.dart';
 
 class RoomScreen extends StatefulWidget {
@@ -64,9 +62,7 @@ class _RoomScreenState extends State<RoomScreen> {
               onPressed: () async {
                 final user = Provider.of<UserData>(context, listen: false);
                 await user.clearUserData();
-                //app screen context
-                // Navigator.pop(context);
-                //Navigator.of((ModalRoute.of(context).settings.arguments as GlobalKey<ScaffoldState>).currentContext).popUntil((route) => route.isFirst);
+                roomProvider.clear();
                 Navigator.of((ModalRoute.of(context).settings.arguments))
                     .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => SplashScreen()), (Route<dynamic> route) => false);
               },

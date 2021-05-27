@@ -106,7 +106,7 @@ class CheckPoint {
         name: json['checkpointText'],
         description: json['description'],
         percentage: json['percentage'],
-        subtasks: (json['subTasks'] as List).map((subtask) => Task.formJson(subtask)).toList()
+        subtasks: json['subTasks'] == null ? null : (json['subTasks'] as List).map((subtask) => Task.formJson(subtask)).toList()
         //subtasks: []
         );
   }
@@ -215,13 +215,15 @@ class Session {
   DateTime endTime;
   Duration extraDuration;
 
-  Session({this.teamId, @required this.task, @required this.roomId, @required this.sessionId, @required this.startTime, this.endTime});
+  Session({this.teamId, @required this.task, @required this.roomId, @required this.sessionId, @required this.startTime, this.endTime, this.extraDuration = Duration.zero});
 
   factory Session.fromJson(Map json) => Session(
-      /*TODO teamId: json['team']['teamId'],*/
+      teamId: json['task']['teamId'],
       task: Task.formJson(json['task']),
-      roomId: null /* TODO: json['team']['roomId'] */,
+      roomId: json['task']['team']['roomId'],
       sessionId: json['id'],
+      endTime: json['endDate'] != null ? DateTime.parse(json['endDate']) : null,
+      extraDuration: json['extraTime'] != null ? Duration(minutes: json['extraTime']) : Duration.zero,
       startTime: DateTime.parse(json['startDate']));
 
   Session copyWith({int taskId, int roomId, int teamId, int sessionId, DateTime startTime, DateTime endTime}) {
@@ -233,4 +235,14 @@ class Session {
         startTime: startTime ?? this.startTime,
         endTime: endTime ?? this.endTime);
   }
+
+  ///calculates session duration if the [endTime] is not null
+  Duration get duration {
+    if (endTime != null) {
+      return endTime.difference(startTime);
+    }
+    return null;
+  }
+
+  Duration get totalDuration => duration + extraDuration;
 }

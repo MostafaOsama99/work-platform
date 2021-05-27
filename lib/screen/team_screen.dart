@@ -124,6 +124,21 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
 
                 _reload = false;
                 // return Text('data');
+                if (teamProvider.tasks.isEmpty)
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/icons/task_empty.png',
+                        color: COLOR_BACKGROUND,
+                      ),
+                      Text(
+                        'No tasks here !',
+                        style: const TextStyle(color: Colors.white30, fontSize: 16),
+                      )
+                    ],
+                  );
+
                 return Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
