@@ -130,6 +130,7 @@ class UserData extends ChangeNotifier {
 
   updateCurrentUser(Map<String, dynamic> json) {
     _userName = json['userName'];
+    _name = json['name'];
     _mail = json['email'];
     _birthDate = DateTime.parse(json['birthDate']);
     _jobTitle = json['jobTitle'];

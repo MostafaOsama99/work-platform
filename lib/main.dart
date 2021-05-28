@@ -4,6 +4,7 @@ import 'package:project/provider/room_provider.dart';
 import 'package:project/screen/auth/auth_screen.dart';
 import 'package:project/screen/auth/login.dart';
 import 'package:project/screen/profile_screen.dart';
+import 'package:project/screen/room_settings.dart';
 import 'package:project/splash_screen/splash_screen.dart';
 import 'package:signalr_client/hub_connection.dart';
 import 'package:signalr_client/hub_connection_builder.dart';
@@ -92,6 +93,9 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.dark,
       home: SplashScreen(),
+      routes: {
+        RoomSettings.route: (_) => RoomSettings(),
+      },
     );
   }
 }

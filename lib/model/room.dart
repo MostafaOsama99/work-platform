@@ -2,17 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:project/model/models.dart';
 
 class Room {
-  final String name, description;
+   String name, description;
   final DateTime createdAt;
   final User creator;
   final int id;
 
-  const Room(
-      {@required this.name,
-      @required this.description,
-      @required this.createdAt,
-      @required this.creator,
-      @required this.id});
+  Room({@required this.name, @required this.description, @required this.createdAt, @required this.creator, @required this.id});
 
   factory Room.formJson(Map<String, dynamic> json) {
     return Room(

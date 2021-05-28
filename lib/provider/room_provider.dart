@@ -14,7 +14,9 @@ class RoomProvider extends ChangeNotifier {
 
   List<Team> _roomTeams = [];
 
-  get roomDescription => _room.description;
+  String get roomDescription => _room.description;
+
+  String get roomName => _room.name;
 
   List<Room> get rooms => [..._rooms];
 
@@ -82,6 +84,15 @@ class RoomProvider extends ChangeNotifier {
       _roomTeams = [];
       (responseData as List<dynamic>).forEach((element) => _roomTeams.add(Team.fromJson(element)));
     });
+  }
+
+  updateRoom(String name, String description) async {
+    bool _isSuccess = await put('/rooms/${_room.id}', json.encode({'name': name ?? _room.name, 'description': description ?? _room.description}));
+    if (_isSuccess != null) {
+      _room.name = name ?? _room.name;
+      _room.description = description ?? _room.description;
+      notifyListeners();
+    }
   }
 
   /// get all current user rooms

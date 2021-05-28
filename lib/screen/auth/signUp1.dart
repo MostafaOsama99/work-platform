@@ -82,6 +82,7 @@ class _SignUp1State extends State<SignUp1> {
             height: KTextFieldHeight,
             child: TextFormField(
                 initialValue: user.name,
+                textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.next,
                 style: TS_Style,
                 keyboardType: TextInputType.name,
@@ -115,6 +116,7 @@ class _SignUp1State extends State<SignUp1> {
               style: TS_Style,
               keyboardType: TextInputType.name,
               focusNode: _jobTitleFocusNode,
+              textCapitalization: TextCapitalization.sentences,
               onFieldSubmitted: (value) {
                 FocusScope.of(context).requestFocus(_mobileFocusNode);
               },

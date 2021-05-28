@@ -10,6 +10,7 @@ import 'package:project/provider/team_provider.dart';
 import 'package:project/screen/join_or_create_team.dart';
 import 'package:project/screen/team_screen.dart';
 import 'package:project/splash_screen/splash_screen.dart';
+import 'package:project/widgets/drawer/drawer_menu.dart';
 import 'package:project/widgets/project_card_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -50,32 +51,26 @@ class _RoomScreenState extends State<RoomScreen> {
     }
 
     return Scaffold(
+      drawer: DrawerMenu(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(45),
         child: ClipRRect(
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(KAppBarRound), bottomRight: Radius.circular(KAppBarRound)),
           child: AppBar(
             centerTitle: true,
-            //TODO: change logout function
-            //need drawer ?
-            leading: IconButton(
-              onPressed: () async {
-                final user = Provider.of<UserData>(context, listen: false);
-                await user.clearUserData();
-                roomProvider.clear();
-                Navigator.of((ModalRoute.of(context).settings.arguments))
-                    .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => SplashScreen()), (Route<dynamic> route) => false);
-              },
-              icon: Icon(Icons.logout),
-              splashRadius: 20,
-            ),
+            // leading: IconButton(
+            //   onPressed: () {
+            //     (ModalRoute.of(context).settings.arguments as GlobalKey<ScaffoldState>).currentState.openDrawer();
+            //   }, icon: Icon(Icons.menu),
+            //   splashRadius: 20,
+            // ),
             title: InkWell(
                 onTap: () {
                   changeRoom(context, MediaQuery.of(context).size.height, roomProvider.rooms);
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [Text("Room", style: TextStyle(color: Colors.white)), Icon(Icons.arrow_drop_down, color: Colors.grey[600])],
+                  children: [Text(roomProvider.roomName ?? 'Workera', style: TextStyle(color: Colors.white)), Icon(Icons.arrow_drop_down, color: Colors.grey[600])],
                 )),
             actions: [
               Padding(
@@ -96,39 +91,39 @@ class _RoomScreenState extends State<RoomScreen> {
       ),
       body: roomProvider.roomId == null
           ? RefreshIndicator(
-              onRefresh: () async {
-                await handleRequest(() => roomProvider.getUserRooms(), context);
-                if (roomProvider.rooms.isNotEmpty) {
-                  roomProvider.changeRoom(roomProvider.rooms.first.id);
-                }
-              },
-              child: Column(
-                //brand new user
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      'Welcome \n\nlet\'s create your first room for your organization, company, work group freelance ...\nor join your team by invitation code',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white, fontSize: 17),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CreateRoomScreen())),
-                    autofocus: true,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                      child: Icon(Icons.read_more_outlined, color: Colors.white, size: 25),
-                      decoration: BoxDecoration(color: Colors.deepOrange, borderRadius: BorderRadius.circular(10)),
-                    ),
-                  )
-                ],
+        onRefresh: () async {
+          await handleRequest(() => roomProvider.getUserRooms(), context);
+          if (roomProvider.rooms.isNotEmpty) {
+            roomProvider.changeRoom(roomProvider.rooms.first.id);
+          }
+        },
+        child: Column(
+          //brand new user
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                'Welcome \n\nlet\'s create your first room for your organization, company, work group freelance ...\nor join your team by invitation code',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 17),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => CreateRoomScreen())),
+              autofocus: true,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Icon(Icons.read_more_outlined, color: Colors.white, size: 25),
+                decoration: BoxDecoration(color: Colors.deepOrange, borderRadius: BorderRadius.circular(10)),
               ),
             )
+          ],
+        ),
+      )
           : switchProjects
-              ? projectWidget(names, context)
-              : Teams(),
+          ? projectWidget(names, context)
+          : Teams(),
     );
   }
 }

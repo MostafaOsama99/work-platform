@@ -14,12 +14,12 @@ import '../widgets/custom_expansion_title.dart' as custom;
 import '../constants.dart';
 import 'auth/signUp1.dart';
 
-class EditTeamScreen extends StatefulWidget {
+class TeamSettings extends StatefulWidget {
   @override
-  _EditTeamScreenState createState() => _EditTeamScreenState();
+  _TeamSettingsState createState() => _TeamSettingsState();
 }
 
-class _EditTeamScreenState extends State<EditTeamScreen> {
+class _TeamSettingsState extends State<TeamSettings> {
   final _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String _teamName, _teamNameError = '', _teamDescription, _teamDescriptionError = '';

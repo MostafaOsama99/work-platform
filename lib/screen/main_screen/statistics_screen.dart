@@ -524,7 +524,7 @@ class CounterState extends State<Counter> {
         CircularStepProgressIndicator(
           totalSteps: KTargetWorkHours * 12,
           //increment each 5 minutes (60/5=12)
-          currentStep: (roomProvider.previousSessionsDuration ?? Duration.zero + _duration).inMinutes ~/ 5,
+          currentStep: (roomProvider?.previousSessionsDuration ?? Duration.zero + _duration).inMinutes ~/ 5,
           // ~/ => int
           stepSize: 3,
           selectedStepSize: 8,

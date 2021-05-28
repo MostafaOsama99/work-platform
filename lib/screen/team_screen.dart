@@ -10,7 +10,7 @@ import '../model/models.dart';
 import '../widgets/task/task_card.dart' show TaskCard;
 import '../constants.dart';
 import 'create_task_screen.dart';
-import 'edit_team_screen.dart';
+import 'team_settings.dart';
 
 class TeamScreen extends StatefulWidget {
   final teamName;
@@ -87,7 +87,7 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
                 icon: Icon(Icons.settings),
                 splashRadius: 21,
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => EditTeamScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => TeamSettings()));
                 },
               )
             ],
@@ -123,7 +123,7 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
                 // _navBarProvider.scrollController = _scrollController;
 
                 _reload = false;
-                // return Text('data');
+                //  case no tasks
                 if (teamProvider.tasks.isEmpty)
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,

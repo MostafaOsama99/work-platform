@@ -27,10 +27,11 @@ class ProjectCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         // instead of ClipRRect
         elevation: 3,
-
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         margin: const EdgeInsets.all(10),
-        child: GestureDetector(
+        child: InkWell(
+          splashColor: Colors.white12,
+          highlightColor: COLOR_ACCENT.withOpacity(0.4),
           onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
@@ -143,7 +144,7 @@ Padding _buildUserAvatar(String name) {
     padding: const EdgeInsets.only(right: 4),
     child: CircleAvatar(
       radius: 12.5,
-      backgroundColor: Colors.red[400],
+      backgroundColor: Colors.black,
       child: Text(
         name[0] + name[lastLitter],
         style: TextStyle(fontSize: 12, color: Colors.white),

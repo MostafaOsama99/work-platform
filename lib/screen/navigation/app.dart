@@ -5,6 +5,7 @@ import 'package:project/demoData.dart';
 import 'package:project/provider/navbar.dart';
 import 'package:project/screen/main_screen/chats_screen.dart';
 import 'package:project/screen/room_screen.dart';
+import 'package:project/widgets/drawer/drawer_menu.dart';
 import 'package:provider/provider.dart';
 
 import '../auth/auth_screen.dart';
@@ -29,6 +30,7 @@ class App extends StatefulWidget {
 class AppState extends State<App> with TickerProviderStateMixin {
   TabItem _currentTab = TabItem.home;
   TabController _tabController;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -77,10 +79,12 @@ class AppState extends State<App> with TickerProviderStateMixin {
         return isFirstRouteInCurrentTab;
       },
       child: Scaffold(
+        key: _scaffoldKey,
         /*
         * the main view here is a stack with children Offstage for each tapView
           * Offstage holding a child and when the value is true it shows up the child
         * */
+
         body: Stack(children: <Widget>[
           Offstage(
             offstage: _currentTab != TabItem.home,
@@ -100,7 +104,7 @@ class AppState extends State<App> with TickerProviderStateMixin {
                     builder = (_) => ChatsScreen();
                     break;
                 }
-                return MaterialPageRoute(builder: builder, settings: RouteSettings(name: routeSettings.name, arguments: context));
+                return MaterialPageRoute(builder: builder, settings: RouteSettings(name: routeSettings.name, arguments: _scaffoldKey));
               },
             ),
           ),
