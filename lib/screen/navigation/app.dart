@@ -3,14 +3,14 @@ import 'package:flutter/rendering.dart';
 import 'package:project/constants.dart';
 import 'package:project/demoData.dart';
 import 'package:project/provider/navbar.dart';
-import 'package:project/screen/main_screen/chats_screen.dart';
+import '../chats_screen.dart';
 import 'package:project/screen/room_screen.dart';
 import 'package:project/widgets/drawer/drawer_menu.dart';
 import 'package:provider/provider.dart';
 
 import '../auth/auth_screen.dart';
 import '../../screen/team_screen.dart';
-import '../../screen/main_screen/statistics_screen.dart';
+import '../statistics_screen.dart';
 import '../notification_screen.dart';
 import 'tab_item.dart';
 

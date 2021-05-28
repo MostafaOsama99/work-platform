@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/screen/navigation/app.dart';
 
-import '../../constants.dart';
+import '../constants.dart';
 import 'package:full_screen_image/full_screen_image.dart';
 
 class Attachment extends StatefulWidget {

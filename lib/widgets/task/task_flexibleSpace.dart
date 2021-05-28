@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:project/model/models.dart';
 import 'package:project/provider/data_constants.dart';
 import 'package:project/provider/team_provider.dart';
-import 'package:project/screen/main_screen/activity_screen.dart';
+import '../../screen/activity_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants.dart';

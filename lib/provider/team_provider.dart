@@ -20,6 +20,8 @@ class TeamProvider extends ChangeNotifier {
 
   List<Task> get tasks => [..._team.tasks.reversed];
 
+  bool isLeader(username) => username == _team.leader.userName;
+
   Future<void> joinTeam(String teamCode) => get('/users/jointeam/$teamCode', (_) {});
 
   ///create team under a specific team
@@ -28,9 +30,7 @@ class TeamProvider extends ChangeNotifier {
       json.encode({
         'name': name,
         'description': description,
-      })
-    //, (responseData) => null
-  );
+      }));
 
   updateTeam(String name, String description) async {
     bool _isSuccess = await put('/teams/${_team.id}', json.encode({'name': name ?? _team.name, 'description': description ?? _team.description}));
@@ -74,12 +74,25 @@ class TeamProvider extends ChangeNotifier {
         _team.tasks.firstWhere((task) => task.id == taskId).members.addAll(assignedMembers);
       });
 
-  Future<void> getTasks([bool reload = false]) async {
+  Future<void> getTeamTasks([bool reload = false]) async {
     if (!reload) return;
     //TODO: remove fetch members call from here
     fetchMembers();
 
     await get('/teams/${_team.id}/tasks', (response) {
+      _team.tasks = [];
+      (response as List).forEach((task) {
+        _team.tasks.add(Task.formJson(task));
+      });
+    });
+  }
+
+  Future<void> getUserTasks([bool reload = false]) async {
+    if (!reload) return;
+    //TODO: remove fetch members call from here
+    fetchMembers();
+
+    await get('/users/authuser/teams/${_team.id}/tasks', (response) {
       _team.tasks = [];
       (response as List).forEach((task) {
         print(task);
@@ -92,9 +105,9 @@ class TeamProvider extends ChangeNotifier {
   Task findById(int id) => _team.tasks.firstWhere((task) => task.id == id);
 
   removeAssignedMembers(int taskId, List<String> removedUserNames) => delete('/tasks/$taskId/assignedusers', json.encode(removedUserNames), (_) {
-    team.tasks.firstWhere((task) => task.id == taskId).members.removeWhere((member) => removedUserNames.contains(member.userName));
-    notifyListeners();
-  });
+        team.tasks.firstWhere((task) => task.id == taskId).members.removeWhere((member) => removedUserNames.contains(member.userName));
+        notifyListeners();
+      });
 
   updateTask(Task newTask) async {
     newTask.checkPoints.forEach((element) => print(element.id));

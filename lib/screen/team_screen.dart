@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:project/provider/UserData.dart';
 import 'package:project/provider/team_provider.dart';
 
 import 'package:provider/provider.dart';
@@ -59,10 +60,17 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
   }
 
   bool _reload = true;
+  bool _isInit = false;
+  bool _isLeader;
+  TeamProvider teamProvider;
 
   @override
   Widget build(BuildContext context) {
-    final teamProvider = Provider.of<TeamProvider>(context, listen: false);
+    if (!_isInit) {
+      teamProvider = Provider.of<TeamProvider>(context, listen: false);
+      _isLeader = teamProvider.isLeader(Provider.of<UserData>(context, listen: false).userName);
+      _isInit = true;
+    }
 
     return Scaffold(
       appBar: PreferredSize(
@@ -99,7 +107,7 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
         child: Column(
           children: [
             FutureBuilder(
-              future: teamProvider.getTasks(_reload),
+              future: teamProvider.getTeamTasks(_reload),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting)
                   return Expanded(child: Center(child: CircularProgressIndicator()));
@@ -125,29 +133,43 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
                 _reload = false;
                 //  case no tasks
                 if (teamProvider.tasks.isEmpty)
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/icons/task_empty.png',
-                        color: COLOR_BACKGROUND,
+                  return Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/icons/task_empty.png', color: COLOR_BACKGROUND),
+                        Center(child: Text('No tasks here !', style: const TextStyle(color: Colors.white30, fontSize: 16)))
+                      ],
+                    ),
+                  );
+
+                //if current user is a member
+                if (!_isLeader)
+                  return Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      controller: _scrollController,
+                      itemCount: teamProvider.tasks.length,
+                      itemBuilder: (_, i) => TaskCard(
+                        key: UniqueKey(),
+                        taskId: teamProvider.tasks[i].id,
                       ),
-                      Text(
-                        'No tasks here !',
-                        style: const TextStyle(color: Colors.white30, fontSize: 16),
-                      )
-                    ],
+                    ),
                   );
 
                 return Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    controller: _scrollController,
-                    itemCount: teamProvider.tasks.length,
-                    itemBuilder: (_, i) => TaskCard(
-                      key: UniqueKey(),
-                      taskId: teamProvider.tasks[i].id,
-                    ),
+                  child: Column(
+                    children: [
+                      ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        controller: _scrollController,
+                        itemCount: teamProvider.tasks.length,
+                        itemBuilder: (_, i) => TaskCard(
+                          key: UniqueKey(),
+                          taskId: teamProvider.tasks[i].id,
+                        ),
+                      ),
+                    ],
                   ),
                 );
               },

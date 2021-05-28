@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:project/provider/team_provider.dart';
 import 'package:project/dialogs/assign_members_dialog.dart';
-import 'package:project/screen/main_screen/attachment%20screen.dart';
+import 'attachment screen.dart';
 import '../constants.dart';
 import '../demoData.dart';
 import 'create_task_screen.dart';

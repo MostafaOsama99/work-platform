@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:project/demoData.dart';
 
-import '../../provider/navbar.dart';
-import '../../constants.dart';
-import '../chat_screen.dart';
+import '../provider/navbar.dart';
+import '../constants.dart';
+import 'chat_screen.dart';
 
 import 'package:provider/provider.dart';
 
 const KTapTS = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
-List<String> lastMessages = [
-  'bye',
-  "see you later",
-  'hello',
-  'new tasks tomorrow'
-];
+List<String> lastMessages = ['bye', "see you later", 'hello', 'new tasks tomorrow'];
 var announce = [5, 4, 0, 1];
 var issue = [2, 3, 1, 0];
 

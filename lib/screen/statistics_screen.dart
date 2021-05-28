@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:project/provider/data_constants.dart';
 import 'package:project/provider/room_provider.dart';
 import 'package:project/provider/team_provider.dart';
+import 'package:project/widgets/custom_tabView.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/models.dart';
-import '../../model/taskType.dart';
-import '../../constants.dart';
-import '../../dialogs/end_task_dialog.dart';
-import '../../dialogs/custom_alert_dialog.dart';
+import '../model/models.dart';
+import '../model/taskType.dart';
+import '../constants.dart';
+import '../dialogs/end_task_dialog.dart';
+import '../dialogs/custom_alert_dialog.dart';
 
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
@@ -108,7 +109,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
       });
       _isInit = true;
     }
-//_isLoading = false;
+
     return Scaffold(
       body: Column(
         children: [
@@ -176,113 +177,57 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
               ],
             ),
           ),
-          Expanded(
-            child: DefaultTabController(
-              length: roomProvider.roomTeams.length,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: Theme(
-                      data: Theme.of(context).copyWith(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                      ),
-                      child: ShaderMask(
-                        shaderCallback: (Rect bounds) {
-                          return LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [COLOR_SCAFFOLD, Colors.transparent, Colors.transparent, Colors.blue],
-                            stops: [0.0, 0.03, 0.97, 1.0],
-                          ).createShader(bounds);
-                        },
-                        blendMode: BlendMode.dstOut,
-                        child: SizedBox(
-                          height: 38,
-                          child: TabBar(
-                            isScrollable: true,
-                            labelPadding: const EdgeInsets.symmetric(horizontal: 8),
-                            indicator: BoxDecoration(borderRadius: BorderRadius.circular(50), color: COLOR_ACCENT),
-                            indicatorSize: TabBarIndicatorSize.label,
-                            tabs: [
-                              for (final team in roomProvider.roomTeams)
-                                Tab(
-                                  child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), border: Border.all(color: COLOR_ACCENT, width: 1)),
-                                    child: Text(team.name),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+          CustomTabView(
+            length: roomProvider.roomTeams.length,
+            tabs: [
+              for (final team in roomProvider.roomTeams)
+                Tab(
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), border: Border.all(color: COLOR_ACCENT, width: 1)),
+                    child: Text(team.name),
                   ),
-                  Expanded(
-                    child: TabBarView(
+                ),
+            ],
+            listView: (index) {
+              return ChangeNotifierProvider.value(
+                key: UniqueKey(),
+                value: TeamProvider(roomProvider.roomTeams[index]),
+                child: Consumer<TeamProvider>(
+                  builder: (BuildContext context, _team, Widget child) {
+                    //setState(() => _isLoadingTasks = true);
+                    if (_loadTasks)
+                      _team.getTeamTasks(_loadTasks).then((value) => setState(() {
+                            print('loading complete');
+                            _isLoadingTasks = false;
+                            _loadTasks = false;
+                          }));
+                    if (_isLoadingTasks) return Center(child: CircularProgressIndicator());
+
+                    if (_team.tasks.isNotEmpty)
+                      return ListView.builder(
+                          padding: const EdgeInsets.only(left: 4, right: 4, top: 2),
+                          key: UniqueKey(),
+                          itemCount: _team.tasks.length,
+                          itemBuilder: (_, index) => WorkTile(
+                                key: UniqueKey(),
+                                task: _team.tasks[index],
+                                isWorking: _activeTask == null ? false : (_activeTask.id == _team.tasks[index].id && _teamId == _team.team.id),
+                                onPressed: (bool value, Task task) {
+                                  toggleTaskTime(isWorking: value, task: task, teamId: _team.team.id);
+                                },
+                              ));
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        for (final Team tm in roomProvider.roomTeams)
-                          ChangeNotifierProvider.value(
-                            value: TeamProvider(tm),
-                            child: Consumer<TeamProvider>(
-                              builder: (BuildContext context, _team, Widget child) {
-                                //setState(() => _isLoadingTasks = true);
-                                if (_loadTasks)
-                                  _team.getTasks(_loadTasks).then((value) => setState(() {
-                                        print('loading tasks');
-                                        _isLoadingTasks = false;
-                                        _loadTasks = false;
-                                      }));
-                                return _isLoadingTasks
-                                    ? Center(child: SizedBox(height: 20, child: CircularProgressIndicator()))
-                                    : ShaderMask(
-                                        shaderCallback: (Rect bounds) {
-                                          return LinearGradient(
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter,
-                                            colors: [COLOR_SCAFFOLD, Colors.transparent, Colors.transparent, Colors.blue],
-                                            stops: [0.0, 0.04, 0.96, 1.0],
-                                          ).createShader(bounds);
-                                        },
-                                        blendMode: BlendMode.dstOut,
-                                        child: _team.tasks.isNotEmpty
-                                            ? ListView.builder(
-                                                padding: const EdgeInsets.only(left: 4, right: 4, top: 2),
-                                                key: UniqueKey(),
-                                                itemCount: _team.tasks.length,
-                                                itemBuilder: (_, index) => WorkTile(
-                                                      key: UniqueKey(),
-                                                      task: _team.tasks[index],
-                                                      isWorking: _activeTask == null ? false : (_activeTask.id == _team.tasks[index].id && _teamId == _team.team.id),
-                                                      onPressed: (bool value, Task task) {
-                                                        toggleTaskTime(isWorking: value, task: task, teamId: _team.team.id);
-                                                      },
-                                                    ))
-                                            : Column(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Image.asset(
-                                                    'assets/icons/task_empty.png',
-                                                    color: COLOR_BACKGROUND,
-                                                  ),
-                                                  Text(
-                                                    'No tasks here !',
-                                                    style: const TextStyle(color: Colors.white30, fontSize: 16),
-                                                  )
-                                                ],
-                                              ),
-                                      );
-                              },
-                            ),
-                          )
+                        Image.asset('assets/icons/task_empty.png', color: COLOR_BACKGROUND),
+                        Text('No tasks here !', style: const TextStyle(color: Colors.white30, fontSize: 16)),
                       ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                    );
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),
