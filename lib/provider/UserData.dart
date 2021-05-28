@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:project/model/http_exception.dart';
 import 'package:http/http.dart' as http;
+import 'package:project/model/models.dart';
 import 'package:project/provider/data_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,6 +32,8 @@ class UserData extends ChangeNotifier {
   String _userName = '';
   String _mail = '';
   String _password = '';
+
+  //User get user => User(userName: _userName, name: _name );
 
   set setName(String value) {
     _name = value;

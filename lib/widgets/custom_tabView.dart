@@ -5,17 +5,17 @@ import '../constants.dart';
 ///used for statistics and team screen
 ///this widget shows a tab bar with it's listView with custom [ShaderMask] on scroll
 class CustomTabView extends StatelessWidget {
-  final int length;
   final List<Widget> tabs;
+  final BoxDecoration decoration;
   final Widget Function(int i) listView;
 
-  const CustomTabView({Key key, this.length, this.tabs, this.listView}) : super(key: key);
+  const CustomTabView({Key key, this.tabs, this.listView, this.decoration}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: DefaultTabController(
-        length: length,
+        length: tabs.length,
         child: Column(
           children: [
             Padding(
@@ -40,7 +40,7 @@ class CustomTabView extends StatelessWidget {
                     child: TabBar(
                       isScrollable: true,
                       labelPadding: const EdgeInsets.symmetric(horizontal: 8),
-                      indicator: BoxDecoration(borderRadius: BorderRadius.circular(50), color: COLOR_ACCENT),
+                      indicator: decoration ?? BoxDecoration(borderRadius: BorderRadius.circular(50), color: COLOR_ACCENT),
                       indicatorSize: TabBarIndicatorSize.label,
                       tabs: tabs,
                     ),
@@ -51,7 +51,7 @@ class CustomTabView extends StatelessWidget {
             Expanded(
               child: TabBarView(
                 children: [
-                  for (int i = 0; i < length; i++)
+                  for (int i = 0; i < tabs.length; i++)
                     ShaderMask(
                       shaderCallback: (Rect bounds) {
                         return LinearGradient(

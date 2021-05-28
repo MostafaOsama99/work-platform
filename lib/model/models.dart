@@ -142,7 +142,7 @@ class User {
   final String imageUrl;
 
   //TODO:check if the userName is required
-  const User({@required this.userName, this.imageUrl, @required this.name, @required this.jobTitle});
+  const User({@required this.userName, this.imageUrl, this.name, this.jobTitle});
 
   factory User.fromJson(Map<String, dynamic> json) {
     if (json == null || json.isEmpty) return null;

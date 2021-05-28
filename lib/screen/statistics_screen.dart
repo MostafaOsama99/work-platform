@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project/provider/data_constants.dart';
 import 'package:project/provider/room_provider.dart';
 import 'package:project/provider/team_provider.dart';
+import 'package:project/widgets/NothingHere.dart';
 import 'package:project/widgets/custom_tabView.dart';
 import 'package:provider/provider.dart';
 
@@ -178,7 +179,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
             ),
           ),
           CustomTabView(
-            length: roomProvider.roomTeams.length,
             tabs: [
               for (final team in roomProvider.roomTeams)
                 Tab(
@@ -217,13 +217,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> with TickerProvider
                                   toggleTaskTime(isWorking: value, task: task, teamId: _team.team.id);
                                 },
                               ));
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/icons/task_empty.png', color: COLOR_BACKGROUND),
-                        Text('No tasks here !', style: const TextStyle(color: Colors.white30, fontSize: 16)),
-                      ],
-                    );
+                    return NothingHere();
                   },
                 ),
               );
