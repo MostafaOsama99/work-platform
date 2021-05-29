@@ -75,7 +75,6 @@ class RoomProvider extends ChangeNotifier {
   /// it does not load the data unless u set [reload] to true, or if uou send another [roomId] it will load the new room teams
   Future<void> getUserTeams({bool reload = false, int roomId}) async {
     if (!reload && roomId == null) {
-      print('Exit');
       return null;
     }
 

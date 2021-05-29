@@ -15,7 +15,15 @@ import '../constants.dart';
 import 'create_task_screen.dart';
 import 'team_settings.dart';
 
+/// tabs titles for team screen that shows filters for Leader
+/// Team: tasks assigned for team (not assigned to any member)
+/// My Tasks: tasks assigned for the leader
+/// Others: tasks assigned for members
 const List<String> leaderTabs = ['All', 'Team', 'My Tasks', 'Others', 'Finished'];
+
+/// tabs titles for team screen that shows filters for Members
+/// My Tasks: represents tasks created by the current member
+const List<String> memberTabs = ['All', 'My Tasks', 'Finished'];
 
 class TeamScreen extends StatefulWidget {
   final teamName;
@@ -63,7 +71,7 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  List<List<Task>> leaderTabsTasks;
+  List<List<Task>> filterTaskTabs;
   bool _reload = true;
   bool _isInit = false;
   bool _isLeader;
@@ -73,19 +81,29 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     if (!_isInit) {
-      teamProvider = Provider.of<TeamProvider>(context, listen: false);
+      teamProvider = Provider.of<TeamProvider>(context);
       _isLeader = teamProvider.isLeader(Provider.of<UserData>(context, listen: false).userName);
       userProvider = Provider.of<UserData>(context, listen: false);
+      _isInit = true;
+    }
 
+    if (_reload) {
+      //   **** Leader ****
       if (_isLeader)
-        leaderTabsTasks = [
+        filterTaskTabs = [
           teamProvider.tasks,
           teamProvider.tasks.where((task) => task.members.isEmpty).toList(),
           teamProvider.tasks.where((task) => task.members.contains(User(userName: userProvider.userName))).toList(),
           teamProvider.tasks.where((task) => !task.members.contains(User(userName: userProvider.userName))).toList(),
           teamProvider.tasks.where((task) => task.progress == 100).toList(),
         ];
-      _isInit = true;
+      //   **** Member ****
+      else
+        filterTaskTabs = [
+          teamProvider.tasks,
+          teamProvider.tasks.where((task) => task.taskCreator.userName == userProvider.userName).toList(),
+          teamProvider.tasks.where((task) => task.progress == 100).toList(),
+        ];
     }
 
     return Scaffold(
@@ -118,84 +136,70 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
           ),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async => setState(() => _reload = true),
-        child: Column(
-          children: [
-            FutureBuilder(
-              future: teamProvider.getTeamTasks(_reload),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting)
-                  return Expanded(child: Center(child: CircularProgressIndicator()));
-                else if (snapshot.error != null) {
-                  print(snapshot.error);
-                  return Expanded(
-                      child: Center(
-                          child: Text(
-                    'cannot reach the server !',
-                    style: TextStyle(color: Colors.grey, fontSize: 15),
-                  )));
-                }
+      body: Column(
+        children: [
+          FutureBuilder(
+            future: teamProvider.getTeamTasks(_reload),
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Expanded(child: Center(child: CircularProgressIndicator()));
+              else if (snapshot.error != null) {
+                print(snapshot.error);
+                return Expanded(
+                    child: Center(
+                        child: Text(
+                  'cannot reach the server !',
+                  style: TextStyle(color: Colors.grey, fontSize: 15),
+                )));
+              }
 
-                // _scrollController.addListener(hideButton);
-                //
-                // _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 200), reverseDuration: Duration(milliseconds: 175));
-                // _animation = CurvedAnimation(parent: _animationController, curve: Curves.easeIn, reverseCurve: Curves.easeOutCirc);
-                // _animationController.value = 1;
+              // _scrollController.addListener(hideButton);
+              //
+              // _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 200), reverseDuration: Duration(milliseconds: 175));
+              // _animation = CurvedAnimation(parent: _animationController, curve: Curves.easeIn, reverseCurve: Curves.easeOutCirc);
+              // _animationController.value = 1;
 
-                // _navBarProvider = Provider.of<NavBar>(context, listen: false);
-                // _navBarProvider.scrollController = _scrollController;
+              // _navBarProvider = Provider.of<NavBar>(context, listen: false);
+              // _navBarProvider.scrollController = _scrollController;
 
-                _reload = false;
-                //  case no tasks
-                if (teamProvider.tasks.isEmpty) return NothingHere();
+              _reload = false;
+              //  case no tasks
+              if (teamProvider.tasks.isEmpty) return Expanded(child: NothingHere());
 
-                //if current user is a member
-                if (!_isLeader)
-                  return Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      controller: _scrollController,
-                      itemCount: teamProvider.tasks.length,
-                      itemBuilder: (_, i) => TaskCard(
-                        key: UniqueKey(),
-                        taskId: teamProvider.tasks[i].id,
+              return CustomTabView(
+                decoration: BoxDecoration(borderRadius: BorderRadius.vertical(top: Radius.circular(3), bottom: Radius.circular(12)), color: COLOR_ACCENT),
+                tabs: [
+                  for (final tab in (_isLeader ? leaderTabs : memberTabs))
+                    Tab(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(3), bottom: Radius.circular(12)), border: Border.all(color: COLOR_ACCENT, width: 1)),
+                        child: Text(tab),
                       ),
                     ),
-                  );
-
-////                 **** Leader ****
-                return CustomTabView(
-                  decoration: BoxDecoration(borderRadius: BorderRadius.vertical(top: Radius.circular(2), bottom: Radius.circular(10)), color: COLOR_ACCENT),
-                  tabs: [
-                    for (final tab in leaderTabs)
-                      Tab(
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.vertical(top: Radius.circular(2), bottom: Radius.circular(10)), border: Border.all(color: COLOR_ACCENT, width: 1)),
-                          child: Text(tab),
-                        ),
-                      ),
-                  ],
-                  listView: (tabIndex) {
-                    return leaderTabsTasks[tabIndex].isNotEmpty
-                        ? ListView.builder(
+                ],
+                listView: (tabIndex) {
+                  return filterTaskTabs[tabIndex].isNotEmpty
+                      ? RefreshIndicator(
+                          onRefresh: () async => setState(() => _reload = true),
+                          child: ListView.builder(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                             controller: _scrollController,
-                            itemCount: teamProvider.tasks.length,
+                            itemCount: filterTaskTabs[tabIndex].length,
                             itemBuilder: (_, i) => TaskCard(
                               key: UniqueKey(),
-                              taskId: leaderTabsTasks[tabIndex][i].id,
+                              taskId: filterTaskTabs[tabIndex][i].id,
                             ),
-                          )
-                        : NothingHere();
-                  },
-                );
-              },
-            ),
-          ],
-        ),
+                          ),
+                        )
+                      : NothingHere();
+                },
+              );
+            },
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
