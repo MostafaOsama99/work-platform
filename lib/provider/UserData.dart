@@ -33,7 +33,8 @@ class UserData extends ChangeNotifier {
   String _mail = '';
   String _password = '';
 
-  //User get user => User(userName: _userName, name: _name );
+  //TODO: missing imageUrl
+  User get user => User(userName: _userName, name: _name, jobTitle: _jobTitle);
 
   set setName(String value) {
     _name = value;

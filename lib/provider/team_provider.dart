@@ -89,9 +89,6 @@ class TeamProvider extends ChangeNotifier {
 
   Future<void> getUserTasks([bool reload = false]) async {
     if (!reload) return;
-    //TODO: remove fetch members call from here
-    fetchMembers();
-
     await get('/users/authuser/teams/${_team.id}/tasks', (response) {
       _team.tasks = [];
       (response as List).forEach((task) {
@@ -138,4 +135,8 @@ class TeamProvider extends ChangeNotifier {
   }
 
   Future<void> deleteCheckpoints(List<int> checkpoints) async => delete('/checkpoints', json.encode(checkpoints));
+
+  getTeamsBelow() => get('/teams/${_team.id}/subteams', (res) {
+        print(res);
+      });
 }

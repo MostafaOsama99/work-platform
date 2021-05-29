@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/provider/UserData.dart';
 import 'package:project/provider/data_constants.dart';
 
 import 'package:provider/provider.dart';
@@ -34,6 +35,7 @@ class _TaskScreenState extends State<TaskScreen> {
   bool _isEditing = false;
   bool _isLoading = false;
   bool _showCheckpointDesc = true;
+  bool _isCreator;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -92,9 +94,10 @@ class _TaskScreenState extends State<TaskScreen> {
   void didChangeDependencies() {
     if (!_isInit) {
       teamProvider = Provider.of<TeamProvider>(context);
+      _isInit = true;
       //get this task from the provider
-
       _reloadTask();
+      _isCreator = task.taskCreator.userName == Provider.of<UserData>(context, listen: false).userName;
     }
 
     super.didChangeDependencies();
@@ -158,7 +161,6 @@ class _TaskScreenState extends State<TaskScreen> {
 
     //used for add members button
     addUsers() async {
-      //TODO:show add member dialog
       // users shown on the screen
       List<User> showedUsers = task.members + _addedUsers;
       //all team members filted by shown users
@@ -170,6 +172,7 @@ class _TaskScreenState extends State<TaskScreen> {
     }
 
     final notificationHeight = MediaQuery.of(context).padding.top;
+
     return Scaffold(
       key: _scaffoldKey,
       body: CustomScrollView(
@@ -184,22 +187,23 @@ class _TaskScreenState extends State<TaskScreen> {
             //automaticallyImplyLeading: false,
             //leading: IconButton(icon: Icon(Icons.arrow_back, size: 22),splashRadius: 15, onPressed: () =>Navigator.of(context).pop(),),
             actions: [
-              IconButton(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                icon: _isEditing
-                    ? Icon(
-                  Icons.check_circle_outline,
-                  color: Colors.green,
-                )
-                    : Icon(Icons.edit, color: Colors.white),
-                splashRadius: 20,
-                onPressed: () {
-                  setState(() => _isEditing = !_isEditing);
-                  if (!_isEditing) {
-                    updateTask();
-                  }
-                },
-              ),
+              if (_isCreator)
+                IconButton(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  icon: _isEditing
+                      ? Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.green,
+                        )
+                      : Icon(Icons.edit, color: Colors.white),
+                  splashRadius: 20,
+                  onPressed: () {
+                    setState(() => _isEditing = !_isEditing);
+                    if (!_isEditing) {
+                      updateTask();
+                    }
+                  },
+                ),
               IconButton(
                   icon: Transform.rotate(
                       angle: 3.14 / 4,

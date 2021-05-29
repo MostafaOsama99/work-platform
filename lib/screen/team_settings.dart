@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/provider/UserData.dart';
 
 import 'package:provider/provider.dart';
 
@@ -25,14 +26,21 @@ class _TeamSettingsState extends State<TeamSettings> {
   String _teamName, _teamNameError = '', _teamDescription, _teamDescriptionError = '';
   bool _isLoading = false;
 
+  TeamProvider teamProvider;
   List<Widget> users;
+  bool _isLeader;
+  bool _isInit = false;
 
   @override
   Widget build(BuildContext context) {
-    final teamProvider = Provider.of<TeamProvider>(context);
-    _nameController.text = teamProvider.team.name;
-    //TODO Performance : this list is generated when ever this screen is re-loaded, move it to initState()
-    users = List.generate(teamProvider.team.members.length, (index) => _userTile(teamProvider.team.members[index]));
+    if (!_isInit) {
+      teamProvider = Provider.of<TeamProvider>(context);
+      _nameController.text = teamProvider.team.name;
+      _isLeader = teamProvider.isLeader(Provider.of<UserData>(context, listen: false).userName);
+      //TODO Performance : this list is generated when ever this screen is re-loaded, move it to initState()
+      users = List.generate(teamProvider.team.members.length, (index) => _userTile(teamProvider.team.members[index]));
+      _isInit = true;
+    }
 
     addTeam() async {
       //seems like it takes some time
@@ -67,7 +75,7 @@ class _TeamSettingsState extends State<TeamSettings> {
                       icon: Icon(
                         Icons.arrow_back,
                       )),
-                  title: Text('Edit Team'),
+                  title: Text(_isLeader ? 'Edit ${teamProvider.team.name}' : teamProvider.team.name),
                   centerTitle: true,
                 ),
                 if (_isLoading) SizedBox(height: 5, child: LinearProgressIndicator())
@@ -79,32 +87,33 @@ class _TeamSettingsState extends State<TeamSettings> {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
-          SizedBox(
-            height: 40,
-            child: TextField(
-                readOnly: true,
-                controller: _nameController,
-                decoration: TEXT_FIELD_DECORATION_2.copyWith(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                  suffixIcon: IconButton(
-                      splashRadius: 20,
-                      splashColor: Color.fromRGBO(8, 77, 99, 1),
-                      icon: Icon(
-                        Icons.edit,
-                        color: Colors.grey,
-                      ),
-                      onPressed: () async {
-                        String newValue = await editTextField(context, _nameController.value.text);
-                        if (newValue != null)
-                          //if update successful
-                          //TODO: add changes to provider
-                          updateTeam(name: newValue);
-                        //if(await updateTeam(name: newValue)) setState(() => _nameController.text = newValue);
-                      }),
-                )),
-          ),
-          Divider(height: 16, indent: 30, endIndent: 30),
-          DescriptionWidget(teamProvider.team.description, onChanged: (desc) => updateTeam(description: desc)),
+          if (_isLeader)
+            SizedBox(
+              height: 40,
+              child: TextField(
+                  readOnly: true,
+                  controller: _nameController,
+                  decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                    suffixIcon: IconButton(
+                        splashRadius: 20,
+                        splashColor: Color.fromRGBO(8, 77, 99, 1),
+                        icon: Icon(
+                          Icons.edit,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () async {
+                          String newValue = await editTextField(context, _nameController.value.text);
+                          if (newValue != null)
+                            //if update successful
+                            //TODO: add changes to provider
+                            updateTeam(name: newValue);
+                          //if(await updateTeam(name: newValue)) setState(() => _nameController.text = newValue);
+                        }),
+                  )),
+            ),
+          if (_isLeader) Divider(height: 16, indent: 30, endIndent: 30),
+          DescriptionWidget(teamProvider.team.description, onChanged: (desc) => updateTeam(description: desc), enableEdit: _isLeader),
           Divider(height: 16, indent: 30, endIndent: 30),
 
           /*

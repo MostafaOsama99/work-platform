@@ -46,24 +46,10 @@ class _CreateTaskState extends State<CreateTask> {
   int _titleCounter;
 
   bool _isLoading = false;
+  bool _isInit = false;
+  bool _isLeader;
 
   TeamProvider teamProvider;
-
-  @override
-  void initState() {
-    newTask = Task(
-        id: null,
-        name: null,
-        datePlannedStart: widget.cpStart ?? DateTime.now(),
-        datePlannedEnd: widget.cpEnd ?? DateTime.now().add(Duration(days: 7)),
-        parentCheckpoint: widget.parentCheckpoint,
-        checkPoints: []);
-
-    Future.delayed(Duration.zero).then((value) => teamProvider = Provider.of<TeamProvider>(context, listen: false));
-
-    _titleCounter = KTaskTitleLength;
-    super.initState();
-  }
 
   ///holds checkpoints of the new task
   final List<Map<String, String>> checkpoints = [];
@@ -124,8 +110,6 @@ class _CreateTaskState extends State<CreateTask> {
         assignedTeam: _selectedUsers.length == 0 ? _selectedTeam : teamProvider.team);
 
     setState(() => _isLoading = true);
-
-    await Future.delayed(Duration(seconds: 2));
 
     await handleRequest(() => teamProvider.createTask(_task), context);
 
@@ -194,6 +178,23 @@ class _CreateTaskState extends State<CreateTask> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_isInit) {
+      newTask = Task(
+          id: null,
+          name: null,
+          datePlannedStart: widget.cpStart ?? DateTime.now(),
+          datePlannedEnd: widget.cpEnd ?? DateTime.now().add(Duration(days: 7)),
+          parentCheckpoint: widget.parentCheckpoint,
+          checkPoints: []);
+
+      teamProvider = Provider.of<TeamProvider>(context, listen: false);
+      _isLeader = teamProvider.isLeader(Provider.of<UserData>(context, listen: false).userName);
+      if (!_isLeader) _selectedUsers.add(Provider.of<UserData>(context, listen: false).user);
+      teamProvider.getTeamsBelow();
+
+      _titleCounter = KTaskTitleLength;
+      _isInit = true;
+    }
     return Scaffold(
       body: Stack(alignment: Alignment.topCenter, children: [
         Container(
@@ -404,26 +405,26 @@ class _CreateTaskState extends State<CreateTask> {
 
               _selectedUsers.length > 0
                   ? ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: _selectedUsers.length,
-                      itemBuilder: (BuildContext context, int index) => UserTile(_selectedUsers[index]),
-                    )
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _selectedUsers.length,
+                itemBuilder: (BuildContext context, int index) => UserTile(_selectedUsers[index]),
+              )
                   : _selectedTeam != null
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                          child: SizedBox(child: TeamTile(_selectedTeam)),
-                        )
-                      : SizedBox(
-                          height: 40,
-                          child: Center(
-                            child: Text(
-                              'Add members or a team!',
-                              style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.white70),
-                            ),
-                          ),
-                        )
+                  ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: SizedBox(child: TeamTile(_selectedTeam)),
+              )
+                  : SizedBox(
+                height: 40,
+                child: Center(
+                  child: Text(
+                    'Add members or a team!',
+                    style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.white70),
+                  ),
+                ),
+              )
             ]),
           ),
         ),

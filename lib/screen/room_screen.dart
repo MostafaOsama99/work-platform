@@ -7,22 +7,18 @@ import 'package:project/provider/data_constants.dart';
 import 'package:project/provider/navbar.dart';
 import 'package:project/provider/room_provider.dart';
 import 'package:project/provider/team_provider.dart';
+import 'package:project/screen/create_project_screen.dart';
 import 'package:project/screen/join_or_create_team.dart';
 import 'package:project/screen/team_screen.dart';
-import 'package:project/splash_screen/splash_screen.dart';
+
 import 'package:project/widgets/drawer/drawer_menu.dart';
 import 'package:project/widgets/project_card_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'package:project/demoData.dart';
 import 'package:project/widgets/home/dropDownMenu.dart';
-import 'auth/auth_screen.dart';
 
 class RoomScreen extends StatefulWidget {
-  final List<List> teams;
-
-  RoomScreen({this.teams = const []});
-
   @override
   _RoomScreenState createState() => _RoomScreenState();
 }
@@ -70,7 +66,7 @@ class _RoomScreenState extends State<RoomScreen> {
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [Text(roomProvider.roomName ?? 'Workera', style: TextStyle(color: Colors.white)), Icon(Icons.arrow_drop_down, color: Colors.grey[600])],
+                  children: [Text(roomProvider?.roomName ?? 'Workera', style: TextStyle(color: Colors.white)), Icon(Icons.arrow_drop_down, color: Colors.grey[600])],
                 )),
             actions: [
               Padding(
@@ -114,16 +110,25 @@ class _RoomScreenState extends State<RoomScreen> {
               autofocus: true,
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: Icon(Icons.read_more_outlined, color: Colors.white, size: 25),
-                decoration: BoxDecoration(color: Colors.deepOrange, borderRadius: BorderRadius.circular(10)),
+                      child: Icon(Icons.read_more_outlined, color: Colors.white, size: 25),
+                      decoration: BoxDecoration(color: Colors.deepOrange, borderRadius: BorderRadius.circular(10)),
+                    ),
+                  )
+                ],
               ),
             )
-          ],
-        ),
-      )
           : switchProjects
-          ? projectWidget(names, context)
-          : Teams(),
+              ? projectWidget(names, context)
+              : Teams(),
+      floatingActionButton: switchProjects
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => CreateProject()));
+              },
+              tooltip: 'Add Project',
+              child: Icon(Icons.add),
+            )
+          : null,
     );
   }
 }

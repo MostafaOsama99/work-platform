@@ -81,9 +81,9 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     if (!_isInit) {
-      teamProvider = Provider.of<TeamProvider>(context);
-      _isLeader = teamProvider.isLeader(Provider.of<UserData>(context, listen: false).userName);
       userProvider = Provider.of<UserData>(context, listen: false);
+      teamProvider = Provider.of<TeamProvider>(context);
+      _isLeader = teamProvider.isLeader(userProvider.userName);
       _isInit = true;
     }
 
@@ -139,6 +139,8 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
       body: Column(
         children: [
           FutureBuilder(
+            //TODO: check when user tasks is finished
+            // future: _isLeader? teamProvider.getTeamTasks(_reload) : teamProvider.getUserTasks(_reload),
             future: teamProvider.getTeamTasks(_reload),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting)
@@ -201,16 +203,18 @@ class _TeamScreenState extends State<TeamScreen> with TickerProviderStateMixin {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context) => CreateTask(
-                    teamMembers: usersLong,
-                  )));
-        },
-        tooltip: 'Add Task',
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: _isLeader
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (BuildContext context) => CreateTask(
+                          teamMembers: usersLong,
+                        )));
+              },
+              tooltip: 'Add Task',
+              child: Icon(Icons.add),
+            )
+          : null,
     );
   }
 }
