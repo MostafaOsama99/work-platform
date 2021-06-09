@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../constants.dart';
 
 editTextField(BuildContext context, String oldValue, {int maxLines = 1}) {
+  assert(maxLines > 0);
   final _formKey = GlobalKey<FormState>();
   String newValue;
 

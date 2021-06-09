@@ -1,29 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:project/constants.dart';
+
 import 'package:project/provider/room_provider.dart';
-import 'package:project/screen/auth/auth_screen.dart';
-import 'package:project/screen/auth/login.dart';
-import 'package:project/screen/profile_screen.dart';
 import 'package:project/screen/room_settings.dart';
 import 'package:project/splash_screen/splash_screen.dart';
-import 'package:signalr_client/hub_connection.dart';
-import 'package:signalr_client/hub_connection_builder.dart';
 import 'provider/UserData.dart';
 import 'provider/navbar.dart';
-import 'package:project/screen/chat_screen.dart';
-import 'screen/activity_screen.dart';
-import 'screen/attachment screen.dart';
 import 'package:provider/provider.dart';
-
 import 'provider/team_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'screen/navigation/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //preferences.getString('email'),
-  // preferences.getString('password')
   runApp(
     MultiProvider(
       providers: [

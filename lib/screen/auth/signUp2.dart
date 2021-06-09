@@ -119,7 +119,7 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
       return;
     }
 
-    submit() async {
+    Future<void> submit() async {
       //if the is not valid
       if (!_formKey.currentState.validate()) return;
 
@@ -129,7 +129,8 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
       user.setPassword = _passwordController.value.text;
 
       try {
-        await handleRequest(user.signUp, widget.scaffoldKey.currentContext, () => throw Exception('could\'t sign in'));
+        await handleRequest(user.signUp, widget.scaffoldKey.currentContext,
+            () => throw Exception('could\'t sign in'));
       } catch (e) {
         print(e);
         widget.whenLoading(false);
@@ -302,13 +303,15 @@ class SignUp2State extends State<SignUp2> with TickerProviderStateMixin {
                 hintText: 'Confirm password',
               ),
               validator: (value) {
-                if (value.trim().length < 1) {
-                  setState(() => confirmPasswordValidation = 'password not match');
+                if (value != _passwordController.value.text) {
+                  setState(
+                      () => confirmPasswordValidation = 'password not match');
                   return '';
                 }
                 setState(() => confirmPasswordValidation = '');
                 return null;
               },
+              onEditingComplete: submit,
             ),
           ),
           if (confirmPasswordValidation.isNotEmpty) errorMessage(confirmPasswordValidation),

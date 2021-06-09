@@ -284,11 +284,12 @@ class _TaskScreenState extends State<TaskScreen> {
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: DescriptionWidget(
+                child: EditableTextWidget(
                   _taskUpdate.description,
                   enableEdit: _isEditing,
                   taskAccentColor: taskTypes[task.type].accentColor,
-                  onChanged: (String desc) => setState(() => _taskUpdate.description = desc),
+                  onChanged: (String desc) =>
+                      setState(() => _taskUpdate.description = desc),
                 ),
               ),
               Divider(endIndent: 25, indent: 25),

@@ -16,7 +16,7 @@ class RoomProvider extends ChangeNotifier {
 
   String get roomDescription => _room.description;
 
-  String get roomName => _room.name;
+  String get roomName => _room?.name;
 
   List<Room> get rooms => [..._rooms];
 
@@ -41,6 +41,8 @@ class RoomProvider extends ChangeNotifier {
   }
 
   List<Session> _previousSessions = [];
+
+  bool isRoomCreator(username) => username == _room.creator.userName;
 
   void clear() {
     _room = null;

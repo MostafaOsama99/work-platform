@@ -15,7 +15,7 @@ class Room {
       name: json["name"],
       description: json["description"],
       createdAt: DateTime.parse(json["createdAt"]),
-      creator: null,
+      creator: User.fromJson(json['creator']),
     );
   }
 }
