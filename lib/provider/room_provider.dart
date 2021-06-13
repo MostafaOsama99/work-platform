@@ -58,7 +58,7 @@ class RoomProvider extends ChangeNotifier {
 
   void changeRoom(int roomId) {
     _room = _rooms.firstWhere((room) => room.id == roomId);
-    //getUserTeams(reload: true);
+    getUserTeams(reload: true);
     notifyListeners();
   }
 
@@ -100,7 +100,9 @@ class RoomProvider extends ChangeNotifier {
   Future<void> getUserRooms() => get(KGetUserRoomsEndpoint,
           //save user rooms in _rooms
           (rooms) {
-        (rooms as List).forEach((element) => _rooms.add(Room.formJson(element)));
+        _rooms = [];
+        (rooms as List)
+            .forEach((element) => _rooms.add(Room.formJson(element)));
       });
 
   //TODO REFACTOR: create session provider separated out of room provider

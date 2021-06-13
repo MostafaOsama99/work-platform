@@ -32,21 +32,21 @@ String token;
 
 ///this function handles any API request & show snackBar on Exception
 Future<dynamic> handleRequest(Function serverRequest, BuildContext context, [VoidCallback onException]) async {
-  //try {
-  return await serverRequest();
-  // } on ServerException catch (e) {
-  //   print('HttpException: $e');
-  //   showSnackBar(e.message, context);
-  // } on TimeoutException catch (e) {
-  //   // A timeout occurred.
-  //   print('timeout exception: $e');
-  //   showSnackBar('connection lost', context);
-  // } on SocketException catch (_) {
-  //   print('SocketException: $_');
-  //   showSnackBar('connection lost', context);
-  // } catch (e) {
-  //   print('*** unhandled exception! ***: $e');
-  // }
+  try {
+    return await serverRequest();
+  } on ServerException catch (e) {
+    print('HttpException: $e');
+    showSnackBar(e.message, context);
+  } on TimeoutException catch (e) {
+    // A timeout occurred.
+    print('timeout exception: $e');
+    showSnackBar('connection lost', context);
+  } on SocketException catch (_) {
+    print('SocketException: $_');
+    showSnackBar('connection lost', context);
+  } catch (e) {
+    print('*** unhandled exception! ***: $e');
+  }
   if (onException != null) onException();
   return false;
 }

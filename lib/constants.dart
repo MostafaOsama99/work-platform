@@ -35,7 +35,7 @@ const int KTaskTitleLength = 30;
 const server = 'http://10.0.2.2:5000/api/v1';
 
 const serverNotification = 'http://10.0.2.2:5000/notification';
-//const server = 'https://workera.azurewebsites.net/api/v1';
+// const server = 'https://workera.azurewebsites.net/api/v1';
 
 const KTimeOutDuration = Duration(seconds: 10);
 

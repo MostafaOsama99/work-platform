@@ -39,7 +39,7 @@ class _TeamSettingsState extends State<TeamSettings> {
       _isLeader = teamProvider
           .isLeader(Provider.of<UserData>(context, listen: false).userName);
       //TODO Performance : this list is generated when ever this screen is re-loaded, move it to initState()
-      users = List.generate(teamProvider.team.members.length,
+      users = List.generate(teamProvider.team.members?.length ?? 0,
           (index) => userTile(teamProvider.team.members[index]));
       _isInit = true;
     }

@@ -35,7 +35,7 @@ class AppState extends State<App> with TickerProviderStateMixin {
   @override
   void initState() {
     _tabController = TabController(initialIndex: 0, length: 4, vsync: this);
-    _tabController.addListener(_selectTab);
+    //_tabController.addListener(_selectTab);
     super.initState();
   }
 
@@ -47,14 +47,16 @@ class AppState extends State<App> with TickerProviderStateMixin {
     TabItem.chats: GlobalKey<NavigatorState>(),
   };
 
-  void _selectTab() {
-    TabItem tabItem = TabItem.values[_tabController.index];
+  void _selectTab(int index) {
+    TabItem tabItem = TabItem.values[index];
+    print('selected tab:$tabItem');
 
     if (tabItem == _currentTab) {
       // pop to first route
       _navigatorKeys[tabItem].currentState.popUntil((route) => route.isFirst);
     } else {
-      setState(() => _currentTab = tabItem);
+      _currentTab = tabItem;
+      setState(() => _tabController.index = tabItem.index);
     }
   }
 
@@ -69,7 +71,10 @@ class AppState extends State<App> with TickerProviderStateMixin {
           // if not on the 'main' tab
           if (_currentTab != TabItem.home) {
             // select 'main' tab
-            _tabController.index = 0;
+            setState(() {
+              _tabController.index = 0;
+              _currentTab = TabItem.home;
+            });
 
             // back button handled by app
             return false;
@@ -87,7 +92,7 @@ class AppState extends State<App> with TickerProviderStateMixin {
 
         body: Stack(children: <Widget>[
           Offstage(
-            offstage: _currentTab != TabItem.home,
+            offstage: TabItem.values[_tabController.index] != TabItem.home,
             child: Navigator(
               key: _navigatorKeys[TabItem.home],
               initialRoute: Routes.home, //Routes.home,
@@ -109,7 +114,8 @@ class AppState extends State<App> with TickerProviderStateMixin {
             ),
           ),
           Offstage(
-            offstage: _currentTab != TabItem.statistics,
+            offstage:
+                TabItem.values[_tabController.index] != TabItem.statistics,
             child: Navigator(
               key: _navigatorKeys[TabItem.statistics],
               onGenerateRoute: (routeSettings) =>
@@ -117,7 +123,8 @@ class AppState extends State<App> with TickerProviderStateMixin {
             ),
           ),
           Offstage(
-            offstage: _currentTab != TabItem.notifications,
+            offstage:
+                TabItem.values[_tabController.index] != TabItem.notifications,
             child: Navigator(
               key: _navigatorKeys[TabItem.notifications],
               onGenerateRoute: (routeSettings) =>
@@ -125,7 +132,7 @@ class AppState extends State<App> with TickerProviderStateMixin {
             ),
           ),
           Offstage(
-            offstage: _currentTab != TabItem.chats,
+            offstage: TabItem.values[_tabController.index] != TabItem.chats,
             child: Navigator(
               key: _navigatorKeys[TabItem.chats],
               //initialRoute: '/home',
@@ -156,8 +163,9 @@ class AppState extends State<App> with TickerProviderStateMixin {
                 color: Colors.grey,
                 //initialActiveIndex: 0,
 
-                disableDefaultTabController: true,
-                onTap: (int index) => _tabController.index = index,
+                disableDefaultTabController: false,
+                onTap: _selectTab,
+                //onTap: (int index) => _tabController.index = index,
                 controller: _tabController,
 
                 items: [
@@ -183,9 +191,9 @@ class AppState extends State<App> with TickerProviderStateMixin {
                             color: Colors.white60, height: KIconSize),
                       ),
                       activeIcon: Padding(
-                        padding: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(6),
                         child: Image.asset('assets/icons/bell_rotate.png',
-                            color: COLOR_ACCENT, height: KActiveIconSize - 7),
+                            color: COLOR_ACCENT, height: KActiveIconSize - 10),
                       ),
                       title: 'Notifications'),
                   bottom.TabItem(

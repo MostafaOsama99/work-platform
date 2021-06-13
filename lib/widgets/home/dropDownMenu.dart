@@ -46,7 +46,7 @@ changeRoom(context, height, List<Room> rooms) {
                             .map((room) => _roomTile(
                                 roomName: room.name,
                                 //TODO: change room id to room creator
-                                creator: room.id.toString(),
+                                creator: room.creator.name,
                                 onPressed: () {
                                   Provider.of<RoomProvider>(context,
                                           listen: false)
