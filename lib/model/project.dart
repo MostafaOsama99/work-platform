@@ -2,14 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:project/model/models.dart';
 
 class Project {
-  final String projectName,mangerName;
+  final String projectName, mangerName;
   final int id;
-  final List <Teams> teams;
-  final  startDate,endDate;
+  final List<Teams> teams;
+  DateTime startDate, endDate;
   final bool isFinished;
   final String description;
-  Project({this.teams,this.startDate,this.endDate,this.projectName,this.mangerName,this.id,this.isFinished,this.description});
 
+  Project(
+      {this.teams,
+      this.startDate,
+      this.endDate,
+      this.projectName,
+      this.mangerName,
+      this.id,
+      this.isFinished,
+      this.description});
 }
 
 class Teams {

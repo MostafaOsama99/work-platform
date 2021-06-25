@@ -10,7 +10,10 @@ import '../constants.dart';
 import '../model/http_exception.dart';
 
 Map<String, String> header = {
-  "Content-Type": "application/json",
+  //"Content-Type": "application/json",
+  'Content-Type': 'text/xml',
+  'accept': 'text/html,application/xhtml+xml,application/xml',
+  'accept-language': 'en-US,en',
   // 'Accept': 'application/json',
   // 'Connection': 'Keep-Alive',
   HttpHeaders.authorizationHeader: 'Bearer ' + token

@@ -36,7 +36,7 @@ class _CreateProjectState extends State<CreateProject> {
 
   bool _isLoading = false;
   bool _isInit = false;
-  bool _isLeader;
+  //bool _isLeader;
 
   TeamProvider teamProvider;
 
@@ -57,7 +57,6 @@ class _CreateProjectState extends State<CreateProject> {
     Navigator.of(context).pop();
   }
 
-  //TODO: check if this this team dose not have teams below, to show AssignMembersDialog directly
   _addMemberOrTeam() async {
     var result;
     //witch kind user want (team, members)
@@ -101,10 +100,11 @@ class _CreateProjectState extends State<CreateProject> {
   @override
   Widget build(BuildContext context) {
     if (!_isInit) {
-      teamProvider = Provider.of<TeamProvider>(context, listen: false);
-      _isLeader = teamProvider.isLeader(Provider.of<UserData>(context, listen: false).userName);
-      if (!_isLeader) _selectedUsers.add(Provider.of<UserData>(context, listen: false).user);
-      teamProvider.getTeamsBelow();
+      //teamProvider = Provider.of<TeamProvider>(context, listen: false);
+
+      //_isLeader = teamProvider.isLeader(Provider.of<UserData>(context, listen: false).userName);
+      //if (!_isLeader) _selectedUsers.add(Provider.of<UserData>(context, listen: false).user);
+      //teamProvider.getTeamsBelow();
 
       _titleCounter = KTaskTitleLength;
       _isInit = true;
@@ -215,28 +215,32 @@ class _CreateProjectState extends State<CreateProject> {
                   ),
                   Spacer(),
                   Text('duo: ', style: TextStyle(fontSize: 15, color: Colors.grey)),
-                  DateField(
-                      key: UniqueKey(),
-                      //    firstDate: newTask.datePlannedStart,
-                      //   initialDate: newTask.datePlannedEnd,
-                      //lastDate: widget.cpEnd,
-                      isEditing: true,
-                      onChanged: (newDate) => newTask.datePlannedEnd = newDate),
-                ],
-              ),
+                      DateField(
+                          key: UniqueKey(),
+                          //    firstDate: newTask.datePlannedStart,
+                          //   initialDate: newTask.datePlannedEnd,
+                          //lastDate: widget.cpEnd,
+                          isEditing: true,
+                          onChanged: (newDate) =>
+                              newTask.datePlannedEnd = newDate),
+                    ],
+                  ),
 
-              SizedBox(height: 4),
+                  SizedBox(height: 12),
 
-              DescriptionTextField(
-                controller: descriptionController,
-                width: MediaQuery.of(context).size.width,
-                readOnly: false,
-                decoration: TEXT_FIELD_DECORATION_2.copyWith(hintText: 'Description', contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14)),
-              ),
+                  DescriptionTextField(
+                    controller: descriptionController,
+                    width: MediaQuery.of(context).size.width,
+                    readOnly: false,
+                    decoration: TEXT_FIELD_DECORATION_2.copyWith(
+                        hintText: 'Description',
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 14)),
+                  ),
 
-              Divider(indent: 25, endIndent: 25),
+                  Divider(indent: 25, endIndent: 25),
 
-              SizedBox(height: 4),
+                  SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -250,9 +254,8 @@ class _CreateProjectState extends State<CreateProject> {
                           color: Colors.white,
                           splashRadius: 20,
                           onPressed: () {
-                            FocusScope.of(context).unfocus();
-                            _addMemberOrTeam();
-                          }))
+                            _showBottomSheet(context);
+                              }))
                 ],
               ),
               SizedBox(height: 10),
@@ -274,16 +277,167 @@ class _CreateProjectState extends State<CreateProject> {
                           height: 40,
                           child: Center(
                             child: Text(
-                              'Add members or a team!',
-                              style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.white70),
-                            ),
+                              'Add teams!',
+                                  style: const TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.white70),
+                                ),
                           ),
-                        )
-            ]),
+                            )
+                ]),
           ),
         ),
         if (_isLoading) Center(child: CircularProgressIndicator()),
       ]),
     );
   }
+}
+
+class CustomTeamTile extends StatefulWidget {
+  final bool isSelected;
+  final Team team;
+  final void Function(int teamId) onSelected;
+  final void Function(int teamId) onDeselect;
+
+  const CustomTeamTile(
+      {Key key,
+      this.isSelected = false,
+      @required this.team,
+      this.onSelected,
+      this.onDeselect})
+      : super(key: key);
+
+  @override
+  _CustomTeamTileState createState() => _CustomTeamTileState();
+}
+
+class _CustomTeamTileState extends State<CustomTeamTile> {
+  bool _isSelected;
+
+  @override
+  void initState() {
+    _isSelected = widget.isSelected;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          color: _isSelected
+              ? Colors.green.withOpacity(0.4)
+              : KProjectAccentColor.withOpacity(0.4),
+          border: Border.all(
+              color: _isSelected
+                  ? Colors.green
+                  : KProjectAccentColor.withOpacity(0.4))),
+      duration: Duration(seconds: 1),
+      child: InkWell(
+        onTap: () {
+          setState(() => _isSelected = !_isSelected);
+          if (_isSelected)
+            widget.onSelected(widget.team.id);
+          else
+            widget.onDeselect(widget.team.id);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 22,
+              child: _isSelected
+                  ? Icon(Icons.check, color: Colors.green)
+                  : Icon(Icons.people_alt_rounded, color: KProjectAccentColor),
+              backgroundColor: COLOR_SCAFFOLD,
+            ),
+            SizedBox(width: 10),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(widget.team.name, style: TextStyle(fontSize: 15)),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(widget.team.description,
+                            style:
+                                TextStyle(fontSize: 12.5, color: Colors.grey),
+                            maxLines: 1),
+                        Spacer(),
+                        Text(widget.team.leader.name,
+                            style: TextStyle(fontSize: 13.5)),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+            //SizedBox(width: 8),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+void _showBottomSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) {
+      return GestureDetector(
+        onTap: () => Navigator.of(context).pop(),
+        child: Container(
+          color: Color.fromRGBO(0, 0, 0, 0.001),
+          child: GestureDetector(
+            onTap: () {},
+            child: DraggableScrollableSheet(
+              initialChildSize: 0.4,
+              minChildSize: 0.2,
+              maxChildSize: 0.75,
+              builder: (_, controller) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey.shade800.withBlue(150),
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(25.0),
+                      topRight: const Radius.circular(25.0),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.remove,
+                        color: Colors.grey[600],
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          controller: controller,
+                          itemCount: 100,
+                          itemBuilder: (_, index) {
+                            return Card(
+                              child: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text("Element at index($index)"),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }

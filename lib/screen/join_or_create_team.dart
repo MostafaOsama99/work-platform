@@ -45,34 +45,6 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
 
   bool _isLoading = false;
 
-  //key for each ExpansionTile
-  // final _joinTeamKey =
-  // GlobalKey<ExpansionTileState>(debugLabel: '_joinTeamKey');
-  // final _createTeamKey =
-  // GlobalKey<ExpansionTileState>(debugLabel: '_createTeamKey');
-  // final _createRoomKey =
-  // GlobalKey<ExpansionTileState>(debugLabel: '_createRoomKey');
-
-  // @override
-  // void initState() {
-  //   //open join team by default
-  //   Future.delayed(Duration(microseconds: 0))
-  //       .then((value) => _joinTeamKey.currentState.handleTap());
-  //   JoinTeamScreen.currentOpened = _joinTeamKey;
-  //   super.initState();
-  // }
-
-  // onTileTap(tileKey){
-  //   //check if current opened card is this card
-  //   if (tileKey == JoinTeamScreen.currentOpened) return;
-  //   //close current open
-  //   JoinTeamScreen.currentOpened.currentState.handleTap();
-  //   //save this card as current open
-  //   JoinTeamScreen.currentOpened = tileKey;
-  //   //open this card
-  //   JoinTeamScreen.currentOpened.currentState.handleTap();
-  // }
-
   @override
   Widget build(BuildContext context) {
     //TODO: device width may be added to provider & calculate only once
@@ -82,29 +54,20 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
     createTeam() async {
       if (!_formKey.currentState.validate()) return;
 
-      //check that room name is unique for current user
-      //TODO: get room creator to make this work
-      // if (roomProvider.rooms.length > 0)
-      //   roomProvider.rooms.forEach((room) {
-      //     if (room.creator.userName ==
-      //         roomProvider.roomCreator.userName)
-      //       if (room.name == _name) {
-      //       setState(() => nameError = 'this name is already taken');
-      //       return;
-      //     }
-      //   });
-
       setState(() => _isLoading = true);
       _formKey.currentState.save();
 
-      bool _isSuccess = await handleRequest(() => roomProvider.createRoom(_name, _description), context);
+      bool _isSuccess = await handleRequest(
+        () => roomProvider.createRoom(_name, _description),
+        context,
+      );
 
       //if success update user rooms
       if (_isSuccess) await roomProvider.getUserRooms();
 
       setState(() => _isLoading = false);
       print('is room created : $_isSuccess');
-      //TODO: show alert dialog : room created successfully , on tap 'ok', pop twice
+      if (_isSuccess) showSnackBar('room created successfully', context);
     }
 
     bool validateCode() {
@@ -121,18 +84,25 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
 
       setState(() => _isLoading = true);
 
-      var _isSuccess = await handleRequest(() => Provider.of<TeamProvider>(context, listen: false).joinTeam(_codeController.value.text.trim()), context);
+      var _isSuccess = await handleRequest(
+          () => Provider.of<TeamProvider>(context, listen: false)
+              .joinTeam(_codeController.value.text.trim()),
+          context);
+
+      if (_isSuccess) await roomProvider.getUserRooms();
 
       setState(() => _isLoading = false);
-      print('join team : $_isSuccess');
-      //TODO: notify user if he joined successfully, or not
+
+      if (_isSuccess) showSnackBar('team joined successfully', context);
     }
 
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(KAppBarHeight),
         child: ClipRRect(
-          borderRadius: BorderRadius.only(bottomRight: Radius.circular(KAppBarRound), bottomLeft: Radius.circular(KAppBarRound)),
+          borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(KAppBarRound),
+              bottomLeft: Radius.circular(KAppBarRound)),
           child: AppBar(
             title: Text(
               "Create room / Join team",
@@ -172,7 +142,10 @@ class _CreateRoomScreenState extends State<CreateRoomScreen> {
                       ),
                     ),
                     //SizedBox(width: 20),
-                    Padding(padding: EdgeInsets.only(left: 15), child: addTeamsButton(hintText: "Join", onPressed: joinTeam))
+                    Padding(
+                        padding: EdgeInsets.only(left: 15),
+                        child: addTeamsButton(
+                            hintText: "Join", onPressed: joinTeam))
                   ],
                 ),
                 Container(

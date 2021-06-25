@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:project/model/taskType.dart';
@@ -211,11 +210,12 @@ Padding buildUserAvatar(String userName) {
   );
 }
 
-class CheckPoint extends StatefulWidget {
+class CheckPoint extends StatelessWidget {
   final model.CheckPoint checkPoint;
   final Color taskAccentColor;
 
-  const CheckPoint({Key key, this.checkPoint, this.taskAccentColor}) : super(key: key);
+  const CheckPoint({Key key, this.checkPoint, this.taskAccentColor})
+      : super(key: key);
 
   static const TS_DONE = TextStyle(
     fontSize: 15,
@@ -229,20 +229,8 @@ class CheckPoint extends StatefulWidget {
   static final TS_WORKING = TextStyle(fontSize: 15);
 
   @override
-  _CheckPointState createState() => _CheckPointState();
-}
-
-class _CheckPointState extends State<CheckPoint> {
-  bool _value;
-
-  @override
-  void initState() {
-    super.initState();
-    _value = widget.checkPoint.isFinished;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    bool _isFinished = checkPoint.isFinished;
     return SizedBox(
       height: 32,
       child: Padding(
@@ -251,19 +239,23 @@ class _CheckPointState extends State<CheckPoint> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              widget.checkPoint.name ?? 'unknown',
-              style: _value ? CheckPoint.TS_DONE : CheckPoint.TS_WORKING,
+              checkPoint.name ?? 'unknown',
+              style: _isFinished ? CheckPoint.TS_DONE : CheckPoint.TS_WORKING,
             ),
             // Spacer(),
-            widget.checkPoint.percentage <= 0
-                ? CircularCheckBox(value: _value, activeColor: widget.taskAccentColor.withOpacity(0.8), onChanged: (value) => setState(() => _value = value))
-                : Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Text(
-                      '${widget.checkPoint.percentage}%',
-                      style: TextStyle(color: Colors.white70, fontStyle: FontStyle.italic),
-                    ),
-                  )
+            _isFinished
+                ? CircularCheck(activeColor: taskAccentColor.withOpacity(0.8))
+                : checkPoint.percentage > 0
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Text(
+                          '${checkPoint.percentage}%',
+                          style: TextStyle(
+                              color: Colors.white70,
+                              fontStyle: FontStyle.italic),
+                        ),
+                      )
+                    : SizedBox()
           ],
         ),
       ),

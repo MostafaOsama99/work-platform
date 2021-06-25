@@ -146,7 +146,11 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     if (json == null || json.isEmpty) return null;
-    return User(userName: json['userName'], name: json['name'], imageUrl: json['imageUrl'], jobTitle: json['jobTitle']);
+    return User(
+        userName: json['userName'],
+        name: json['name'],
+        imageUrl: json['imageUrl'],
+        jobTitle: json['jobTitle']);
   }
 
   @override
@@ -155,9 +159,9 @@ class User {
 
 // class Project {
 //   final int id;
-//   final String name;
-//   final User creator;
+//   String name, description;
 //   final DateTime datePlannedStart, datePlannedEnd, dateActualStart, dateActualEnd, dateCreated;
+//   final User creator;
 //   final List<Team> teams;
 //
 //   //TODO: add list of teams

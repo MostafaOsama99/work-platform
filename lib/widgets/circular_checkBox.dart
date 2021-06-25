@@ -44,3 +44,18 @@ class CircularCheckBox extends StatelessWidget {
     );
   }
 }
+
+class CircularCheck extends StatelessWidget {
+  final Color activeColor;
+
+  const CircularCheck({Key key, this.activeColor}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: activeColor),
+      child: Icon(Icons.check, color: Colors.white, size: 16),
+    );
+  }
+}

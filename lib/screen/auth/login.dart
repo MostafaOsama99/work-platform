@@ -159,6 +159,8 @@ class _LoginState extends State<Login> {
                 ),
                 hintText: 'password',
               ),
+              //onFieldSubmitted: (_)=> submit,
+              onEditingComplete: submit,
             ),
           ),
           if (passwordValidation.isNotEmpty) errorMessage(passwordValidation),
