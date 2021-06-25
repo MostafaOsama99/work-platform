@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
+import 'package:project/model/project.dart';
 import 'package:project/provider/room_provider.dart';
 import 'package:project/screen/auth/auth_screen.dart';
 import 'package:project/screen/auth/login.dart';
@@ -92,7 +93,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color.fromRGBO(17, 20, 25, 1), //Color.fromRGBO(7, 30, 61, 1), //const Color(0x071E3D)
       ),
       themeMode: ThemeMode.dark,
-      home: SplashScreen(),
+      home: Attachment(),
       routes: {
         RoomSettings.route: (_) => RoomSettings(),
       },

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_duration_picker/flutter_duration_picker.dart';
+
 import 'package:project/provider/room_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -225,11 +225,11 @@ class _DurationDialogState extends State<DurationDialog> {
               style: const TextStyle(fontSize: 18),
             ),
           ),
-          Center(
-              child: DurationPicker(
-                duration: _duration,
-                onChange: (Duration value) => setState(() => _duration = value),
-              )),
+          // Center(
+          //     child: DurationPicker(
+          //       duration: _duration,
+          //       onChange: (Duration value) => setState(() => _duration = value),
+          //     )),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

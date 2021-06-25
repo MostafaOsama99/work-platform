@@ -66,7 +66,7 @@ class _RoomScreenState extends State<RoomScreen> {
                 },
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [Text(roomProvider?.roomName ?? 'Workera', style: TextStyle(color: Colors.white)), Icon(Icons.arrow_drop_down, color: Colors.grey[600])],
+                  children: [Text('Workera', style: TextStyle(color: Colors.white)), Icon(Icons.arrow_drop_down, color: Colors.grey[600])],
                 )),
             actions: [
               Padding(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/constants.dart';
 import 'package:project/provider/UserData.dart';
 import 'package:project/provider/room_provider.dart';
+import 'package:project/screen/profile_screen.dart';
 import 'package:project/screen/room_settings.dart';
 import 'package:project/splash_screen/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -28,28 +29,36 @@ class DrawerMenu extends StatelessWidget {
         child: Column(
           children: <Widget>[
             SizedBox(height: 10),
-            SizedBox(
-              height: 75,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: CircleAvatar(
-                      radius: 40,
-                      child: Text(user.name[0] + user.name[lastLitter], style: TextStyle(fontSize: 18)),
-                      backgroundColor: Colors.black,
+            InkWell(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context){
+
+                  return Profile();
+                }));
+              },
+              child: SizedBox(
+                height: 75,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: CircleAvatar(
+                        radius: 40,
+                        child: Text(user.name[0] + user.name[lastLitter], style: TextStyle(fontSize: 18)),
+                        backgroundColor: Colors.black,
+                      ),
                     ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      SizedBox(height: 8),
-                      Center(child: Text(user.name, style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold))),
-                      Text(user.jobTitle, style: TextStyle(fontSize: 16, color: Colors.white70)),
-                    ],
-                  ),
-                ],
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        SizedBox(height: 8),
+                        Center(child: Text(user.name, style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold))),
+                        Text(user.jobTitle, style: TextStyle(fontSize: 16, color: Colors.white70)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 10),

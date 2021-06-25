@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-void loadDialog(BuildContext context) {
+void showLoadingDialog(BuildContext context,Key key) {
   showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
+          key: key,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),

@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:project/model/models.dart';
+import 'package:project/model/room.dart';
 import 'package:project/provider/team_provider.dart';
-import '/model/room.dart';
+
 import 'data_constants.dart';
 
 class RoomProvider extends ChangeNotifier {

@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:project/dialogs/load_dialog.dart';
+import 'package:project/provider/data_constants.dart';
+import 'package:project/widgets/profile_screenn/select_image_class.dart';
 import 'package:project/widgets/task/add_teams_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,7 +13,7 @@ import 'package:project/constants.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:project/provider/UserData.dart';
-
+import 'package:project/provider/data_constants.dart';
 import 'auth/signUp1.dart';
 
 class Profile extends StatefulWidget {
@@ -20,10 +24,20 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final _formKey = GlobalKey<FormState>();
   FirebaseStorage _storage = FirebaseStorage.instance;
+  final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   File _image;
   String _email, _password, _confirmPassword, _name, _phone, _address;
-  PickedFile pickedFile;
-  final picker = ImagePicker();
+
+  Future<void> updateProfile() => put(
+      KUpdateUser,
+      json.encode({
+        "imageUrl": Provider.of<UserData>(context, listen: false).image,
+        "username": "wqeeeedsawwweawqee",
+        "name": Provider.of<UserData>(context, listen: false).userName,
+        "email": Provider.of<UserData>(context, listen: false).mail,
+        "phoneNumber": Provider.of<UserData>(context, listen: false).mobile,
+        "jobTitle": Provider.of<UserData>(context, listen: false).jobTitle,
+      }));
 
   bool isEmail(String em) {
     String p =
@@ -32,39 +46,15 @@ class _ProfileState extends State<Profile> {
     return regExp.hasMatch(em);
   }
 
-  Future getGalleryImage() async {
-    pickedFile = await picker.getImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        print(_image);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
-  Future getCameraImage() async {
-    pickedFile = await picker.getImage(source: ImageSource.camera);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        print(_image);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
-  Future<String> uploadFile(var imageFile,String folderName) async {
+  Future<String> uploadFile(var imageFile, String folderName) async {
     StorageReference ref =
         _storage.ref().child("$folderName/${_image.path.split('/').last}");
     StorageUploadTask uploadTask = ref.putFile(imageFile);
-    loadDialog(context);
+
     var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-    Navigator.pop(context);
+
+    Provider.of<UserData>(context, listen: false).setImage = dowurl;
+
     String url = dowurl.toString();
     print(url);
     return url;
@@ -79,10 +69,48 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserData>(context, listen: false);
+    dialog() async {
+      final loadingKey = GlobalKey();
+      var result = await showDialog(
+          context: context,
+          // barrierColor: Colors.black12.withOpacity(0.6),
+          // // background color
+          // barrierDismissible: false,
+          // // should dialog be dismissed when tapped outside
+          // barrierLabel: "Dialog",
+          // // label for barrier
+          // transitionDuration: Duration(milliseconds: 400),
+          // // how long it takes to popup dialog after button click
+          // pageBuilder: (_, __, ___) {
+          // your widget implementation
+
+          builder: (_) {
+            return SelectImage();
+          });
+      print(result);
+      if (result != null) {
+        //call api
+        _image = result;
+        showLoadingDialog(context, loadingKey);
+        String uploadedImageUrl = await uploadFile(_image, "images");
+        print(uploadedImageUrl);
+        print("this is token $token");
+        var handleResult =
+            await handleRequest(updateProfile, scaffoldKey.currentContext);
+        if (handleResult) {
+          setState(() {
+            _image = result;
+          });
+        }
+        Navigator.of(loadingKey.currentContext).pop();
+      } else
+        print('error');
+    }
 
     var height = MediaQuery.of(context).size.height;
     // TODO: implement build
     return Scaffold(
+      key: scaffoldKey,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(45),
         child: ClipRRect(
@@ -94,15 +122,7 @@ class _ProfileState extends State<Profile> {
             title: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return Profile();
-                      }));
-                    },
-                    child:
-                        Text("Profile", style: TextStyle(color: Colors.white))),
+                Text("Profile", style: TextStyle(color: Colors.white)),
               ],
             ),
           ),
@@ -117,91 +137,24 @@ class _ProfileState extends State<Profile> {
               Padding(
                 padding: const EdgeInsets.only(top: 50),
                 child: Center(
-                  /// UNKNOWN Error in refactoring check Bottom of Screen
                   child: FlatButton(
                       onPressed: () {
-                        return showGeneralDialog(
-                          context: context,
-                          barrierColor: Colors.black12.withOpacity(0.6),
-                          // background color
-                          barrierDismissible: false,
-                          // should dialog be dismissed when tapped outside
-                          barrierLabel: "Dialog",
-                          // label for barrier
-                          transitionDuration: Duration(milliseconds: 400),
-                          // how long it takes to popup dialog after button click
-                          pageBuilder: (_, __, ___) {
-                            // your widget implementation
-                            return Dialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.35,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Spacer(
-                                        flex: 2,
-                                      ),
-                                      FlatButton(
-                                        onPressed: () {
-                                          getCameraImage();
-                                          Navigator.pop(context);
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 50,
-                                          backgroundColor: Colors.grey[200],
-                                          child: Icon(
-                                            Icons.camera_alt,
-                                            size: 50,
-                                            color: Colors.grey[500],
-                                          ),
-                                        ),
-                                      ),
-                                      Spacer(
-                                        flex: 2,
-                                      ),
-                                      FlatButton(
-                                        onPressed: () {
-                                          getGalleryImage();
-                                          Navigator.pop(context);
-                                        },
-                                        child: CircleAvatar(
-                                          radius: 50,
-                                          backgroundColor: Colors.grey[200],
-                                          child: Icon(
-                                            Icons.image,
-                                            size: 50,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ),
-                                      Spacer(
-                                        flex: 2,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
+                        dialog();
                       },
-                      child: (_image != null)
+                      child: (_image == null)
                           ? CircleAvatar(
-                              backgroundColor: Colors.grey[300],
-                              backgroundImage: FileImage(_image),
-                              radius: height * 0.12,
-                            )
-                          : CircleAvatar(
+                              // backgroundImage: NetworkImage(""),
                               backgroundColor: Colors.grey[200],
                               child: Icon(
                                 Icons.person,
                                 color: Colors.grey[500],
                                 size: 100,
                               ),
+                              radius: height * 0.12,
+                            )
+                          : CircleAvatar(
+                              backgroundColor: Colors.grey[300],
+                              backgroundImage: FileImage(_image),
                               radius: height * 0.12,
                             )),
                 ),
@@ -320,7 +273,7 @@ class _ProfileState extends State<Profile> {
                           print("");
                         }
 
-                        uploadFile(_image,"images");
+                        // uploadFile(_image, "images");
                       })),
             ],
           ),
@@ -328,92 +281,4 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-}
-
-Widget textField({String text, icon, Function validator, Function onSaved}) {
-  return Padding(
-    padding: const EdgeInsets.only(top: 16, bottom: 5),
-    child: Container(
-      child: TextFormField(
-          validator: validator,
-          onSaved: onSaved,
-          textInputAction: TextInputAction.done,
-          onFieldSubmitted: (_) {},
-          autofocus: false,
-          initialValue: text,
-          style: TextStyle(color: Colors.grey[800], fontSize: 20),
-          decoration: TEXT_FIELD_DECORATION1.copyWith(
-              prefixIcon: Icon(
-            icon,
-            color: Colors.grey[800],
-          ))),
-    ),
-  );
-}
-
-showDialog({context, function1, function2}) {
-  return showGeneralDialog(
-    context: context,
-    barrierColor: Colors.black12.withOpacity(0.6),
-    // background color
-    barrierDismissible: false,
-    // should dialog be dismissed when tapped outside
-    barrierLabel: "Dialog",
-    // label for barrier
-    transitionDuration: Duration(milliseconds: 400),
-    // how long it takes to popup dialog after button click
-    pageBuilder: (_, __, ___) {
-      // your widget implementation
-      return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.35,
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Spacer(
-                  flex: 2,
-                ),
-                FlatButton(
-                  onPressed: () async {
-                    return function1;
-                  },
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.grey[200],
-                    child: Icon(
-                      Icons.camera_alt,
-                      size: 50,
-                      color: Colors.grey[500],
-                    ),
-                  ),
-                ),
-                Spacer(
-                  flex: 2,
-                ),
-                FlatButton(
-                  onPressed: () async {
-                    return function2;
-                  },
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.grey[200],
-                    child: Icon(
-                      Icons.image,
-                      size: 50,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-                Spacer(
-                  flex: 2,
-                )
-              ],
-            ),
-          ),
-        ),
-      );
-    },
-  );
 }

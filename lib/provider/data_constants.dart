@@ -18,7 +18,7 @@ Map<String, String> header = {
 
 const KSignIn = '/auth/signin';
 const KSignUp = '/auth/signup';
-
+const KUpdateUser ='/users';
 const KGetUserRoomsEndpoint = '/users/rooms';
 
 const KCreateRoom = '/rooms';
@@ -28,6 +28,10 @@ String token;
 // 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0ZXN0MUBnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImM5Mjg4ZGQ2LTNlZjEtNGJlYi1iNjE1LTczZTljNDIwMTIxNCIsImV4cCI6MTYyMDM5NTM1MCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzYvIiwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzYvIn0.Feyn_-_EY7gH5cmoZRscgannH-75Jvv6r6DYNMHyVrk';
 
 ///this function handles any API request & show snackBar on Exception
+///
+
+
+
 Future<dynamic> handleRequest(Function serverRequest, BuildContext context, [VoidCallback onException]) async {
   try {
     return await serverRequest();

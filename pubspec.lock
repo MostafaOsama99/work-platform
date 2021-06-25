@@ -7,7 +7,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.5.0"
+    version: "2.6.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -132,15 +132,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_duration_picker:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: a44d26ff31ae593c4cb87e7e4d27951f7049c694
-      url: "https://github.com/cdharris/flutter_duration_picker"
-    source: git
-    version: "1.0.4"
   flutter_filereader:
     dependency: "direct main"
     description:

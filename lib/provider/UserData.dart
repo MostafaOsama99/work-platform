@@ -25,7 +25,9 @@ class UserData extends ChangeNotifier {
   String _name = '';
   String _jobTitle = '';
   String _mobile = '';
+  String _image;
 
+  get image =>_image;
   /// nullable
   DateTime _birthDate;
 
@@ -34,12 +36,15 @@ class UserData extends ChangeNotifier {
   String _password = '';
 
   //TODO: missing imageUrl
-  User get user => User(userName: _userName, name: _name, jobTitle: _jobTitle);
+  User get user => User(userName: _userName, name: _name, jobTitle: _jobTitle,imageUrl: image);
 
   set setName(String value) {
     _name = value;
   }
-
+  set setImage(String value){
+ _image=value;
+    notifyListeners();
+  }
   set setJobTitle(String value) {
     _jobTitle = value;
   }
@@ -139,6 +144,7 @@ class UserData extends ChangeNotifier {
     _birthDate = DateTime.parse(json['birthDate']);
     _jobTitle = json['jobTitle'];
     _mobile = json['phoneNumber'];
+    _image=json['imageUrl'];
   }
 
   Future<void> getCurrentUser() async {
