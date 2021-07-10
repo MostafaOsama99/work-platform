@@ -43,9 +43,13 @@ class DrawerMenu extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: CircleAvatar(
+                      child:user.image==null? CircleAvatar(
                         radius: 40,
                         child: Text(user.name[0] + user.name[lastLitter], style: TextStyle(fontSize: 18)),
+                        backgroundColor: Colors.black,
+                      ):CircleAvatar(
+                        radius: 40,
+                        backgroundImage: NetworkImage(user.image),
                         backgroundColor: Colors.black,
                       ),
                     ),

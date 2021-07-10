@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:project/dialogs/load_dialog.dart';
@@ -23,6 +24,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final _formKey = GlobalKey<FormState>();
+
   FirebaseStorage _storage = FirebaseStorage.instance;
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   File _image;
@@ -32,7 +34,6 @@ class _ProfileState extends State<Profile> {
       KUpdateUser,
       json.encode({
         "imageUrl": Provider.of<UserData>(context, listen: false).image,
-        "username": "wqeeeedsawwweawqee",
         "name": Provider.of<UserData>(context, listen: false).userName,
         "email": Provider.of<UserData>(context, listen: false).mail,
         "phoneNumber": Provider.of<UserData>(context, listen: false).mobile,
@@ -48,7 +49,7 @@ class _ProfileState extends State<Profile> {
 
   Future<String> uploadFile(var imageFile, String folderName) async {
     StorageReference ref =
-        _storage.ref().child("$folderName/${_image.path.split('/').last}");
+    _storage.ref().child("$folderName/${_image.path.split('/').last}");
     StorageUploadTask uploadTask = ref.putFile(imageFile);
 
     var dowurl = await (await uploadTask.onComplete).ref.getDownloadURL();
@@ -96,7 +97,7 @@ class _ProfileState extends State<Profile> {
         print(uploadedImageUrl);
         print("this is token $token");
         var handleResult =
-            await handleRequest(updateProfile, scaffoldKey.currentContext);
+        await handleRequest(updateProfile, scaffoldKey.currentContext);
         if (handleResult) {
           setState(() {
             _image = result;
@@ -111,6 +112,7 @@ class _ProfileState extends State<Profile> {
     // TODO: implement build
     return Scaffold(
       key: scaffoldKey,
+
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(45),
         child: ClipRRect(
@@ -143,20 +145,20 @@ class _ProfileState extends State<Profile> {
                       },
                       child: (_image == null)
                           ? CircleAvatar(
-                              // backgroundImage: NetworkImage(""),
-                              backgroundColor: Colors.grey[200],
-                              child: Icon(
-                                Icons.person,
-                                color: Colors.grey[500],
-                                size: 100,
-                              ),
-                              radius: height * 0.12,
-                            )
+                        backgroundImage: NetworkImage(Provider.of<UserData>(context, listen: false).image==null?"":Provider.of<UserData>(context, listen: false).image),
+                        backgroundColor: Colors.grey[200],
+                        child:Provider.of<UserData>(context, listen: false).image==null?  Icon(
+                          Icons.person,
+                          color: Colors.grey[500],
+                          size: 100,
+                        ) : Text(""),
+                        radius: height * 0.12,
+                      )
                           : CircleAvatar(
-                              backgroundColor: Colors.grey[300],
-                              backgroundImage: FileImage(_image),
-                              radius: height * 0.12,
-                            )),
+                        backgroundColor: Colors.grey[300],
+                        backgroundImage: FileImage(_image),
+                        radius: height * 0.12,
+                      )),
                 ),
               ),
 
@@ -166,15 +168,15 @@ class _ProfileState extends State<Profile> {
                 ),
                 child: Center(
                     child: Text(
-                  user.userName.toString(),
-                  style: TextStyle(fontSize: 25, color: Colors.white),
-                )),
+                      user.userName.toString(),
+                      style: TextStyle(fontSize: 25, color: Colors.white),
+                    )),
               ),
               Center(
                   child: Text(
-                user.jobTitle.toString(),
-                style: TextStyle(fontSize: 25, color: Colors.white),
-              )),
+                    user.jobTitle.toString(),
+                    style: TextStyle(fontSize: 25, color: Colors.white),
+                  )),
 
               Divider(
                 color: Theme.of(context).accentColor,
@@ -216,37 +218,7 @@ class _ProfileState extends State<Profile> {
                     }
                     return null;
                   }),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: SizedBox(
-                  child: DateTimeField(
-                    initialValue: user.birthDate,
-                    style: TS_Style,
-                    decoration: TEXT_FIELD_DECORATION1.copyWith(
-                      hintText: 'birth date',
-                      prefixIcon:
-                          Icon(Icons.date_range, color: COLOR_BACKGROUND),
-                    ),
-                    onSaved: (value) => user.setBirthDate = value,
-                    validator: (value) {
-                      if (value == null)
-                        return "Please enter your date of birth";
-                      else
-                        return null;
-                    },
-                    format: DateFormat("dd/MM/yyyy"),
-                    resetIcon: null,
-                    onShowPicker: (context, currentValue) {
-                      return showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1900),
-                          initialDate: currentValue ??
-                              DateTime.now().subtract(Duration(days: 16 * 365)),
-                          lastDate: DateTime.now());
-                    },
-                  ),
-                ),
-              ),
+
               // textField(text:DateFormat('dd/MM/yyy').format(user.birthDate).toString(),icon: Icons.date_range,validator: (value){
               //   if (value.isEmpty)
               //     return "Please enter your date of birth";
@@ -270,7 +242,13 @@ class _ProfileState extends State<Profile> {
                         // var    rurl = url.toString();
                         //     print(rurl);
                         if (_formKey.currentState.validate()) {
-                          print("");
+                          _formKey.currentState.save();
+
+                          var handleResult =
+                          await handleRequest(updateProfile, scaffoldKey.currentContext);
+
+                          showSnackBar("Data Updated Successfully", context);
+
                         }
 
                         // uploadFile(_image, "images");

@@ -198,7 +198,7 @@ class UserData extends ChangeNotifier {
         "confirmPassword": _password,
         "phoneNumber": _mobile,
         "jobTitle": _jobTitle,
-        "birthDate": '${_birthDate.day}/${_birthDate.month}/${_birthDate.year}'
+        "birthDate": '${_birthDate.year}/${_birthDate.month}/${_birthDate.day}'
       }),
       (responseData) => null);
 

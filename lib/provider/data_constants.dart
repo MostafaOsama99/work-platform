@@ -22,6 +22,7 @@ Map<String, String> header = {
 const KSignIn = '/auth/signin';
 const KSignUp = '/auth/signup';
 const KUpdateUser ='/users';
+const KAddAttachment='/attachments';
 const KGetUserRoomsEndpoint = '/users/rooms';
 
 const KCreateRoom = '/rooms';

@@ -212,7 +212,7 @@ class _TaskScreenState extends State<TaskScreen> {
                         color: Colors.white,
                       )),
                   splashRadius: 20,
-                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Attachment())))
+                  onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Attachment(taskId: widget.taskId,))))
             ],
             flexibleSpace: BuildFlexibleSpace(
               taskId: task.id,
